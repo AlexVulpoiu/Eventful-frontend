@@ -14,7 +14,7 @@ import * as TablerIcons from 'angular-tabler-icons/icons';
 
 import { AuthenticationRoutes } from './authentication.routing';
 
-import { AppSideLoginComponent } from './login/login.component';
+import { LoginComponent } from './login/login.component';
 import { AppSideRegisterComponent } from './register/register.component';
 
 @NgModule({
@@ -31,7 +31,7 @@ import { AppSideRegisterComponent } from './register/register.component';
     TablerIconsModule.pick(TablerIcons),
   ],
   declarations: [
-    AppSideLoginComponent,
+    LoginComponent,
     AppSideRegisterComponent,
   ],
 })

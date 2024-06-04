@@ -5,6 +5,8 @@
   </button>
   <!-- --------------------------------------------------------------- -->
 
+  <span class="flex-1-auto"></span>
+
   <!-- --------------------------------------------------------------- -->
   <!-- Notification Dropdown -->
   <!-- --------------------------------------------------------------- -->
@@ -18,20 +20,9 @@
     ></i-tabler>
   </button>
 
-  <span class="flex-1-auto"></span>
-
   <!-- --------------------------------------------------------------- -->
   <!-- profile Dropdown -->
   <!-- --------------------------------------------------------------- -->
-  <a
-    mat-flat-button
-    color="primary"
-    href="https://adminmart.com/product/modernize-angular-admin-dashboard/"
-    target="_blank"
-    class="d-flex justify-content-center"
-  >
-    Download Free
-  </a>
   <button
     mat-icon-button
     [matMenuTriggerFor]="profilemenu"
@@ -63,14 +54,15 @@
       >My Task
     </button>
 
-    <div class="p-x-12 m-t-12">
-      <a
-        [routerLink]="['/authentication/login']"
-        mat-stroked-button
-        color="primary"
-        class="w-100"
-        >Logout</a
-      >
+    <div class="p-x-12 m-t-12 form-group">
+      <form class="m-t-30" (ngSubmit)="logout()">
+        <button
+          mat-stroked-button
+          color="primary"
+          class="w-100"
+          >Logout
+        </button>
+      </form>
     </div>
   </mat-menu>
 </mat-toolbar>
