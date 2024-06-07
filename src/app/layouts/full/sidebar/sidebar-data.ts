@@ -10,6 +10,36 @@ export const navItems: NavItem[] = [
     route: '/dashboard',
   },
   {
+    displayName: 'Events',
+    iconName: 'calendar-event',
+    route: '/events'
+  },
+  {
+    displayName: 'Tickets scanner',
+    iconName: 'barcode',
+    route: '/tickets-scanner',
+  },
+  {
+    displayName: 'Maps',
+    iconName: 'map-pin-2',
+    route: '/maps'
+  },
+  {
+    displayName: 'Seats map',
+    iconName: 'armchair',
+    route: '/seats-map'
+  },
+  {
+    displayName: 'Text editor',
+    iconName: 'edit',
+    route: '/text-editor'
+  },
+  {
+    displayName: 'Locations',
+    iconName: 'map-pin',
+    route: '/locations'
+  },
+  {
     navCap: 'Ui Components',
   },
   {

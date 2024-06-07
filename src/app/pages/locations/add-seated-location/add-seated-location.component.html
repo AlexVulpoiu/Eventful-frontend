@@ -1,0 +1,104 @@
+<h1>Add seated location</h1>
+
+<br/>
+
+<mat-stepper [linear]="true">
+  <mat-step [stepControl]="form">
+    <form [formGroup]="form">
+      <ng-template matStepLabel>Add main details</ng-template>
+
+      <br/>
+
+      <div class="row">
+        <div class="col-md-6 col-sm-12">
+          <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">
+            Name
+          </mat-label>
+          <mat-form-field appearance="outline" class="w-100" color="primary">
+            <input matInput placeholder="Location name" [formControl]="$any(form).controls?.name" (blur)="updateErrorMessage()"/>
+            @if ($any(form).controls?.name.invalid) {
+              <mat-error>{{errorMessage}}</mat-error>
+            }
+          </mat-form-field>
+
+
+          <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">
+            City
+          </mat-label>
+          <mat-form-field appearance="outline" class="w-100" color="primary">
+            <input matInput id="city" name="city" [formControl]="$any(form).controls?.city" (blur)="updateErrorMessage()" />
+          </mat-form-field>
+
+          <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">
+            Number of rows
+          </mat-label>
+          <mat-form-field appearance="outline" class="w-100" color="primary">
+            <input matInput type="number" id="numberOfRows" name="numberOfRows" [formControl]="$any(form).controls?.numberOfRows" (blur)="updateErrorMessage()" />
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-6 col-sm-12">
+          <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">
+            Country
+          </mat-label>
+          <mat-form-field appearance="outline" class="w-100" color="primary">
+            <input matInput id="country" name="country" [formControl]="$any(form).controls?.country" (blur)="updateErrorMessage()" />
+          </mat-form-field>
+
+          <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">
+            Address
+          </mat-label>
+          <mat-form-field appearance="outline" class="w-100" color="primary">
+            <input matInput id="address" name="address" [formControl]="$any(form).controls?.address" (blur)="updateErrorMessage()" />
+          </mat-form-field>
+
+          <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">
+            Seats per row
+          </mat-label>
+          <mat-form-field appearance="outline" class="w-100" color="primary">
+            <input matInput type="number" id="seatsPerRow" name="seatsPerRow" [formControl]="$any(form).controls?.seatsPerRow" (blur)="updateErrorMessage()" />
+          </mat-form-field>
+        </div>
+      </div>
+      <div>
+        <button matStepperNext mat-flat-button color="primary">Next</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step [stepControl]="form" label="Add seats categories">
+    <form [formGroup]="form">
+      <ng-template matStepLabel>Add seats categories</ng-template>
+
+      <br/>
+      <div class="row">
+        <div class="col-sm-8">
+          <h3>Define seats categories</h3>
+        </div>
+        <div class="col-sm-4">
+          <div class="row">
+            <button mat-flat-button color="primary" (click)="addCategory()">Add category</button>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <button mat-flat-button class="delete-button" (click)="deleteCategory()">Remove last category</button>
+          </div>
+        </div>
+      </div>
+      <br/>
+
+      <div formArrayName="seatsPerCategory">
+        <div *ngFor="let category of $any(seatsPerCategory).controls; let i = index" [formGroupName]="i">
+          <app-add-seats-category [formGroup]="category"></app-add-seats-category>
+        </div>
+      </div>
+
+      <br/>
+
+      <div>
+        <button mat-flat-button color="accent" matStepperPrevious>Back</button>
+        &nbsp;&nbsp;
+        <form (ngSubmit)="onSubmit()">
+          <button mat-flat-button class="success-button">Save location</button>
+        </form>
+      </div>
+    </form>
+  </mat-step>
+</mat-stepper>

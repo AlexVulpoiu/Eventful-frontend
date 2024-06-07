@@ -1,0 +1,42 @@
+<div class="row">
+  <div class="col-sm-4">
+    <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">
+      Name
+    </mat-label>
+    <mat-form-field appearance="outline" class="w-100" color="primary">
+      <input matInput id="name" name="name" [formControl]="$any(formGroup).get('name')" />
+    </mat-form-field>
+  </div>
+
+  <div class="col-sm-4">
+    <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">
+      Start row
+    </mat-label>
+    <mat-form-field appearance="outline" class="w-100" color="primary">
+      <input matInput type="number" id="minRow" name="minRow" [formControl]="$any(formGroup).get('minRow')" />
+    </mat-form-field>
+
+    <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">
+      End row
+    </mat-label>
+    <mat-form-field appearance="outline" class="w-100" color="primary">
+      <input matInput type="number" id="maxRow" name="maxRow" [formControl]="$any(formGroup).get('maxRow')" />
+    </mat-form-field>
+  </div>
+
+  <div class="col-sm-4">
+    <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">
+      Start seat
+    </mat-label>
+    <mat-form-field appearance="outline" class="w-100" color="primary">
+      <input matInput type="number" id="minSeat" name="minSeat" [formControl]="$any(formGroup).get('minSeat')" />
+    </mat-form-field>
+
+    <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">
+      End seat
+    </mat-label>
+    <mat-form-field appearance="outline" class="w-100" color="primary">
+      <input matInput type="number" id="maxSeat" name="maxSeat" [formControl]="$any(formGroup).get('maxSeat')" />
+    </mat-form-field>
+  </div>
+</div>

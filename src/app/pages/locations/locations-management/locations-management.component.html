@@ -1,0 +1,245 @@
+<mat-tab-group>
+  <mat-tab label="Standing locations">
+    <br/>
+    <form class="m-t-30">
+      <div class="row">
+        <div class="col-md-9">
+          <mat-form-field class="w-100">
+            <span matPrefix> </span>
+            <input type="tel" matInput placeholder="Search" name="search" [(ngModel)]= "search">
+            <button matSuffix mat-button>
+              <mat-icon>search</mat-icon>
+            </button>
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-3">
+          <button class="center-div" mat-flat-button color="accent" (click)="router.navigate(['/locations/add-standing'])">
+            Add standing location
+          </button>
+        </div>
+      </div>
+
+      <br/>
+
+      <div class="table-responsive m-t-16">
+        <table mat-table [dataSource]="standingLocations" class="w-100 table-striped">
+          <ng-container matColumnDef="index">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              class="f-w-600 mat-subtitle-1 f-s-14"
+            >
+              #
+            </th>
+            <td mat-cell *matCellDef="let element; let i = index;">
+              <div class="d-flex align-items-center">
+                <h6 class="mat-subtitle-1 f-s-14 f-w-600">
+                  {{ i + 1 }}.
+                </h6>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Position Column -->
+          <ng-container matColumnDef="name">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              class="f-w-600 mat-subtitle-1 f-s-14"
+            >
+              Name
+            </th>
+            <td mat-cell *matCellDef="let element">
+              <div class="d-flex align-items-center">
+                <h6 class="mat-subtitle-1 f-s-14 f-w-600">
+                  {{ element.name }}
+                </h6>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Name Column -->
+          <ng-container matColumnDef="address">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              class="f-w-600 mat-subtitle-1 f-s-14"
+            >
+              Address
+            </th>
+            <td mat-cell *matCellDef="let element" class="mat-body-1">
+              {{ element.address + ', ' + element.city + ', ' + element.country }}
+            </td>
+          </ng-container>
+
+          <!-- Weight Column -->
+          <ng-container matColumnDef="capacity">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              class="f-w-600 mat-subtitle-1 f-s-14"
+            >
+              Capacity
+            </th>
+            <td mat-cell *matCellDef="let element">
+              {{element.capacity}}
+            </td>
+          </ng-container>
+
+          <!-- Symbol Column -->
+          <ng-container matColumnDef="actions">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              class="f-w-600 mat-subtitle-1 f-s-14"
+            >
+              Actions
+            </th>
+            <td mat-cell *matCellDef="let element" class="mat-body-1">
+              <button mat-flat-button color="primary" class="w-100" (click)="router.navigate(['/events'])">
+                View details
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+        <mat-paginator
+          #paginator
+          class="demo-paginator"
+          (page)="handlePageEvent($event)"
+          [length]="length"
+          [pageSize]="pageSize"
+          [disabled]="disabled"
+          [showFirstLastButtons]="showFirstLastButtons"
+          [hidePageSize]="hidePageSize"
+          [pageIndex]="pageIndex"
+          aria-label="Select page"></mat-paginator>
+      </div>
+    </form>
+  </mat-tab>
+
+  <mat-tab label="Seated locations">
+    <br/>
+    <form class="m-t-30">
+      <div class="row">
+        <div class="col-md-9">
+          <mat-form-field class="w-100">
+            <span matPrefix> </span>
+            <input type="tel" matInput placeholder="Search" name="search" [(ngModel)]= "search">
+            <button matSuffix mat-button>
+              <mat-icon>search</mat-icon>
+            </button>
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-3">
+          <button class="center-div" mat-flat-button color="accent" (click)="router.navigate(['/locations/add-seated'])">
+            Add seated location
+          </button>
+        </div>
+      </div>
+
+      <br/>
+
+      <div class="table-responsive m-t-16">
+        <table mat-table [dataSource]="seatedLocations" class="w-100 table-striped">
+          <ng-container matColumnDef="index">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              class="f-w-600 mat-subtitle-1 f-s-14"
+            >
+              #
+            </th>
+            <td mat-cell *matCellDef="let element; let i = index;">
+              <div class="d-flex align-items-center">
+                <h6 class="mat-subtitle-1 f-s-14 f-w-600">
+                  {{ i + 1 }}.
+                </h6>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Position Column -->
+          <ng-container matColumnDef="name">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              class="f-w-600 mat-subtitle-1 f-s-14"
+            >
+              Name
+            </th>
+            <td mat-cell *matCellDef="let element">
+              <div class="d-flex align-items-center">
+                  <h6 class="mat-subtitle-1 f-s-14 f-w-600">
+                    {{ element.name }}
+                  </h6>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Name Column -->
+          <ng-container matColumnDef="address">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              class="f-w-600 mat-subtitle-1 f-s-14"
+            >
+              Address
+            </th>
+            <td mat-cell *matCellDef="let element" class="mat-body-1">
+              {{ element.address + ', ' + element.city + ', ' + element.country }}
+            </td>
+          </ng-container>
+
+          <!-- Weight Column -->
+          <ng-container matColumnDef="capacity">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              class="f-w-600 mat-subtitle-1 f-s-14"
+            >
+              Capacity
+            </th>
+            <td mat-cell *matCellDef="let element">
+              {{element.numberOfRows * element.seatsPerRow}}
+            </td>
+          </ng-container>
+
+          <!-- Symbol Column -->
+          <ng-container matColumnDef="actions">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              class="f-w-600 mat-subtitle-1 f-s-14"
+            >
+              Actions
+            </th>
+            <td mat-cell *matCellDef="let element" class="mat-body-1">
+              <button mat-flat-button color="primary" class="w-100" (click)="router.navigate(['/events'])">
+                View details
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+        <mat-paginator
+          #paginator
+          class="demo-paginator"
+          (page)="handlePageEvent($event)"
+          [length]="length"
+          [pageSize]="pageSize"
+          [disabled]="disabled"
+          [showFirstLastButtons]="showFirstLastButtons"
+          [hidePageSize]="hidePageSize"
+          [pageIndex]="pageIndex"
+          aria-label="Select page"></mat-paginator>
+      </div>
+    </form>
+  </mat-tab>
+</mat-tab-group>

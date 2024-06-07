@@ -1,5 +1,22 @@
+//html .topbar {
+//  background-color: $toolbar;
+//  position: sticky;
+//  top: 0;
+//  z-index: 9;
+//  height: $header-height;
+//}
+//
+//.topbar-dd {
+//  min-width: 200px !important;
+//}
+//
+//.object-cover {
+//  object-fit: cover;
+//}
+
+
 html .topbar {
-  background-color: $toolbar;
+  border-bottom: 2px solid #1c70ec;
   position: sticky;
   top: 0;
   z-index: 9;

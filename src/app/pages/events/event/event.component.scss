@@ -1,0 +1,87 @@
+/* app.component.css */
+.container {
+  position: relative;
+  height: 350px;
+  width: 100%;
+  overflow: hidden; /* Ensure no overflow */
+}
+
+.background-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover; /* Ensure it covers the full width */
+  background-repeat: no-repeat; /* Prevent background repetition */
+  background-position: center; /* Center the background image */
+  opacity: 0.25; /* 25% transparency for the background */
+  z-index: 0; /* Place the background behind the image */
+}
+
+.container img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Center the image */
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* Ensure the image fits within the div without cropping */
+  z-index: 1; /* Place the image above the background */
+}
+
+.description {
+  text-align: justify;
+}
+
+.number-input {
+  display: flex;
+  align-items: center;
+}
+
+.number-input button {
+  width: 30px;
+  height: 30px;
+  font-size: 16px;
+  text-align: center;
+  line-height: 30px;
+  cursor: pointer;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+}
+
+.number-input input {
+  width: 40px;
+  height: 30px;
+  text-align: center;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  pointer-events: none; /* Prevent user from typing */
+}
+
+.minus-button {
+  color: red;
+}
+
+.plus-button {
+  color: green;
+}
+
+ul.no-bullets {
+  list-style-type: none;
+}
+
+.success-button {
+  background-color: #10e05c;
+  color: white;
+}
+
+.w-50 {
+  width: 50%;
+}
+
+.right-elements {
+  float: right;
+}

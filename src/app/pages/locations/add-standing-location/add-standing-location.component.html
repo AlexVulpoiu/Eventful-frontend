@@ -1,0 +1,52 @@
+<div class="col-md-6">
+  <h1>Add standing location</h1>
+
+  <br/>
+
+  <form class="m-t-30" (ngSubmit)="onSubmit()">
+    <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">
+      Name
+    </mat-label>
+    <mat-form-field appearance="outline" class="w-100" color="primary">
+      <input matInput placeholder="Location name" [formControl]="$any(form).controls?.name" (blur)="updateErrorMessage()"/>
+      @if ($any(form).controls?.name.invalid) {
+        <mat-error>{{errorMessage}}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">
+      City
+    </mat-label>
+    <mat-form-field appearance="outline" class="w-100" color="primary">
+      <input matInput id="city" name="city" [formControl]="$any(form).controls?.city" (blur)="updateErrorMessage()" />
+    </mat-form-field>
+
+    <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">
+      Country
+    </mat-label>
+    <mat-form-field appearance="outline" class="w-100" color="primary">
+      <input matInput id="country" name="country" [formControl]="$any(form).controls?.country" (blur)="updateErrorMessage()" />
+    </mat-form-field>
+
+    <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">
+      Address
+    </mat-label>
+    <mat-form-field appearance="outline" class="w-100" color="primary">
+      <input matInput id="address" name="address" [formControl]="$any(form).controls?.address" (blur)="updateErrorMessage()" />
+    </mat-form-field>
+
+    <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">
+      Capacity
+    </mat-label>
+    <mat-form-field appearance="outline" class="w-100" color="primary">
+      <input matInput id="capacity" name="capacity" [formControl]="$any(form).controls?.capacity" (blur)="updateErrorMessage()" />
+    </mat-form-field>
+
+    <div class="form-group">
+      <button mat-flat-button class="success-button w-100">
+        Save location
+      </button>
+    </div>
+    <!-- input -->
+  </form>
+</div>

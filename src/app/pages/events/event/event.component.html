@@ -1,0 +1,169 @@
+<div class="container">
+  <div class="background-image" [ngStyle]="{'background-image': 'url(' + eventDto?.logo + ')'}"></div>
+  <img [src]="eventDto?.logo" alt="Your Image">
+</div>
+
+<br/>
+
+<div class="row justify-content-center">
+  <h1>{{ eventDto?.name }}</h1>
+</div>
+
+<br/>
+<br/>
+
+<div class="w-100 row">
+  <div class="col-lg-6 col-md-12 col-sm-12">
+    <div class="w-100">
+      <i-tabler name="map-2"></i-tabler>&nbsp;
+      {{ eventDto?.location?.fullAddress }}
+    </div>
+
+    <div class="w-100">
+      <i-tabler name="calendar-time"></i-tabler>&nbsp;
+      {{ formatDate(startDate, 'dd.MM.yyyy, HH:mm', this.locale) }}
+      - {{ formatDate(endDate, 'dd.MM.yyyy, HH:mm', this.locale) }}
+    </div>
+
+    <div class="w-100">
+      <i-tabler name="bulb"></i-tabler>
+      Event organized by {{ eventDto?.organiserName }}
+    </div>
+
+    <br/>
+
+    <div class="w-100 description">
+      <h2>Event details</h2>
+      <div [innerHTML]="eventDto?.description"></div>
+    </div>
+  </div>
+
+  <div class="col-lg-6 col-md-12 col-sm-12">
+    <iframe
+      width="100%"
+      height="500px"
+      style="border:0"
+      loading="lazy"
+      allowfullscreen
+      referrerpolicy="no-referrer-when-downgrade"
+      [src]="safeMapsUrl">
+    </iframe>
+  </div>
+</div>
+
+<br/>
+
+<div class="w-100 row">
+  <div class="col-lg-6 col-md-12 col-sm-12">
+    <h2>Buy tickets</h2>
+
+    <div class="table-responsive m-t-16">
+      <table mat-table [dataSource]="standingCategories" class="w-100 table-striped">
+
+        <!-- Position Column -->
+        <ng-container matColumnDef="category">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="f-w-600 mat-subtitle-1 f-s-14"
+          >
+            Category
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <div class="d-flex align-items-center">
+              <h6 class="mat-subtitle-1 f-s-14 f-w-600">
+                {{ element.name }}
+              </h6>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="price">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="f-w-600 mat-subtitle-1 f-s-14"
+          >
+            Price
+          </th>
+          <td mat-cell *matCellDef="let element" class="mat-body-1">
+            {{ element.price }} RON
+          </td>
+        </ng-container>
+
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="cart">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="f-w-600 mat-subtitle-1 f-s-14"
+          >
+            Add to cart
+          </th>
+          <td mat-cell *matCellDef="let i = index;" class="mat-body-1">
+            <div class="number-input">
+              <button class="minus-button" (click)="decreaseValue(i)">-</button>
+              <input type="text" [value]="ticketsPerCategory[i]" readonly>
+              <button class="plus-button" (click)="increaseValue(i)">+</button>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="col-lg-6 col-md-12 col-sm-12 w-100" *ngIf="getTotalTickets() > 0">
+    <h2>Order summary</h2>
+
+    <div class="row w-100">
+      <div class="w-50">
+        <ol>
+          <ng-container *ngFor="let c of standingCategories; let i = index">
+            <li *ngIf="ticketsPerCategory[i] > 0">
+              {{ ticketsPerCategory[i] }} x {{ c.name }} tickets
+            </li>
+          </ng-container>
+        </ol>
+      </div>
+
+      <div class="w-50 right-elements">
+        <ul class="no-bullets right-elements">
+          <ng-container *ngFor="let c of standingCategories; let i = index">
+            <li *ngIf="ticketsPerCategory[i] > 0">
+              {{ ticketsPerCategory[i] * c.price }} RON
+            </li>
+          </ng-container>
+        </ul>
+      </div>
+    </div>
+
+    <hr/>
+
+    <div class="row w-100">
+      <div class="w-50">
+        <ul class="no-bullets">
+          <li><strong>Total: </strong></li>
+        </ul>
+      </div>
+
+      <div class="w-50 right-elements">
+        <ul class="no-bullets right-elements">
+          <li>{{ getTotalAmount() }} RON</li>
+        </ul>
+      </div>
+    </div>
+
+    <button mat-flat-button class="success-button w-100">
+      Place order
+    </button>
+  </div>
+</div>
+
+<br/>
+<br/>
+<br/>
+<br/>

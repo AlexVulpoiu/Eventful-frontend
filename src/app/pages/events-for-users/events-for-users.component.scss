@@ -1,0 +1,19 @@
+.cart-btn {
+  position: absolute !important;
+  right: 16px;
+  top: -21px;
+  background-color: #10e05c;
+  color: white;
+}
+
+.event-logo {
+  aspect-ratio: 3/2;
+}
+
+.event {
+  transition: transform .15s;
+}
+
+.event:hover {
+  transform: scale(1.05);
+}

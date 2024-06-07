@@ -1,0 +1,6 @@
+<editor style="width: 75%" apiKey="{{environment.TINYMCE_API_KEY}}"
+        [init]="{plugins: 'lists link image table code help wordcount'}"
+        [(ngModel)]="article"
+        (ngModelChange)="modelChangeFn($event)">
+
+</editor>
