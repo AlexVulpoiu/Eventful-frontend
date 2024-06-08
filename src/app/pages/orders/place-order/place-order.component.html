@@ -25,20 +25,36 @@
 
     <div class="row w-100">
       <div class="w-50">
-        <ol>
+        <ol *ngIf="standingCategories.length > 0">
           <ng-container *ngFor="let c of standingCategories; let i = index">
             <li *ngIf="ticketsPerCategory[i] > 0">
               {{ ticketsPerCategory[i] }} x {{ c.name }} tickets
             </li>
           </ng-container>
         </ol>
+
+        <ol *ngIf="seatsCategories.length > 0">
+          <ng-container *ngFor="let c of seatsCategories; let i = index">
+            <li *ngIf="ticketsPerCategory[i] > 0">
+              {{ ticketsPerCategory[i] }} x {{ c }} tickets
+            </li>
+          </ng-container>
+        </ol>
       </div>
 
       <div class="w-50 right-elements">
-        <ul class="no-bullets right-elements">
+        <ul class="no-bullets right-elements" *ngIf="standingCategories.length > 0">
           <ng-container *ngFor="let c of standingCategories; let i = index">
             <li *ngIf="ticketsPerCategory[i] > 0">
               {{ ticketsPerCategory[i] * c.price }} RON
+            </li>
+          </ng-container>
+        </ul>
+
+        <ul class="no-bullets right-elements" *ngIf="seatsCategories.length > 0">
+          <ng-container *ngFor="let c of seatsCategories; let i = index">
+            <li *ngIf="ticketsPerCategory[i] > 0">
+              {{ ticketsPerCategory[i] * seatsPrices[i] }} RON
             </li>
           </ng-container>
         </ul>

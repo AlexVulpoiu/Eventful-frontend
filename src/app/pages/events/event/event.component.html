@@ -52,8 +52,9 @@
 </div>
 
 <br/>
+<hr/>
 
-<div class="w-100 row">
+<div class="w-100 row" *ngIf="standingCategories.length > 0">
   <div class="col-lg-6 col-md-12 col-sm-12">
     <h2>Buy tickets</h2>
 
@@ -152,7 +153,7 @@
 
       <div class="w-50 right-elements">
         <ul class="no-bullets right-elements">
-          <li>{{ getTotalAmount() }} RON</li>
+          <li>{{ getTotalAmountForStandingEvent() }} RON</li>
         </ul>
       </div>
     </div>
@@ -160,6 +161,94 @@
     <button mat-flat-button class="success-button w-100" (click)="sendDataToOrderPage()">
       Place order
     </button>
+  </div>
+</div>
+
+<div class="w-100 row" *ngIf="seatsCategories.length > 0">
+  <div class="col-lg-6 col-md-12 col-sm-12">
+    <h2>Buy tickets</h2>
+
+    <div class="row w-100">
+      <div class="w-50">
+        <ul>
+          <ng-container *ngFor="let sc of seatsCategories; let i = index">
+            <li>
+              <strong>{{ sc.name }}:</strong> rows {{ sc.minRow }} - {{ sc.maxRow }}, seats {{ sc.minSeat }}
+              - {{ sc.maxSeat }}
+            </li>
+          </ng-container>
+        </ul>
+      </div>
+
+      <div class="w-25 right-elements">
+        <ul class="no-bullets right-elements">
+          <ng-container *ngFor="let sc of seatsCategories; let i = index">
+            <li>
+              {{ sc.price }} RON
+            </li>
+          </ng-container>
+        </ul>
+      </div>
+    </div>
+
+    <p>Please select the seats from the map below. You can select maximum 10 tickets.</p>
+  </div>
+
+  <br/>
+  <br/>
+  <br/>
+
+</div>
+
+<div class="row w-100" *ngIf="seatsCategories.length > 0">
+  <!-- Seats map starts here -->
+  <div class="w-100 seat-container">
+    <div class="w-100" *ngFor="let seatrow of seatmap ">
+      <div class="col-12 pricing-label"
+           *ngIf="seatChartConfig?.showRowWisePricing && seatrow.seatPricingInformation != ''">{{ seatrow.seatPricingInformation }}
+      </div>
+      <div class="seatrow col-lg-12">
+        <div *ngIf="seatChartConfig?.showRowsLabel">
+          <div class="row-label"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ seatrow.seatRowLabel }}</div>
+        </div>
+        <div *ngFor="let seatobj of seatrow.seats">
+          <div class="seat-item seat-space" style="color:white ; background-color:white"
+               *ngIf="seatobj.seatLabel == ''"> &nbsp;
+          </div>
+          <div matTooltip="{{seatobj.seatLabel}} | {{ seatobj.category }} | {{seatobj.price}} RON" matTooltipPosition="above"
+               [ngClass]="{ 'seat-item' : true , 'seat-available' : seatobj.status == 'available' ,'seat-booked' : seatobj.status == 'booked' ,'seat-unavailable' : seatobj.status == 'unavailable' }"
+               (click)="selectSeat(seatobj)"
+               *ngIf="(seatobj.status == 'available' || seatobj.status == 'booked' )&& seatobj.seatLabel != ''">{{ seatobj.seatNo }}
+          </div>
+
+          <div matTooltip="Seat not available" matTooltipPosition="above"
+               [ngClass]="{ 'seat-item' : true , 'seat-unavailable' : true }"
+               *ngIf="seatobj.status == 'unavailable' && seatobj.seatLabel != ''">{{ seatobj.seatNo }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- *ngIf="cart?.selectedSeats?.length > 0" -->
+  <div class="col-lg-12">
+    <div class="col-lg-12 summary-bar">
+      <div class="col-lg-4">
+        <div>
+          <h5>Total Selected : {{ cart?.selectedSeats?.length }}</h5>
+          <h5>Total Amount :&nbsp;&nbsp; {{ cart.totalamount }} RON</h5>
+        </div>
+      </div>
+      <div class="col-lg-8 selected-seats">
+        <h5 class="col-lg-12 no-padding">Selected Seats : </h5>
+        <span *ngFor="let s of cart.selectedSeats" class="badge badge-primary">Row {{ s.row }}, seat {{ s.seat }}</span>
+      </div>
+    </div>
+    <div class="book-area">
+      <button [disabled]="cart?.selectedSeats?.length == 0"
+              mat-flat-button class="success-button w-100" (click)="sendDataToOrderPage()">
+        Place order
+      </button>
+    </div>
   </div>
 </div>
 

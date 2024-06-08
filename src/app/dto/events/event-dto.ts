@@ -1,5 +1,7 @@
 import {LocationDto} from "../locations/location-dto";
 import {StandingCategoryDto} from "./standing-category-dto";
+import {SeatsCategoryDetails} from "../locations/seats-category-details";
+import {Seat} from "./seat";
 
 export class EventDto {
   public id: number;
@@ -14,11 +16,13 @@ export class EventDto {
   public organiserName: string;
   public organiserRating: string;
   public standingCategories: StandingCategoryDto[];
-
+  public seatsCategories: SeatsCategoryDetails[];
+  public unavailableSeats: Seat[];
 
   constructor(id: number, name: string, description: string, startDate: Date, endDate: Date, logo: string,
               charityPercentage: number, rejectionReason: string, location: LocationDto, organiserName: string,
-              organiserRating: string, standingCategories: StandingCategoryDto[]) {
+              organiserRating: string, standingCategories: StandingCategoryDto[], seatsCategories: SeatsCategoryDetails[],
+              unavailableSeats: Seat[]) {
     this.id = id;
     this.name = name;
     this.description.innerHTML = description;
@@ -31,5 +35,7 @@ export class EventDto {
     this.organiserName = organiserName;
     this.organiserRating = organiserRating;
     this.standingCategories = standingCategories;
+    this.seatsCategories = seatsCategories;
+    this.unavailableSeats = unavailableSeats;
   }
 }

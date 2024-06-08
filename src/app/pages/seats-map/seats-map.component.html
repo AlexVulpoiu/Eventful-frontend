@@ -4,6 +4,9 @@
     Seat Chart Generator
   </h1>
 </div>
+
+<br/>
+
 <div class="col-lg-12 seat-container" >
   <div  *ngFor="let seatrow of seatmap " >
     <div class="col-12 pricing-label" *ngIf="seatChartConfig?.showRowWisePricing && seatrow.seatPricingInformation != ''">{{seatrow.seatPricingInformation}}</div>
@@ -13,7 +16,7 @@
       </div>
       <div *ngFor="let seatobj of seatrow.seats">
         <div class="seat-item seat-space" style="color:white ; background-color:white" *ngIf="seatobj.seatLabel == ''">  &nbsp; </div>
-        <div matTooltip="Seat : {{seatobj.seatLabel}} | Price : {{seatobj.price}}Rs" matTooltipPosition="above"
+        <div matTooltip="Seat : {{seatobj.seatLabel}} | Price : {{seatobj.price}} RON" matTooltipPosition="above"
              [ngClass]="{ 'seat-item' : true , 'seat-available' : seatobj.status == 'available' ,'seat-booked' : seatobj.status == 'booked' ,'seat-unavailable' : seatobj.status == 'unavailable' }"
              (click)="selectSeat(seatobj)" *ngIf="(seatobj.status == 'available' || seatobj.status == 'booked' )&& seatobj.seatLabel != ''">{{seatobj.seatNo}}</div>
 
@@ -30,7 +33,7 @@
     <div class="col-lg-4" >
       <div>
         <h5>Total Selected : {{ cart?.selectedSeats?.length }}</h5>
-        <h5>Total Amount :&nbsp;&nbsp; {{cart.totalamount}} Rs</h5>
+        <h5>Total Amount :&nbsp;&nbsp; {{cart.totalamount}} RON</h5>
       </div>
     </div>
     <div class="col-lg-8 selected-seats">

@@ -11,6 +11,7 @@ import {OrdersService} from "../../../services/orders.service";
 import {NewOrderDto} from "../../../dto/orders/new-order-dto";
 import {PaymentService} from "../../../services/payment.service";
 import {Router} from "@angular/router";
+import {SeatDetails} from "../../../dto/orders/seat-details";
 
 @Component({
   selector: 'app-place-order',
@@ -33,6 +34,9 @@ export class PlaceOrderComponent implements OnInit {
   name: string = '';
   location: string = '';
   standingCategories: StandingCategoryDto[] = [];
+  seatsCategories: string[] = [];
+  seatsPrices: number[] = [];
+  seatedTickets: any = [];
   ticketsPerCategory: number[] = [];
   total: number = 0;
   useDiscount: boolean = false;
@@ -61,6 +65,9 @@ export class PlaceOrderComponent implements OnInit {
       this.name = data.event.name;
       this.location = data.event.location.fullAddress;
       this.standingCategories = data.standingCategories;
+      this.seatsCategories = data.seatsCategories;
+      this.seatsPrices = data.seatsCategoriesPrices;
+      this.seatedTickets = data.seatedTickets;
       this.ticketsPerCategory = data.ticketsPerCategory;
       this.total = data.total;
       this.eventId = data.event.id;
@@ -68,21 +75,38 @@ export class PlaceOrderComponent implements OnInit {
   }
 
   placeOrder() {
-    const standingTicketsInfo: any = {};
-    for (let i = 0; i < this.ticketsPerCategory.length; i++) {
-      if (this.ticketsPerCategory[i] > 0) {
-        standingTicketsInfo[this.standingCategories[i].name] = this.ticketsPerCategory[i];
+    if (this.standingCategories.length > 0) {
+      const standingTicketsInfo: any = {};
+      for (let i = 0; i < this.ticketsPerCategory.length; i++) {
+        if (this.ticketsPerCategory[i] > 0) {
+          standingTicketsInfo[this.standingCategories[i].name] = this.ticketsPerCategory[i];
+        }
       }
-    }
 
-    let newOrderDto = new NewOrderDto(this.eventId, 0, standingTicketsInfo, []);
-    this.orderService.placeOrder(newOrderDto).subscribe(
-      res => {
-        this.paymentService.initiatePayment(res.id).subscribe(
-          data => window.location.href = data.sessionUrl
-        )
+      let newOrderDto = new NewOrderDto(this.eventId, 0, standingTicketsInfo, []);
+      this.orderService.placeOrder(newOrderDto).subscribe(
+        res => {
+          this.paymentService.initiatePayment(res.id).subscribe(
+            data => window.location.href = data.sessionUrl
+          )
+        }
+      );
+    } else {
+      let seatsDetails = [];
+      for (let i = 0; i < this.seatedTickets.length; i++) {
+        let t = this.seatedTickets[i];
+        seatsDetails.push(new SeatDetails(t.categoryId, t.row, t.seat));
       }
-    );
+
+      let newOrderDto = new NewOrderDto(this.eventId, 0, {}, seatsDetails);
+      this.orderService.placeOrder(newOrderDto).subscribe(
+        res => {
+          this.paymentService.initiatePayment(res.id).subscribe(
+            data => window.location.href = data.sessionUrl
+          )
+        }
+      );
+    }
   }
 
   protected readonly formatDate = formatDate;

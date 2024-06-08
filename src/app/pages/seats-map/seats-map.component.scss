@@ -1,9 +1,9 @@
 $seat-available-bg: white;
-$seat-available-color: #a0a0a0;
-$seat-booked-bg: #a0a0a0;
+$seat-available-color: #1c70ec;
+$seat-booked-bg: #ff7100;
 $seat-booked-color: white;
-$seat-unavailable-bg: black;
-$seat-unavailable-color: white;
+$seat-unavailable-bg: white;
+$seat-unavailable-color: #a0a0a0;
 
 .badge-primary
 {
@@ -11,6 +11,7 @@ $seat-unavailable-color: white;
   background-color: $seat-available-color;
   padding: 5px;
   margin: 0px 5px 5px 0px;
+  border-radius: 10px;
 }
 .seatrow
 {
@@ -77,7 +78,7 @@ $seat-unavailable-color: white;
 .seat-container
 {
   overflow-x: auto;
-  padding: 5% 36%;
+  //padding: 5% 36%;
   overflow-y: hidden;
 }
 

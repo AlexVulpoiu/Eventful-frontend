@@ -19,9 +19,9 @@ export class SeatsMapComponent {
   protected seatmap: any[] = [];
 
   protected seatChartConfig = {
-    showRowsLabel : false,
+    showRowsLabel : true,
     showRowWisePricing : false,
-    newSeatNoForRow : false
+    newSeatNoForRow : true
   }
 
   protected cart = {
@@ -43,37 +43,29 @@ export class SeatsMapComponent {
         "seat_price": 250,
         "seat_map": [
           {
-            "seat_label": "1",
-            "layout": "g_____"
+            "seat_label": "Row 1",
+            "layout": "_gggggggggggggggggggggggg"
           },
           {
-            "seat_label": "2",
-            "layout": "gg__gg"
+            "seat_label": "Row 2",
+            "layout": "_gggggggggggggggggggggggg"
           },
           {
-            "seat_label": "3",
-            "layout": "gg__gg"
+            "seat_label": "Row 3",
+            "layout": "_gggggggggggggggggggggggg"
           },
           {
-            "seat_label": "4",
-            "layout": "gg__gg"
+            "seat_label": "Row 4",
+            "layout": "_gggggggggggggggggggggggg"
           },
           {
-            "seat_label": "5",
-            "layout": "gg__gg"
+            "seat_label": "Row 5",
+            "layout": "_gggggggggggggggggggggggg"
           },
           {
-            "seat_label": "6",
-            "layout": "gg__gg"
+            "seat_label": "Row 6",
+            "layout": "_gggggggggggggggggggggggg"
           },
-          {
-            "seat_label": "7",
-            "layout": "gg__gg"
-          },
-          {
-            "seat_label": "8",
-            "layout": "gggggg"
-          }
         ]
       }
     ]
@@ -100,7 +92,7 @@ export class SeatsMapComponent {
         {
           row_label += item_map[ item_map.length - 2].seat_label;
         }
-        row_label += " : Rs. " + map_data[__counter].seat_price;
+        row_label += " : RON. " + map_data[__counter].seat_price;
 
         item_map.forEach((map_element: { seat_label: string; layout: string; }) => {
           var mapObj = {
@@ -127,9 +119,10 @@ export class SeatsMapComponent {
             if( item != '_')
             {
               seatObj["seatLabel"] = map_element.seat_label+" "+seatNoCounter;
-              if(seatNoCounter < 10)
-              { seatObj["seatNo"] = "0"+seatNoCounter; }
-              else { seatObj["seatNo"] = ""+seatNoCounter; }
+              seatObj["seatNo"] = seatNoCounter;
+              // if(seatNoCounter < 10)
+              // { seatObj["seatNo"] = "0"+seatNoCounter; }
+              // else { seatObj["seatNo"] = ""+seatNoCounter; }
 
               seatNoCounter++;
             }
@@ -145,51 +138,6 @@ export class SeatsMapComponent {
 
         });
       }
-
-
-      // for (let __counter = 0; __counter < map_data.length; __counter++) {
-      //   var row_label = "";
-      //   var rowLblArr = map_data[__counter]["seat_labels"];
-      //   var seatMapArr = map_data[__counter]["seat_map"];
-      //   for (let rowIndex = 0; rowIndex < rowLblArr.length; rowIndex++) {
-      //     var rowItem = rowLblArr[rowIndex];
-      //     var mapObj = {
-      //       "seatRowLabel" : rowItem,
-      //       "seats" : []
-      //     };
-      //     var seatValArr = seatMapArr[rowIndex].split('');
-      //     var seatNoCounter = 1;
-      //     var totalItemCounter = 1;
-      //     seatValArr.forEach(item => {
-      //       var seatObj = {
-      //         "key" : rowItem+"_"+totalItemCounter,
-      //         "price" : map_data[__counter]["seat_price"],
-      //         "status" : "available"
-      //       };
-
-      //       if( item != '_')
-      //       {
-      //         seatObj["seatLabel"] = rowItem+" "+seatNoCounter;
-      //         if(seatNoCounter < 10)
-      //         { seatObj["seatNo"] = "0"+seatNoCounter; }
-      //         else { seatObj["seatNo"] = ""+seatNoCounter; }
-
-      //         seatNoCounter++;
-      //       }
-      //       else
-      //       {
-      //         seatObj["seatLabel"] = "";
-      //       }
-      //       totalItemCounter++;
-      //       mapObj["seats"].push(seatObj);
-      //     });
-      //     console.log(" \n\n\n Seat Objects " , mapObj);
-      //     this.seatmap.push( mapObj );
-      //     console.log(" \n\n\n Seat Map " , this.seatmap);
-
-      //   }
-
-      // }
     }
   }
 
@@ -217,8 +165,7 @@ export class SeatsMapComponent {
     }
   }
 
-  public blockSeats(seatsToBlock : string)
-  {
+  public blockSeats(seatsToBlock : string) {
     if(seatsToBlock != "")
     {
       var seatsToBlockArr = seatsToBlock.split(',');
