@@ -1,7 +1,7 @@
 :host {
   display: block;
   padding: 1px;
-  height: 100vh;
+  height: 50vh;
 
   /* Warning: This style is global, hence the high specificity of the query. */
   .scanner-container > zxing-scanner.scanner::ng-deep video {
@@ -49,8 +49,13 @@
   display: block;
 }
 
+.success-button {
+  background-color: #10e05c;
+  color: white;
+}
+
 .scan-result {
-  font-size: 2em;
+  //font-size: 2em;
   font-weight: 300;
   text-align: center;
 }

@@ -1,6 +1,6 @@
-<h1 class="page-title">QR Code Scanner Example</h1>
+<h1 style="text-align: center">Tickets scanner</h1>
 
-<div class="scanner-container">
+<div class="col-md-6 scanner-container">
   <zxing-scanner
     #scanner
     *ngIf="startCamera$ | async"
@@ -15,11 +15,22 @@
   ></zxing-scanner>
 </div>
 
-<p *ngIf="scanSuccess$ | async" class="scan-result">
-  Scan Result: {{ scanSuccess$ | async }}
-</p>
+<div *ngIf="ticketInfo != undefined" class="row">
+  <div class="col-md-3"></div>
+  <div class="col-md-6 scan-result">
+    <p>Event: {{ eventName }}</p>
+    <p>Date: {{ formatDate(startDate, 'dd.MM.yyyy, HH:mm', this.locale) }}</p>
+    <p>Location: {{ ticketInfo?.locationAddress }}</p>
+    <p>Category: {{ ticketInfo?.category }}</p>
+    <p *ngIf="ticketInfo?.row != 0">Row: {{ ticketInfo?.row }}</p>
+    <p *ngIf="ticketInfo?.seat != 0">Seat: {{ ticketInfo?.seat }}</p>
+    <button *ngIf="showButton" mat-flat-button class="success-button" (click)="validateTicket()">Validate ticket</button>
+    <button *ngIf="showNextScanButton" mat-flat-button color="primary" (click)="newScan()">Scan another ticket</button>
+  </div>
+  <div class="col-md-3"></div>
+</div>
 
-<div class="toggle-camera-btn-container">
+<div *ngIf="!showNextScanButton" class="toggle-camera-btn-container">
   <button
     class="toggle-camera-btn"
     mat-flat-button

@@ -2,6 +2,7 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Injectable} from "@angular/core";
 import {EventPreviewDto} from "../dto/events/event-preview-dto";
 import {EventDto} from "../dto/events/event-dto";
+import {TicketDto} from "../dto/tickets/ticket-dto";
 
 const EVENTS_API = 'http://localhost:8080/api/events';
 
@@ -25,5 +26,13 @@ export class EventsService {
 
   getEvent(id: number) {
     return this.http.get<EventDto>(EVENTS_API + '/' + id, httpOptions);
+  }
+
+  getTicketInfo(eventId: number, ticketId: string) {
+    return this.http.get<TicketDto>(EVENTS_API + '/ticketInfo/' + eventId + '?ticketId=' + ticketId, httpOptions);
+  }
+
+  validateTicket(eventId: number, ticketId: string) {
+    return this.http.post(EVENTS_API + '/validateTicket/' + eventId + '?ticketId=' + ticketId, httpOptions);
   }
 }
