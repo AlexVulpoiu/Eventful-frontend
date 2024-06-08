@@ -1,6 +1,6 @@
 import {BaseSignupRequest} from "./base-signup-request";
-import {AddAddress} from "../add-address";
-import {AddBankAccount} from "../add-bank-account";
+import {AddAddress} from "../organisers/add-address";
+import {AddBankAccount} from "../organisers/add-bank-account";
 
 export abstract class OrganiserSignupRequest extends BaseSignupRequest {
   address: AddAddress;

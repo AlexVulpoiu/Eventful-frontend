@@ -11,6 +11,7 @@ import {AddStandingLocationComponent} from "./pages/locations/add-standing-locat
 import {LocationsManagementComponent} from "./pages/locations/locations-management/locations-management.component";
 import {AddSeatedLocationComponent} from "./pages/locations/add-seated-location/add-seated-location.component";
 import {EventComponent} from "./pages/events/event/event.component";
+import {PlaceOrderComponent} from "./pages/orders/place-order/place-order.component";
 
 const routes: Routes = [
   {
@@ -74,6 +75,10 @@ const routes: Routes = [
       {
         path: 'events/:eventId',
         component: EventComponent
+      },
+      {
+        path: 'orders/new',
+        component: PlaceOrderComponent
       }
     ],
   },

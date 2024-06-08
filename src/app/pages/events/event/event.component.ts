@@ -1,6 +1,6 @@
 import {Component, Inject, LOCALE_ID, OnInit} from '@angular/core';
 import {EventDto} from "../../../dto/events/event-dto";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {EventsService} from "../../../services/events.service";
 import {formatDate, NgFor, NgIf, NgStyle} from "@angular/common";
 import {DomSanitizer, SafeResourceUrl} from "@angular/platform-browser";
@@ -18,6 +18,8 @@ import {
 } from "@angular/material/table";
 import {MatPaginator} from "@angular/material/paginator";
 import {StandingCategoryDto} from "../../../dto/events/standing-category-dto";
+import {EventOrderService} from "../../../services/event-order.service";
+import {OrderDetails} from "../../../dto/orders/order-details-dto";
 
 @Component({
   selector: 'app-event',
@@ -54,7 +56,13 @@ export class EventComponent implements OnInit {
   ticketsPerCategory: number[] = [];
 
   constructor(private route: ActivatedRoute, private eventService: EventsService, private domSanitizer: DomSanitizer,
-              @Inject(LOCALE_ID) public locale: string) {
+              @Inject(LOCALE_ID) public locale: string, protected router: Router, private eventOrderService: EventOrderService) {
+  }
+
+  sendDataToOrderPage() {
+    const data: OrderDetails = new OrderDetails(this.eventDto, this.standingCategories, this.ticketsPerCategory, this.getTotalAmount());
+    this.eventOrderService.setMessage(data);
+    this.router.navigate(['/orders/new']);
   }
 
   ngOnInit() {
