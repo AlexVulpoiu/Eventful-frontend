@@ -64,7 +64,7 @@ export class EventComponent implements OnInit {
   location: any;
   unavailableSeats: any = [];
 
-  private seatConfig: any = null;
+  private seatConfig: any = [];
   protected seatmap: any[] = [];
 
   protected seatChartConfig = {

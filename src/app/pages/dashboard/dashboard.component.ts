@@ -134,6 +134,7 @@ export class AppDashboardComponent {
   @ViewChild('chart') chart: ChartComponent = Object.create(null);
 
   public salesOverviewChart!: Partial<salesOverviewChart> | any;
+  public eventsOverviewChart!: Partial<salesOverviewChart> | any;
   public yearlyChart!: Partial<yearlyChart> | any;
   public monthlyChart!: Partial<monthlyChart> | any;
 
@@ -226,14 +227,94 @@ export class AppDashboardComponent {
     this.salesOverviewChart = {
       series: [
         {
-          name: 'Eanings this month',
-          data: [355, 390, 300, 350, 390, 180, 355, 390],
-          color: '#5D87FF',
+          name: 'Earnings this month',
+          data: [0, 870, 1460, 950, 200, 300],
+          color: '#10e05c',
         },
+        // {
+        //   name: 'Events organised',
+        //   data: [1, 2, 4, 3, 3, 2],
+        //   color: '#49BEFF',
+        // },
+      ],
+
+      grid: {
+        borderColor: 'rgba(0,0,0,0.1)',
+        strokeDashArray: 3,
+        xaxis: {
+          lines: {
+            show: false,
+          },
+        },
+      },
+      plotOptions: {
+        bar: { horizontal: false, columnWidth: '35%', borderRadius: [4] },
+      },
+      chart: {
+        type: 'bar',
+        height: 390,
+        offsetX: -15,
+        toolbar: { show: true },
+        foreColor: '#adb0bb',
+        fontFamily: 'inherit',
+        sparkline: { enabled: false },
+      },
+      dataLabels: { enabled: false },
+      markers: { size: 0 },
+      legend: { show: false },
+      xaxis: {
+        type: 'category',
+        categories: [
+          'January',
+          'February',
+          'March',
+          'April',
+          'May',
+          'June'
+        ],
+        labels: {
+          style: { cssClass: 'grey--text lighten-2--text fill-color' },
+        },
+      },
+      yaxis: {
+        show: true,
+        min: 0,
+        max: 2000,
+        tickAmount: 4,
+        labels: {
+          style: {
+            cssClass: 'grey--text lighten-2--text fill-color',
+          },
+        },
+      },
+      stroke: {
+        show: true,
+        width: 3,
+        lineCap: 'butt',
+        colors: ['transparent'],
+      },
+      tooltip: { theme: 'light' },
+
+      responsive: [
         {
-          name: 'Expense this month',
-          data: [280, 250, 325, 215, 250, 310, 280, 250],
-          color: '#49BEFF',
+          breakpoint: 600,
+          options: {
+            plotOptions: {
+              bar: {
+                borderRadius: 3,
+              },
+            },
+          },
+        },
+      ],
+    };
+
+    this.eventsOverviewChart = {
+      series: [
+        {
+          name: 'Organised events',
+          data: [0, 2, 4, 3, 1, 2],
+          color: '#5D87FF',
         },
       ],
 
@@ -264,14 +345,12 @@ export class AppDashboardComponent {
       xaxis: {
         type: 'category',
         categories: [
-          '16/08',
-          '17/08',
-          '18/08',
-          '19/08',
-          '20/08',
-          '21/08',
-          '22/08',
-          '23/08',
+          'January',
+          'February',
+          'March',
+          'April',
+          'May',
+          'June'
         ],
         labels: {
           style: { cssClass: 'grey--text lighten-2--text fill-color' },
@@ -280,8 +359,8 @@ export class AppDashboardComponent {
       yaxis: {
         show: true,
         min: 0,
-        max: 400,
-        tickAmount: 4,
+        max: 5,
+        tickAmount: 5,
         labels: {
           style: {
             cssClass: 'grey--text lighten-2--text fill-color',
@@ -312,7 +391,7 @@ export class AppDashboardComponent {
 
     // yearly breakup chart
     this.yearlyChart = {
-      series: [38, 40, 25],
+      series: [100, 0],
 
       chart: {
         type: 'donut',
@@ -323,7 +402,7 @@ export class AppDashboardComponent {
         },
         height: 130,
       },
-      colors: ['#5D87FF', '#ECF2FF', '#F9F9FD'],
+      colors: ['#5D87FF', '#14cc65'],
       plotOptions: {
         pie: {
           startAngle: 0,
@@ -354,7 +433,17 @@ export class AppDashboardComponent {
         },
       ],
       tooltip: {
-        enabled: false,
+        enabled: true,
+        y: {
+          formatter: function (value: number) {
+            return value + '%'
+          },
+          title: {
+            formatter: function (seriesName: any) {
+              return ''
+            }
+          }
+        },
       },
     };
 

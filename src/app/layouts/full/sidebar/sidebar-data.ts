@@ -40,6 +40,11 @@ export const navItems: NavItem[] = [
     route: '/locations'
   },
   {
+    displayName: 'Add event',
+    iconName: 'table-plus',
+    route: '/events/add'
+  },
+  {
     navCap: 'Ui Components',
   },
   {

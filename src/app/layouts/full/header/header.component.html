@@ -37,7 +37,7 @@
     />
   </button>
   <mat-menu #profilemenu="matMenu" class="topbar-dd cardWithShadow">
-    <button mat-menu-item>
+    <button mat-menu-item (click)="goToProfilePage()">
       <mat-icon class="d-flex align-items-center"
         ><i-tabler name="user" class="icon-18 d-flex"></i-tabler></mat-icon
       >My Profile

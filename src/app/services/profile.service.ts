@@ -1,0 +1,21 @@
+import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {Injectable} from "@angular/core";
+import {ProfileDto} from "../dto/profile/profile-dto";
+
+const PROFILE_API = 'http://localhost:8080/api/profile';
+
+const httpOptions = {
+  headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+};
+
+@Injectable({ providedIn: 'root' })
+export class ProfileService {
+
+  constructor(private http: HttpClient) {
+
+  }
+
+  getProfileDetails() {
+    return this.http.get<ProfileDto>(PROFILE_API, httpOptions);
+  }
+}

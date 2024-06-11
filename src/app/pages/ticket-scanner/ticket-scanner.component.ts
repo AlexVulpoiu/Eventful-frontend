@@ -53,6 +53,8 @@ export class TicketScannerComponent {
     startWith(true)
   );
 
+  startCamera = this.startCamera$.subscribe(() => this.ticketInfo = undefined);
+
   scanSuccess$ = new BehaviorSubject<string>('');
 
   scanError(error: Error) {
@@ -83,6 +85,7 @@ export class TicketScannerComponent {
       },
       error => {
         console.log(error);
+        window.alert("This ticket was already validated!");
       }
     )
   }

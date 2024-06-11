@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import {AuthService} from "../../../services/auth.service";
+import {Router} from "@angular/router";
 
 
 @Component({
@@ -23,7 +24,11 @@ export class HeaderComponent {
 
   showFiller = false;
 
-  constructor(public dialog: MatDialog, private authService: AuthService) {}
+  constructor(public dialog: MatDialog, private authService: AuthService, private router: Router) {}
+
+  goToProfilePage() {
+    this.router.navigate(['/profile']);
+  }
 
   logout() {
     this.authService.logout();

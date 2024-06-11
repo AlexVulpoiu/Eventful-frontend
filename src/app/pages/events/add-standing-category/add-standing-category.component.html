@@ -1,0 +1,28 @@
+<div class="row">
+  <div class="col-sm-4">
+    <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">
+      Name
+    </mat-label>
+    <mat-form-field appearance="outline" class="w-100" color="primary">
+      <input matInput id="name" name="name" [formControl]="$any(formGroup).get('name')" />
+    </mat-form-field>
+  </div>
+
+  <div class="col-sm-4">
+    <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">
+      Capacity
+    </mat-label>
+    <mat-form-field appearance="outline" class="w-100" color="primary">
+      <input matInput type="number" id="capacity" name="capacity" [formControl]="$any(formGroup).get('capacity')" />
+    </mat-form-field>
+  </div>
+
+  <div class="col-sm-4">
+    <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">
+      Price
+    </mat-label>
+    <mat-form-field appearance="outline" class="w-100" color="primary">
+      <input matInput type="number" id="price" name="price" [formControl]="$any(formGroup).get('price')" />
+    </mat-form-field>
+  </div>
+</div>

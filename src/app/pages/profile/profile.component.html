@@ -1,0 +1,120 @@
+<h1>My profile</h1>
+
+<hr/>
+<br>
+
+<div class="w-100">
+  <h2>Name: {{ profileDetails?.name }} </h2>
+  <h2>Email: {{ profileDetails?.email}} </h2>
+  <h2>Phone: {{ profileDetails?.phone != undefined ? profileDetails?.phone : 'N/A' }}</h2>
+  <h2>Total XP points: {{ profileDetails?.xp }}</h2>
+  <h2>Available points: {{ profileDetails?.availablePoints }}</h2>
+
+  <br/>
+
+  <div class="col-12">
+    <mat-card class="cardWithShadow">
+      <mat-card-content class="p-24">
+        <mat-card-title>My orders</mat-card-title>
+        <div class="table-responsive m-t-16">
+          <table mat-table [dataSource]="orders" class="w-100">
+            <!-- Position Column -->
+            <ng-container matColumnDef="orderId">
+              <th
+                mat-header-cell
+                *matHeaderCellDef
+                class="f-w-600 mat-subtitle-1 f-s-14"
+              >
+                Order ID
+              </th>
+              <td mat-cell *matCellDef="let element">
+                <div class="d-flex align-items-center">
+                  <div class="m-l-16">
+                    <h6 class="mat-subtitle-1 f-s-14 f-w-600">
+                      {{ element.id }}
+                    </h6>
+                  </div>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Name Column -->
+            <ng-container matColumnDef="status">
+              <th
+                mat-header-cell
+                *matHeaderCellDef
+                class="f-w-600 mat-subtitle-1 f-s-14"
+              >
+                Status
+              </th>
+              <td mat-cell *matCellDef="let element" class="mat-body-1">
+                {{ element.status }}
+              </td>
+            </ng-container>
+
+            <!-- Weight Column -->
+            <ng-container matColumnDef="orderDate">
+              <th
+                mat-header-cell
+                *matHeaderCellDef
+                class="f-w-600 mat-subtitle-1 f-s-14"
+              >
+                Date
+              </th>
+              <td mat-cell *matCellDef="let element" class="mat-body-1">
+                {{ formatDate(element.orderDate, 'dd.MM.yyyy, HH:mm', this.locale) }}
+              </td>
+            </ng-container>
+
+            <!-- Name Column -->
+            <ng-container matColumnDef="eventName">
+              <th
+                mat-header-cell
+                *matHeaderCellDef
+                class="f-w-600 mat-subtitle-1 f-s-14"
+              >
+                Status
+              </th>
+              <td mat-cell *matCellDef="let element" class="mat-body-1">
+                {{ element.eventName }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="total">
+              <th
+                mat-header-cell
+                *matHeaderCellDef
+                class="f-w-600 mat-subtitle-1 f-s-14"
+              >
+                Total
+              </th>
+              <td mat-cell *matCellDef="let element" class="mat-body-1">
+                {{ element.total }} RON
+              </td>
+            </ng-container>
+
+            <!-- Symbol Column -->
+            <ng-container matColumnDef="tickets">
+              <th
+                mat-header-cell
+                *matHeaderCellDef
+                style="text-align: center"
+                class="f-w-600 mat-subtitle-1 f-s-14"
+              >
+                Tickets
+              </th>
+              <td mat-cell *matCellDef="let element" class="mat-body-1">
+                <ul *ngFor="let item of element.tickets" class="no-bullets">
+                  <li><a href="{{item.url}}">{{item.name}}.pdf</a></li>
+                </ul>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+          </table>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

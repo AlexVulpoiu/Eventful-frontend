@@ -12,6 +12,8 @@ import {LocationsManagementComponent} from "./pages/locations/locations-manageme
 import {AddSeatedLocationComponent} from "./pages/locations/add-seated-location/add-seated-location.component";
 import {EventComponent} from "./pages/events/event/event.component";
 import {PlaceOrderComponent} from "./pages/orders/place-order/place-order.component";
+import {ProfileComponent} from "./pages/profile/profile.component";
+import {AddEventComponent} from "./pages/events/add-event/add-event.component";
 
 const routes: Routes = [
   {
@@ -73,12 +75,20 @@ const routes: Routes = [
         component: AddSeatedLocationComponent
       },
       {
+        path: 'events/add',
+        component: AddEventComponent
+      },
+      {
         path: 'events/:eventId',
         component: EventComponent
       },
       {
         path: 'orders/new',
         component: PlaceOrderComponent
+      },
+      {
+        path: 'profile',
+        component: ProfileComponent
       }
     ],
   },
