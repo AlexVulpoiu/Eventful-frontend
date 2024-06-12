@@ -3,24 +3,27 @@ import {AuthService} from "../../../services/auth.service";
 import {TokenStorageService} from "../../../services/token-storage.service";
 import {Router} from "@angular/router";
 import {LoginRequest} from "../../../dto/auth/login-request";
+import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
 })
 export class LoginComponent implements OnInit {
-  form: any = {
-    email: null,
-    password: null
-  };
+  signInForm: FormGroup = new FormGroup({});
   isLoggedIn = false;
   isLoginFailed = false;
   errorMessage = '';
   roles: string[] = [];
 
-  constructor(private authService: AuthService, private tokenStorage: TokenStorageService, private router: Router) { }
+  constructor(private authService: AuthService, private tokenStorage: TokenStorageService, private router: Router,
+              private fb: FormBuilder) { }
 
   ngOnInit(): void {
+    this.signInForm = this.fb.group({
+      email: new FormControl('', [Validators.required, Validators.email]),
+      password: new FormControl('', [Validators.required]),
+    })
     if (this.tokenStorage.getToken()) {
       this.isLoggedIn = true;
       this.roles = this.tokenStorage.getUser().roles;
@@ -29,22 +32,23 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit(): void {
-    const { email, password } = this.form;
 
-    this.authService.login(new LoginRequest(email, password)).subscribe({
-      next: data => {
-        this.tokenStorage.saveToken(data.token);
-        this.tokenStorage.saveUser(data);
+    if (this.signInForm.valid) {
+      this.authService.login(new LoginRequest(this.signInForm.value.email, this.signInForm.value.password)).subscribe({
+        next: data => {
+          this.tokenStorage.saveToken(data.token);
+          this.tokenStorage.saveUser(data);
 
-        this.isLoginFailed = false;
-        this.isLoggedIn = true;
-        this.roles = this.tokenStorage.getUser().roles;
-        this.router.navigate(['/events']);
-      },
-      error: err => {
-        this.errorMessage = err.error.message;
-        this.isLoginFailed = true;
-      }
-    });
+          this.isLoginFailed = false;
+          this.isLoggedIn = true;
+          this.roles = this.tokenStorage.getUser().roles;
+          this.router.navigate(['/events']);
+        },
+        error: err => {
+          this.errorMessage = err.error.message;
+          this.isLoginFailed = true;
+        }
+      });
+    }
   }
 }
