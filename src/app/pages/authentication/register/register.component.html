@@ -6,7 +6,7 @@
       <mat-card class="cardWithShadow boxed-auth">
         <mat-card-content class="p-32">
           <div class="text-center">
-            <a [routerLink]="['/dashboard']">
+            <a [routerLink]="['/events']">
               <img
                 src="./assets/images/logos/text_logo.png"
                 height="50em"
@@ -16,41 +16,78 @@
             </a>
           </div>
 
-          <form class="m-t-30">
-            <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block"
-              >Name</mat-label
-            >
+          <form [formGroup]="signUpForm" class="m-t-30" (ngSubmit)="onSubmit()">
+            <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">
+              Email address
+            </mat-label>
             <mat-form-field appearance="outline" class="w-100" color="primary">
-              <input matInput />
+              <input matInput type="email" formControlName="email" />
+              <mat-error *ngIf="signUpForm.get('email')?.hasError('required')">
+                Email is required
+              </mat-error>
+              <mat-error *ngIf="signUpForm.get('email')?.hasError('email')">
+                Please enter a valid email address
+              </mat-error>
             </mat-form-field>
-            <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block"
-              >Email Adddress</mat-label
-            >
+
+            <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">
+              First name
+            </mat-label>
             <mat-form-field appearance="outline" class="w-100" color="primary">
-              <input matInput type="email" />
+              <input matInput formControlName="firstName" />
+              <mat-error *ngIf="signUpForm.get('firstName')?.hasError('required')">
+                First name is required
+              </mat-error>
+              <mat-error *ngIf="signUpForm.get('firstName')?.hasError('pattern')">
+                First name can only contain letters, spaces, or dashes
+              </mat-error>
             </mat-form-field>
+
+            <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">
+              Last name
+            </mat-label>
+            <mat-form-field appearance="outline" class="w-100" color="primary">
+              <input matInput formControlName="lastName" />
+              <mat-error *ngIf="signUpForm.get('lastName')?.hasError('required')">
+                Last name is required
+              </mat-error>
+              <mat-error *ngIf="signUpForm.get('lastName')?.hasError('pattern')">
+                Last name can only contain letters, spaces, or dashes
+              </mat-error>
+            </mat-form-field>
+
             <!-- password -->
-            <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block"
-              >Password</mat-label
-            >
+            <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">
+              Password
+            </mat-label>
             <mat-form-field appearance="outline" class="w-100" color="primary">
-              <input matInput type="password" />
+              <input matInput type="password" formControlName="password" />
+              <mat-error *ngIf="signUpForm.get('password')?.hasError('required')">
+                Password is required
+              </mat-error>
+              <mat-error *ngIf="signUpForm.get('password')?.hasError('minlength')">
+                Password must be at least 8 characters long
+              </mat-error>
+              <mat-error *ngIf="signUpForm.get('password')?.hasError('pattern')">
+                Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character
+              </mat-error>
             </mat-form-field>
 
-            <a [routerLink]="['/']" mat-flat-button color="primary" class="w-100">
-              Sign Up
-            </a>
-            <!-- input -->
+            <div class="form-group">
+              <br/>
+              <br/>
+              <button mat-flat-button color="primary" class="w-100" [disabled]="signUpForm.invalid">
+                Sign Up
+              </button>
+            </div>
           </form>
-          <span class="d-block f-w-500 text-center m-t-24"
-            >Already have an Account?
 
-            <a
-              [routerLink]="['/authentication/login']"
-              class="text-decoration-none text-primary f-w-500 f-s-14"
-            >
-              Sign In</a
-            >
+          <span class="d-block f-w-500 text-center m-t-24">
+            Already have an Account?
+
+            <a [routerLink]="['/authentication/login']" class="text-decoration-none text-primary f-w-500 f-s-14">
+              Sign In
+            </a>
           </span>
         </mat-card-content>
       </mat-card>
