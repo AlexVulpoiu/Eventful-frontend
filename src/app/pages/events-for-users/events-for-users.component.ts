@@ -18,7 +18,7 @@ import {NgApexchartsModule} from "ng-apexcharts";
 import {formatDate, NgForOf, TitleCasePipe} from "@angular/common";
 import {Router, RouterLink} from "@angular/router";
 import {TablerIconsModule} from "angular-tabler-icons";
-import {EventsService} from "../../services/events.service";
+import {EventService} from "../../services/event.service";
 import {EventPreviewDto} from "../../dto/events/event-preview-dto";
 import {FormsModule} from "@angular/forms";
 import {MatIcon} from "@angular/material/icon";
@@ -63,7 +63,7 @@ import {MatInput} from "@angular/material/input";
   styleUrl: './events-for-users.component.scss'
 })
 export class EventsForUsersComponent implements OnInit {
-  constructor(private eventService: EventsService,
+  constructor(private eventService: EventService,
               protected router: Router,
               @Inject(LOCALE_ID) public locale: string) {
 

@@ -4,7 +4,7 @@ import {ZXingScannerComponent, ZXingScannerModule} from "@zxing/ngx-scanner";
 import {BarcodeFormat} from "@zxing/library";
 import {AsyncPipe, CommonModule, formatDate, NgIf} from "@angular/common";
 import {MatButton} from "@angular/material/button";
-import {EventsService} from "../../services/events.service";
+import {EventService} from "../../services/event.service";
 import {TicketDto} from "../../dto/tickets/ticket-dto";
 
 @Component({
@@ -29,7 +29,7 @@ export class TicketScannerComponent {
   showButton: boolean = false;
   showNextScanButton: boolean = false;
 
-  constructor(private eventService: EventsService,
+  constructor(private eventService: EventService,
               @Inject(LOCALE_ID) public locale: string) {
 
   }

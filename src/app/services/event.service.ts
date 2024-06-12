@@ -4,6 +4,9 @@ import {EventPreviewDto} from "../dto/events/event-preview-dto";
 import {EventDto} from "../dto/events/event-dto";
 import {TicketDto} from "../dto/tickets/ticket-dto";
 import {AddEventDto} from "../dto/events/add-event-dto";
+import {AddPromotionDto} from "../dto/events/add-promotion-dto";
+import {RaffleDto} from "../dto/events/raffle-dto";
+import {ChangeEventStatusDto} from "../dto/events/change-event-status-dto";
 
 const EVENTS_API = 'http://localhost:8080/api/events';
 
@@ -12,7 +15,7 @@ const httpOptions = {
 };
 
 @Injectable({ providedIn: 'root' })
-export class EventsService {
+export class EventService {
   constructor(private http: HttpClient) {
 
   }
@@ -43,5 +46,17 @@ export class EventsService {
 
   updateLogo(eventId: number, formData: FormData) {
     return this.http.patch(EVENTS_API + '/' + eventId, formData);
+  }
+
+  addPromotion(eventId: number, promotionDto: AddPromotionDto) {
+    return this.http.post<EventDto>(EVENTS_API + '/' + eventId + '/promotion', promotionDto, httpOptions);
+  }
+
+  addRaffle(eventId: number, raffleDto: RaffleDto) {
+    return this.http.post<RaffleDto>(EVENTS_API + '/' + eventId + '/raffle', raffleDto, httpOptions);
+  }
+
+  updateEventStatus(eventId: number, changeEventStatus: ChangeEventStatusDto) {
+    return this.http.patch<string>(EVENTS_API + '/status/' + eventId, changeEventStatus, httpOptions);
   }
 }

@@ -1,3 +1,9 @@
+<button mat-flat-button color="accent" (click)="openPromotionDialog()">Add promotional period</button>
+<button mat-flat-button color="accent" (click)="openRaffleDialog()">Add raffle</button>
+<button mat-button (click)="openApprovalDialog()">Approve</button>
+<button mat-button (click)="openRejectionDialog()">Reject</button>
+
+
 <div class="container">
   <div class="background-image" [ngStyle]="{'background-image': 'url(' + eventDto?.logo + ')'}"></div>
   <img [src]="eventDto?.logo" alt="Your Image">

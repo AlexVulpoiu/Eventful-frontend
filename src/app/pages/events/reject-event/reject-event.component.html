@@ -1,0 +1,17 @@
+<h2 mat-dialog-title>Event Rejection</h2>
+<form [formGroup]="rejectionForm" (ngSubmit)="onReject()">
+  <mat-dialog-content>
+    <p>Please provide the reason for rejection. The organiser has 7 days to update the details until the event will be deleted.</p>
+    <mat-form-field appearance="fill">
+      <mat-label>Rejection Reason</mat-label>
+      <textarea matInput formControlName="reason" required></textarea>
+      <mat-error *ngIf="rejectionForm.get('reason')?.hasError('required')">
+        Rejection reason is required
+      </mat-error>
+    </mat-form-field>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button mat-button type="submit" [disabled]="rejectionForm.invalid">Reject</button>
+  </mat-dialog-actions>
+</form>

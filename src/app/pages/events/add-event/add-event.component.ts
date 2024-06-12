@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {EventsService} from "../../../services/events.service";
+import {EventService} from "../../../services/event.service";
 import {Router} from "@angular/router";
 import {
   FormArray,
@@ -111,7 +111,7 @@ export class AddEventComponent implements OnInit {
     standingCategories: new FormArray([]),
   });
 
-  constructor(private eventsService: EventsService, private locationService: LocationsService, private router: Router,
+  constructor(private eventsService: EventService, private locationService: LocationsService, private router: Router,
               private formBuilder: FormBuilder) {
 
   }

@@ -1,7 +1,7 @@
 import {Component, Inject, LOCALE_ID, OnInit} from '@angular/core';
 import {EventDto} from "../../../dto/events/event-dto";
 import {ActivatedRoute, Router} from "@angular/router";
-import {EventsService} from "../../../services/events.service";
+import {EventService} from "../../../services/event.service";
 import {formatDate, NgClass, NgFor, NgIf, NgStyle} from "@angular/common";
 import {DomSanitizer, SafeResourceUrl} from "@angular/platform-browser";
 import {environment} from "../../../../environments/environment";
@@ -23,7 +23,15 @@ import {OrderDetails} from "../../../dto/orders/order-details-dto";
 import {SeatsCategoryDetails} from "../../../dto/locations/seats-category-details";
 import {MatTooltip} from "@angular/material/tooltip";
 import {SeatedTicketDto} from "../../../dto/orders/seated-ticket-dto";
-import {Seat} from "../../../dto/events/seat";
+import {MatDialog} from "@angular/material/dialog";
+import {AddPromotionComponent} from "../add-promotion/add-promotion.component";
+import {EventPromotionService} from "../../../services/event-promotion.service";
+import {EventRaffleService} from "../../../services/event-raffle.service";
+import {AddRaffleComponent} from "../add-raffle/add-raffle.component";
+import {ApproveEventComponent} from "../approve-event/approve-event.component";
+import {EventApproveService} from "../../../services/event-approve.service";
+import {EventRejectService} from "../../../services/event-reject.service";
+import {RejectEventComponent} from "../reject-event/reject-event.component";
 
 @Component({
   selector: 'app-event',
@@ -81,8 +89,85 @@ export class EventComponent implements OnInit {
     eventId: 0
   };
 
-  constructor(private route: ActivatedRoute, private eventService: EventsService, private domSanitizer: DomSanitizer,
-              @Inject(LOCALE_ID) public locale: string, protected router: Router, private eventOrderService: EventOrderService) {
+  constructor(private route: ActivatedRoute, private eventService: EventService, private domSanitizer: DomSanitizer,
+              @Inject(LOCALE_ID) public locale: string, protected router: Router,
+              private eventOrderService: EventOrderService, private eventPromotionService: EventPromotionService,
+              private eventRaffleService: EventRaffleService, private eventApproveService: EventApproveService,
+              private eventRejectService: EventRejectService,
+              public dialog: MatDialog) {
+  }
+
+  openPromotionDialog(): void {
+    this.eventPromotionService.setMessage({
+      eventId: this.eventDto?.id,
+      limitDate: this.eventDto?.endDate
+    });
+
+    const dialogRef = this.dialog.open(AddPromotionComponent, {
+      width: '300px'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // Handle the result here
+        console.log('The dialog was closed with data: ', result);
+      }
+    });
+  }
+
+  openRaffleDialog() {
+    this.eventRaffleService.setMessage({
+      eventId: this.eventDto?.id,
+      limitDate: this.eventDto?.endDate
+    });
+
+    const dialogRef = this.dialog.open(AddRaffleComponent, {
+      width: '300px'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        console.log('The dialog was closed with data: ', result);
+      }
+    });
+  }
+
+  openApprovalDialog(): void {
+    this.eventApproveService.setMessage({
+      eventId: this.eventDto?.id
+    });
+
+    const dialogRef = this.dialog.open(ApproveEventComponent, {
+      width: '400px'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // Handle the approval result here
+        console.log('The event was approved.');
+      } else {
+        console.log('The approval was cancelled.');
+      }
+    });
+  }
+
+  openRejectionDialog() {
+    this.eventRejectService.setMessage({
+      eventId: this.eventDto?.id
+    });
+
+    const dialogRef = this.dialog.open(RejectEventComponent, {
+      width: '400px'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // Handle the approval result here
+        console.log('The event was rejected.');
+      } else {
+        console.log('The rejection was cancelled.');
+      }
+    });
   }
 
   sendDataToOrderPage() {
