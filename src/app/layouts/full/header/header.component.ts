@@ -8,6 +8,7 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import {AuthService} from "../../../services/auth.service";
 import {Router} from "@angular/router";
+import {TokenStorageService} from "../../../services/token-storage.service";
 
 
 @Component({
@@ -23,8 +24,15 @@ export class HeaderComponent {
   @Output() toggleCollapsed = new EventEmitter<void>();
 
   showFiller = false;
+  userName: string = '';
 
-  constructor(public dialog: MatDialog, private authService: AuthService, private router: Router) {}
+  constructor(public dialog: MatDialog, private authService: AuthService, private router: Router,
+              private tokenStorageService: TokenStorageService) {
+     let user = tokenStorageService.getUser();
+     if (user.name != undefined) {
+       this.userName = user.name;
+     }
+  }
 
   goToProfilePage() {
     this.router.navigate(['/profile']);
@@ -32,5 +40,7 @@ export class HeaderComponent {
 
   logout() {
     this.authService.logout();
+    this.userName = '';
+    this.router.navigate(['/events']);
   }
 }

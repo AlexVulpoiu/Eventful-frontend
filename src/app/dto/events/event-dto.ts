@@ -14,14 +14,15 @@ export class EventDto {
   public rejectionReason: string;
   public location: LocationDto;
   public organiserName: string;
-  public organiserRating: string;
+  public discount: number;
+  public discountEndDate: Date;
   public standingCategories: StandingCategoryDto[];
   public seatsCategories: SeatsCategoryDetails[];
   public unavailableSeats: Seat[];
 
   constructor(id: number, name: string, description: string, startDate: Date, endDate: Date, logo: string,
               charityPercentage: number, rejectionReason: string, location: LocationDto, organiserName: string,
-              organiserRating: string, standingCategories: StandingCategoryDto[], seatsCategories: SeatsCategoryDetails[],
+              discount: number, discountEndDate: Date, standingCategories: StandingCategoryDto[], seatsCategories: SeatsCategoryDetails[],
               unavailableSeats: Seat[]) {
     this.id = id;
     this.name = name;
@@ -33,7 +34,8 @@ export class EventDto {
     this.rejectionReason = rejectionReason;
     this.location = location;
     this.organiserName = organiserName;
-    this.organiserRating = organiserRating;
+    this.discount = discount;
+    this.discountEndDate = discountEndDate;
     this.standingCategories = standingCategories;
     this.seatsCategories = seatsCategories;
     this.unavailableSeats = unavailableSeats;

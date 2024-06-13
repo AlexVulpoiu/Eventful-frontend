@@ -18,4 +18,8 @@ export class ProfileService {
   getProfileDetails() {
     return this.http.get<ProfileDto>(PROFILE_API, httpOptions);
   }
+
+  getAvailablePoints() {
+    return this.http.get<number>(PROFILE_API + '/points', httpOptions);
+  }
 }

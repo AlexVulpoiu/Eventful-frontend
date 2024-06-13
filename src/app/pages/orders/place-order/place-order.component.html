@@ -77,10 +77,10 @@
       </div>
     </div>
 
-    <div class="row w-100">
+    <div *ngIf="points > 0" class="row w-100">
       <div class="w-60">
         <ul class="no-bullets">
-          <li style="text-align: justify">You have 100 discount points, which means a 10 RON discount. Do you want to use them?</li>
+          <li style="text-align: justify">You have {{ points }} discount points, which means a {{ points / 10 }} RON discount. Do you want to use them?</li>
         </ul>
       </div>
 
@@ -100,7 +100,7 @@
 
       <div class="w-50 right-elements">
         <ul class="no-bullets right-elements">
-          <li>-10 RON</li>
+          <li>-{{ points / 10 }} RON</li>
         </ul>
       </div>
     </div>

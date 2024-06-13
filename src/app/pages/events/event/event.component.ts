@@ -32,6 +32,8 @@ import {ApproveEventComponent} from "../approve-event/approve-event.component";
 import {EventApproveService} from "../../../services/event-approve.service";
 import {EventRejectService} from "../../../services/event-reject.service";
 import {RejectEventComponent} from "../reject-event/reject-event.component";
+import {TokenStorageService} from "../../../services/token-storage.service";
+import {MatIcon} from "@angular/material/icon";
 
 @Component({
   selector: 'app-event',
@@ -54,7 +56,8 @@ import {RejectEventComponent} from "../reject-event/reject-event.component";
     NgIf,
     NgFor,
     NgClass,
-    MatTooltip
+    MatTooltip,
+    MatIcon
   ],
   templateUrl: './event.component.html',
   styleUrl: './event.component.scss'
@@ -71,6 +74,9 @@ export class EventComponent implements OnInit {
   ticketsPerCategory: number[] = [];
   location: any;
   unavailableSeats: any = [];
+  roles: string[] = [];
+  discount: number = 0;
+  discountEndDate: Date = new Date();
 
   private seatConfig: any = [];
   protected seatmap: any[] = [];
@@ -94,7 +100,7 @@ export class EventComponent implements OnInit {
               private eventOrderService: EventOrderService, private eventPromotionService: EventPromotionService,
               private eventRaffleService: EventRaffleService, private eventApproveService: EventApproveService,
               private eventRejectService: EventRejectService,
-              public dialog: MatDialog) {
+              public dialog: MatDialog, private tokenStorageService: TokenStorageService) {
   }
 
   openPromotionDialog(): void {
@@ -213,6 +219,8 @@ export class EventComponent implements OnInit {
         this.standingCategories = this.eventDto.standingCategories;
         this.seatsCategories = this.eventDto.seatsCategories;
         this.unavailableSeats = this.eventDto.unavailableSeats;
+        this.discount = this.eventDto.discount;
+        this.discountEndDate = this.eventDto.discountEndDate;
         console.log(this.unavailableSeats);
         this.location = this.eventDto.location;
         for (let i = 0; i < this.standingCategories.length; i++) {
@@ -235,6 +243,10 @@ export class EventComponent implements OnInit {
         this.processSeatChart(this.seatConfig);
       });
     });
+    let user = this.tokenStorageService.getUser();
+    if (user.roles != undefined) {
+      this.roles = user.roles;
+    }
     window.scrollTo(0, 0);
   }
 

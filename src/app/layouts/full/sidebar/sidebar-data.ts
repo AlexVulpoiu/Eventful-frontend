@@ -45,6 +45,11 @@ export const navItems: NavItem[] = [
     route: '/events/add'
   },
   {
+    displayName: 'Add feedback',
+    iconName: 'writing',
+    route: '/feedback'
+  },
+  {
     navCap: 'Ui Components',
   },
   {

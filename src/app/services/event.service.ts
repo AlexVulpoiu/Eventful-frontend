@@ -20,12 +20,13 @@ export class EventService {
 
   }
 
-  getEventsList(search: string) {
+  getEventsList(search: string, page: number, size: number) {
     let queryParams: string = '?';
     if (search !== undefined && search !== null) {
       queryParams += `search=${encodeURIComponent(search)}`;
     }
-    return this.http.get<EventPreviewDto[]>(EVENTS_API + queryParams, httpOptions);
+    queryParams += '&pageNumber=' + page + '&size=' + size;
+    return this.http.get<{content: EventPreviewDto[], totalElements: number}>(EVENTS_API + queryParams, httpOptions);
   }
 
   getEvent(id: number) {

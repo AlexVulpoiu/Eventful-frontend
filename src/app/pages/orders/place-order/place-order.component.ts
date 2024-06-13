@@ -12,6 +12,7 @@ import {NewOrderDto} from "../../../dto/orders/new-order-dto";
 import {PaymentService} from "../../../services/payment.service";
 import {Router} from "@angular/router";
 import {SeatDetails} from "../../../dto/orders/seat-details";
+import {ProfileService} from "../../../services/profile.service";
 
 @Component({
   selector: 'app-place-order',
@@ -41,18 +42,20 @@ export class PlaceOrderComponent implements OnInit {
   total: number = 0;
   useDiscount: boolean = false;
   eventId: number = 0;
+  points: number = 0;
 
   constructor(private eventOrderService: EventOrderService, @Inject(LOCALE_ID) public locale: string,
-              private orderService: OrdersService, private paymentService: PaymentService, private router: Router) {
+              private orderService: OrdersService, private paymentService: PaymentService, private router: Router,
+              private profileService: ProfileService) {
 
   }
 
   updateTotal(event: MatCheckboxChange) {
     if (event.checked) {
-      this.total -= 10;
+      this.total -= this.points / 10;
       this.useDiscount = true;
     } else {
-      this.total += 10;
+      this.total += this.points / 10;
       this.useDiscount = false;
     }
   }
@@ -72,6 +75,13 @@ export class PlaceOrderComponent implements OnInit {
       this.total = data.total;
       this.eventId = data.event.id;
     });
+
+    this.profileService.getAvailablePoints().subscribe(data => {
+      this.points = data;
+      if (this.points >= this.total * 10 - 20) {
+        this.points = this.total * 10 - 20;
+      }
+    });
   }
 
   placeOrder() {
@@ -83,7 +93,7 @@ export class PlaceOrderComponent implements OnInit {
         }
       }
 
-      let newOrderDto = new NewOrderDto(this.eventId, 0, standingTicketsInfo, []);
+      let newOrderDto = new NewOrderDto(this.eventId, this.useDiscount ? this.points : 0, standingTicketsInfo, []);
       this.orderService.placeOrder(newOrderDto).subscribe(
         res => {
           this.paymentService.initiatePayment(res.id).subscribe(

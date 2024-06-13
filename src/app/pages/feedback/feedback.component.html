@@ -1,0 +1,14 @@
+<form [formGroup]="feedbackForm" (ngSubmit)="onSubmit()">
+
+  <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Feedback</mat-label>
+  <mat-form-field appearance="outline" class="w-100" color="primary">
+    <textarea matInput formControlName="text" rows="5"></textarea>
+    <mat-error *ngIf="feedbackForm.get('text')?.hasError('required')">
+      Feedback is required
+    </mat-error>
+  </mat-form-field>
+
+  <button mat-raised-button class="success-button" type="submit" [disabled]="feedbackForm.invalid">
+    Submit feedback
+  </button>
+</form>

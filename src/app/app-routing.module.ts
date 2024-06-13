@@ -14,6 +14,7 @@ import {EventComponent} from "./pages/events/event/event.component";
 import {PlaceOrderComponent} from "./pages/orders/place-order/place-order.component";
 import {ProfileComponent} from "./pages/profile/profile.component";
 import {AddEventComponent} from "./pages/events/add-event/add-event.component";
+import {FeedbackComponent} from "./pages/feedback/feedback.component";
 
 const routes: Routes = [
   {
@@ -89,6 +90,10 @@ const routes: Routes = [
       {
         path: 'profile',
         component: ProfileComponent
+      },
+      {
+        path: 'feedback',
+        component: FeedbackComponent
       }
     ],
   },
