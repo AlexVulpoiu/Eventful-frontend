@@ -86,6 +86,11 @@ export const navItems: NavItem[] = [
     route: '/authentication/register',
   },
   {
+    displayName: 'Organisers register',
+    iconName: 'user-star',
+    route: '/authentication/organisers/register',
+  },
+  {
     navCap: 'Extra',
   },
   {

@@ -1,0 +1,269 @@
+<div class="blank-layout-container justify-content-center align-items-center bg-light-primary">
+  <div
+    class="position-relative row w-100 h-100 bg-gredient justify-content-center"
+  >
+    <div class="col-md-10 d-flex align-items-center ">
+      <mat-card class="cardWithShadow organiser-register">
+        <mat-card-content class="p-32">
+          <div class="text-center">
+            <a [routerLink]="['/events']">
+              <img
+                src="./assets/images/logos/text_logo.png"
+                height="50em"
+                class="align-middle m-2"
+                alt="logo"
+              />
+            </a>
+          </div>
+          <form [formGroup]="generalInfoFormGroup" class="m-t-30" (ngSubmit)="onSubmit()">
+            <mat-horizontal-stepper [linear]="isLinear" #stepper>
+              <mat-step [stepControl]="generalInfoFormGroup">
+                <form [formGroup]="generalInfoFormGroup">
+                  <ng-template matStepLabel>General Info</ng-template>
+
+                  <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Email address</mat-label>
+                  <mat-form-field appearance="outline" class="w-100" color="primary">
+                    <input matInput type="email" formControlName="email"/>
+                    <mat-error *ngIf="generalInfoFormGroup.get('email')?.hasError('required')">
+                      Email is required
+                    </mat-error>
+                    <mat-error *ngIf="generalInfoFormGroup.get('email')?.hasError('email')">
+                      Please enter a valid email address
+                    </mat-error>
+                  </mat-form-field>
+
+                  <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">First name</mat-label>
+                  <mat-form-field appearance="outline" class="w-100" color="primary">
+                    <input matInput formControlName="firstName"/>
+                    <mat-error *ngIf="generalInfoFormGroup.get('firstName')?.hasError('required')">
+                      First name is required
+                    </mat-error>
+                    <mat-error *ngIf="generalInfoFormGroup.get('firstName')?.hasError('pattern')">
+                      First name can only contain letters, spaces, or dashes
+                    </mat-error>
+                  </mat-form-field>
+
+                  <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Last name</mat-label>
+                  <mat-form-field appearance="outline" class="w-100" color="primary">
+                    <input matInput formControlName="lastName"/>
+                    <mat-error *ngIf="generalInfoFormGroup.get('lastName')?.hasError('required')">
+                      Last name is required
+                    </mat-error>
+                    <mat-error *ngIf="generalInfoFormGroup.get('lastName')?.hasError('pattern')">
+                      Last name can only contain letters, spaces, or dashes
+                    </mat-error>
+                  </mat-form-field>
+
+                  <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Password</mat-label>
+                  <mat-form-field appearance="outline" class="w-100" color="primary">
+                    <input matInput type="password" formControlName="password"/>
+                    <mat-error *ngIf="generalInfoFormGroup.get('password')?.hasError('required')">
+                      Password is required
+                    </mat-error>
+                    <mat-error *ngIf="generalInfoFormGroup.get('password')?.hasError('minlength')">
+                      Password must be at least 8 characters long
+                    </mat-error>
+                    <mat-error *ngIf="generalInfoFormGroup.get('password')?.hasError('pattern')">
+                      Password must contain at least one uppercase letter, one lowercase letter, one number, and one
+                      special
+                      character
+                    </mat-error>
+                  </mat-form-field>
+
+                  <div>
+                    <button mat-flat-button color="primary" matStepperNext [disabled]="generalInfoFormGroup.invalid">
+                      Next
+                    </button>
+                  </div>
+                </form>
+              </mat-step>
+
+              <mat-step [stepControl]="addressInfoFormGroup">
+                <form [formGroup]="addressInfoFormGroup">
+                  <ng-template matStepLabel>Address Info</ng-template>
+
+                  <div class="address-info-grid">
+                    <div class="form-group">
+                      <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Country</mat-label>
+                      <mat-form-field appearance="outline" class="w-100" color="primary">
+                        <input matInput formControlName="country"/>
+                        <mat-error *ngIf="addressInfoFormGroup.get('country')?.hasError('required')">
+                          Country is required
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+
+                    <div class="form-group">
+                      <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">District</mat-label>
+                      <mat-form-field appearance="outline" class="w-100" color="primary">
+                        <input matInput formControlName="district"/>
+                        <mat-error *ngIf="addressInfoFormGroup.get('district')?.hasError('required')">
+                          District is required
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+
+                    <div class="form-group">
+                      <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">City</mat-label>
+                      <mat-form-field appearance="outline" class="w-100" color="primary">
+                        <input matInput formControlName="city"/>
+                        <mat-error *ngIf="addressInfoFormGroup.get('city')?.hasError('required')">
+                          City is required
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+
+                    <div class="form-group">
+                      <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Street</mat-label>
+                      <mat-form-field appearance="outline" class="w-100" color="primary">
+                        <input matInput formControlName="street"/>
+                        <mat-error *ngIf="addressInfoFormGroup.get('street')?.hasError('required')">
+                          Street is required
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+
+                    <div class="form-group">
+                      <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Building</mat-label>
+                      <mat-form-field appearance="outline" class="w-100" color="primary">
+                        <input matInput formControlName="building"/>
+                        <mat-error *ngIf="addressInfoFormGroup.get('building')?.hasError('required')">
+                          Building is required
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+
+                    <div class="form-group">
+                      <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Zipcode</mat-label>
+                      <mat-form-field appearance="outline" class="w-100" color="primary">
+                        <input matInput formControlName="zipcode"/>
+                        <mat-error *ngIf="addressInfoFormGroup.get('zipcode')?.hasError('required')">
+                          Zipcode is required
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                  <div>
+                    <br/>
+                    <br/>
+                    <button mat-flat-button color="accent" matStepperPrevious>Back</button>&nbsp;&nbsp;
+                    <button mat-flat-button color="primary" matStepperNext [disabled]="addressInfoFormGroup.invalid">Next</button>
+                  </div>
+                </form>
+              </mat-step>
+
+              <mat-step [stepControl]="bankDetailsFormGroup">
+                <form [formGroup]="bankDetailsFormGroup">
+                  <ng-template matStepLabel>Bank Details</ng-template>
+
+                  <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Bank</mat-label>
+                  <mat-form-field appearance="outline" class="w-100" color="primary">
+                    <input matInput formControlName="bank"/>
+                    <mat-error *ngIf="bankDetailsFormGroup.get('bank')?.hasError('required')">
+                      Bank is required
+                    </mat-error>
+                    <mat-error *ngIf="bankDetailsFormGroup.get('bank')?.hasError('pattern')">
+                      Bank can only contain letters
+                    </mat-error>
+                  </mat-form-field>
+
+                  <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">IBAN</mat-label>
+                  <mat-form-field appearance="outline" class="w-100" color="primary">
+                    <input matInput formControlName="iban"/>
+                    <mat-error *ngIf="bankDetailsFormGroup.get('iban')?.hasError('required')">
+                      IBAN is required
+                    </mat-error>
+                    <mat-error *ngIf="bankDetailsFormGroup.get('iban')?.hasError('pattern')">
+                      IBAN can only contain uppercase letters and digits
+                    </mat-error>
+                  </mat-form-field>
+
+                  <div>
+                    <br/>
+                    <br/>
+                    <button mat-flat-button color="accent" matStepperPrevious>Back</button>&nbsp;&nbsp;
+                    <button mat-flat-button color="primary" matStepperNext [disabled]="bankDetailsFormGroup.invalid">Next</button>
+                  </div>
+                </form>
+              </mat-step>
+
+              <mat-step [stepControl]="organisationDetailsFormGroup">
+                <form [formGroup]="organisationDetailsFormGroup">
+                  <ng-template matStepLabel>Organisation Details</ng-template>
+
+                  <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Commerce Registration Number
+                  </mat-label>
+                  <mat-form-field appearance="outline" class="w-100" color="primary">
+                    <input matInput formControlName="commerceRegistrationNumber"/>
+                    <mat-error
+                      *ngIf="organisationDetailsFormGroup.get('commerceRegistrationNumber')?.hasError('required')">
+                      Commerce Registration Number is required
+                    </mat-error>
+                    <mat-error
+                      *ngIf="organisationDetailsFormGroup.get('commerceRegistrationNumber')?.hasError('pattern')">
+                      Commerce Registration Number can only contain uppercase letters and digits
+                    </mat-error>
+                  </mat-form-field>
+
+                  <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Do you represent a legal person?</mat-label>
+                  <mat-radio-group formControlName="isLegalPerson" (change)="onLegalPersonChange($event)">
+                    <mat-radio-button value="yes">Yes</mat-radio-button>
+                    <mat-radio-button value="no">No</mat-radio-button>
+                  </mat-radio-group>
+
+                  <div *ngIf="legalPerson">
+                    <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">CUI</mat-label>
+                    <mat-form-field appearance="outline" class="w-100" color="primary">
+                      <input matInput formControlName="cui"/>
+                      <mat-error *ngIf="organisationDetailsFormGroup.get('cui')?.hasError('required')">
+                        CUI is required
+                      </mat-error>
+                      <mat-error *ngIf="organisationDetailsFormGroup.get('cui')?.hasError('min')">
+                        CUI must be greater than 0
+                      </mat-error>
+                      <mat-error *ngIf="organisationDetailsFormGroup.get('cui')?.hasError('pattern')">
+                        CUI can only contain numbers
+                      </mat-error>
+                    </mat-form-field>
+
+                    <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Legal Name</mat-label>
+                    <mat-form-field appearance="outline" class="w-100" color="primary">
+                      <input matInput formControlName="legalName"/>
+                      <mat-error *ngIf="organisationDetailsFormGroup.get('legalName')?.hasError('required')">
+                        Legal Name is required
+                      </mat-error>
+                      <mat-error *ngIf="organisationDetailsFormGroup.get('legalName')?.hasError('minlength')">
+                        Legal Name must be at least 1 character long
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+
+                  <div *ngIf="!legalPerson">
+                    <mat-form-field appearance="outline" class="w-100" color="primary">
+                      <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">CNP</mat-label>
+                      <input matInput formControlName="pin"/>
+                      <mat-error *ngIf="organisationDetailsFormGroup.get('pin')?.hasError('required')">
+                        CNP is required
+                      </mat-error>
+                      <mat-error *ngIf="organisationDetailsFormGroup.get('pin')?.hasError('pattern')">
+                        CNP must be exactly 13 digits
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+
+                  <div>
+                    <br/>
+                    <button mat-flat-button color="accent" matStepperPrevious>Back</button>&nbsp;&nbsp;
+                    <button mat-flat-button class="success-button" [disabled]="organisationDetailsFormGroup.invalid" (click)="onSubmit()">Sign up
+                    </button>
+                  </div>
+                </form>
+              </mat-step>
+            </mat-horizontal-stepper>
+          </form>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

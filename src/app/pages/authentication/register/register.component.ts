@@ -30,7 +30,7 @@ export class AppSideRegisterComponent implements OnInit {
     if (this.signUpForm.valid) {
       let form = this.signUpForm.value;
       this.authService.registerUser(new UserSignupRequest(form.email, form.firstName, form.lastName, form.password))
-        .subscribe(() => this.router.navigate(['/authentication/signin']));
+        .subscribe(() => this.router.navigate(['/authentication/login']));
     }
   }
 }
