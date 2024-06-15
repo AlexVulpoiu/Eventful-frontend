@@ -44,11 +44,34 @@
       <div [innerHTML]="eventDto?.description"></div>
     </div>
 
+    <div class="w-100" *ngIf="eventDto?.charitableCause != undefined">
+      <br/>
+      <h2>This event supports a charitable cause</h2>
+      <h2>{{ eventDto?.charityPercentage }}% from tickets value go to {{ eventDto?.charitableCause!.name! }}</h2>
+      <p>{{ eventDto?.charitableCause!.description! }}</p>
+      <p><strong>{{ eventDto?.charitableCause!.collectedAmount! }}</strong> RON raised from a needed amount of
+        <strong>{{ eventDto?.charitableCause!.neededAmount! }} RON</strong>
+      </p>
+    </div>
+
     <div class="w-100" *ngIf="discount > 0">
       <br/>
       <h2>Promotional period</h2>
       <p>All tickets are <strong>{{ discount }}% off until {{ formatDate(discountEndDate, 'dd.MM.yyyy', this.locale) }}</strong>.</p>
       <p>The discount is already applied on the prices!</p>
+    </div>
+
+    <div class="w-100" *ngIf="eventDto?.raffle != undefined">
+      <br/>
+      <h2>This event has an active raffle</h2>
+      <p *ngIf="eventDto?.raffle!.participantsLimit! == 0">
+        All customers that place an order for this event <strong>until {{ formatDate(eventDto?.raffle!.endDate!, 'dd.MM.yyyy', this.locale) }}</strong>
+        automatically enter into the drawing for winning a <strong>voucher with {{ eventDto?.raffle!.prize! }}% discount at {{ eventDto?.raffle!.partnerName! }}</strong>!
+      </p>
+      <p *ngIf="eventDto?.raffle!.participantsLimit! > 0">
+        First {{ eventDto?.raffle!.participantsLimit! }} customers win a <strong>voucher with {{ eventDto?.raffle!.prize! }}% discount
+        at {{ eventDto?.raffle!.partnerName! }}</strong>!
+      </p>
     </div>
   </div>
 

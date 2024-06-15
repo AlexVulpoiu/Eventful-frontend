@@ -5,7 +5,7 @@ import {EventDto} from "../dto/events/event-dto";
 import {TicketDto} from "../dto/tickets/ticket-dto";
 import {AddEventDto} from "../dto/events/add-event-dto";
 import {AddPromotionDto} from "../dto/events/add-promotion-dto";
-import {RaffleDto} from "../dto/events/raffle-dto";
+import {AddRaffleDto} from "../dto/events/add-raffle-dto";
 import {ChangeEventStatusDto} from "../dto/events/change-event-status-dto";
 
 const EVENTS_API = 'http://localhost:8080/api/events';
@@ -53,8 +53,8 @@ export class EventService {
     return this.http.post<EventDto>(EVENTS_API + '/' + eventId + '/promotion', promotionDto, httpOptions);
   }
 
-  addRaffle(eventId: number, raffleDto: RaffleDto) {
-    return this.http.post<RaffleDto>(EVENTS_API + '/' + eventId + '/raffle', raffleDto, httpOptions);
+  addRaffle(eventId: number, raffleDto: AddRaffleDto) {
+    return this.http.post<AddRaffleDto>(EVENTS_API + '/' + eventId + '/raffle', raffleDto, httpOptions);
   }
 
   updateEventStatus(eventId: number, changeEventStatus: ChangeEventStatusDto) {

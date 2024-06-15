@@ -9,7 +9,7 @@ import {
 } from "@angular/material/dialog";
 import {EventService} from "../../../services/event.service";
 import {EventRaffleService} from "../../../services/event-raffle.service";
-import {RaffleDto} from "../../../dto/events/raffle-dto";
+import {AddRaffleDto} from "../../../dto/events/add-raffle-dto";
 import {MatButton} from "@angular/material/button";
 import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from "@angular/material/datepicker";
 import {MatError, MatFormField, MatLabel, MatSuffix} from "@angular/material/form-field";
@@ -72,7 +72,7 @@ export class AddRaffleComponent implements OnInit {
 
   onSave() {
     if (this.raffleForm.valid) {
-      this.eventService.addRaffle(this.eventId, new RaffleDto(this.raffleForm.value.participantsLimit,
+      this.eventService.addRaffle(this.eventId, new AddRaffleDto(this.raffleForm.value.participantsLimit,
         this.raffleForm.value.endDate, this.raffleForm.value.prize, this.raffleForm.value.partnerName))
         .subscribe(data => console.log(data));
       this.dialogRef.close(this.raffleForm.value);

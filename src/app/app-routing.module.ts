@@ -15,6 +15,7 @@ import {PlaceOrderComponent} from "./pages/orders/place-order/place-order.compon
 import {ProfileComponent} from "./pages/profile/profile.component";
 import {AddEventComponent} from "./pages/events/add-event/add-event.component";
 import {FeedbackComponent} from "./pages/feedback/feedback.component";
+import {AddReviewComponent} from "./pages/events/add-review/add-review.component";
 
 const routes: Routes = [
   {
@@ -94,6 +95,10 @@ const routes: Routes = [
       {
         path: 'feedback',
         component: FeedbackComponent
+      },
+      {
+        path: 'reviews/:reviewId',
+        component: AddReviewComponent
       }
     ],
   },

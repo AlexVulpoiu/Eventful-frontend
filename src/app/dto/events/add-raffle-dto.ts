@@ -1,4 +1,4 @@
-export class RaffleDto {
+export class AddRaffleDto {
   public participantsLimit: number;
   public endDate: Date;
   public prize: number;

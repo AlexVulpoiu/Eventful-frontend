@@ -2,6 +2,8 @@ import {LocationDto} from "../locations/location-dto";
 import {StandingCategoryDto} from "./standing-category-dto";
 import {SeatsCategoryDetails} from "../locations/seats-category-details";
 import {Seat} from "./seat";
+import { RaffleDto } from "../raffles/raffle-dto";
+import {CharitableCauseDto} from "../charitable-causes/charitable-cause-dto";
 
 export class EventDto {
   public id: number;
@@ -16,14 +18,16 @@ export class EventDto {
   public organiserName: string;
   public discount: number;
   public discountEndDate: Date;
+  public raffle: RaffleDto;
+  public charitableCause: CharitableCauseDto;
   public standingCategories: StandingCategoryDto[];
   public seatsCategories: SeatsCategoryDetails[];
   public unavailableSeats: Seat[];
 
   constructor(id: number, name: string, description: string, startDate: Date, endDate: Date, logo: string,
               charityPercentage: number, rejectionReason: string, location: LocationDto, organiserName: string,
-              discount: number, discountEndDate: Date, standingCategories: StandingCategoryDto[], seatsCategories: SeatsCategoryDetails[],
-              unavailableSeats: Seat[]) {
+              discount: number, discountEndDate: Date, raffle: RaffleDto, charitableCause: CharitableCauseDto,
+              standingCategories: StandingCategoryDto[], seatsCategories: SeatsCategoryDetails[], unavailableSeats: Seat[]) {
     this.id = id;
     this.name = name;
     this.description.innerHTML = description;
@@ -36,6 +40,8 @@ export class EventDto {
     this.organiserName = organiserName;
     this.discount = discount;
     this.discountEndDate = discountEndDate;
+    this.raffle = raffle;
+    this.charitableCause = charitableCause;
     this.standingCategories = standingCategories;
     this.seatsCategories = seatsCategories;
     this.unavailableSeats = unavailableSeats;
