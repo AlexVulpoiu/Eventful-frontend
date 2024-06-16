@@ -25,17 +25,27 @@ export class HeaderComponent {
 
   showFiller = false;
   userName: string = '';
+  user: any = {};
 
   constructor(public dialog: MatDialog, private authService: AuthService, private router: Router,
               private tokenStorageService: TokenStorageService) {
-     let user = tokenStorageService.getUser();
+     let user = this.tokenStorageService.getUser();
+     this.user = user;
      if (user.name != undefined) {
        this.userName = user.name;
      }
   }
 
   goToProfilePage() {
-    this.router.navigate(['/profile']);
+    if (this.user.roles.includes('ORGANISER')) {
+      this.router.navigate(['/organiser-profile']);
+    } else {
+      this.router.navigate(['/profile']);
+    }
+  }
+
+  goToStatisticsPage() {
+    this.router.navigate(['/statistics']);
   }
 
   logout() {

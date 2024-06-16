@@ -1,0 +1,12 @@
+.full-width-field {
+  width: 100%;
+}
+
+.mat-form-field {
+  width: calc(100% - 32px);
+}
+
+.form-field-container {
+  display: flex;
+  flex-direction: column;
+}

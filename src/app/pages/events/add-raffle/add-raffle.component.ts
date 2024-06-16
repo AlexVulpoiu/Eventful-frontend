@@ -1,5 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  ValidationErrors,
+  Validators
+} from "@angular/forms";
 import {
   MatDialogActions,
   MatDialogClose,
@@ -51,6 +59,7 @@ export class AddRaffleComponent implements OnInit {
 
   raffleForm: FormGroup;
   eventId: number = 0;
+  tomorrow: Date = new Date();
   limitDate: Date = new Date();
 
   constructor(public dialogRef: MatDialogRef<AddRaffleComponent>, private fb: FormBuilder,
@@ -63,19 +72,39 @@ export class AddRaffleComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.eventRaffleService.getMessage.subscribe(data => {
       this.eventId = data.eventId;
-      this.limitDate = data.eventLimit;
-    })
+      this.limitDate = data.limitDate;
+      this.tomorrow.setDate(this.tomorrow.getDate() + 1);
+    });
+
+    this.raffleForm = this.fb.group({
+      participantsLimit: [null, [Validators.min(0)]],
+      endDate: [null],
+      prize: [null, [Validators.required, Validators.min(1), Validators.max(100)]],
+      partnerName: ['', [Validators.required]]
+    }, { validators: this.participantsOrEndDateValidator });
+  }
+
+  participantsOrEndDateValidator(control: AbstractControl): ValidationErrors | null {
+    const participantsLimit = control.get('participantsLimit')?.value;
+    const endDate = control.get('endDate')?.value;
+
+    if ((participantsLimit && endDate) || (!participantsLimit && !endDate)) {
+      return { bothValuesProvided: true };
+    }
+
+    return null;
   }
 
   onSave() {
     if (this.raffleForm.valid) {
       this.eventService.addRaffle(this.eventId, new AddRaffleDto(this.raffleForm.value.participantsLimit,
-        this.raffleForm.value.endDate, this.raffleForm.value.prize, this.raffleForm.value.partnerName))
+        new Date(this.raffleForm.value.endDate.toString() + ' UTC'), this.raffleForm.value.prize, this.raffleForm.value.partnerName))
         .subscribe(data => console.log(data));
       this.dialogRef.close(this.raffleForm.value);
+      window.location.reload();
     }
   }
 }

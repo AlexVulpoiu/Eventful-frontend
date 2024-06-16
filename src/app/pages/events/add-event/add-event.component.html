@@ -14,123 +14,81 @@
           Name
         </mat-label>
         <mat-form-field appearance="outline" class="w-100" color="primary">
-          <input matInput placeholder="Event name" [formControl]="$any(form).controls?.name"/>
-          <!--            @if ($any(form).controls?.name.invalid) {-->
-          <!--              <mat-error>{{errorMessage}}</mat-error>-->
-          <!--            }-->
+          <input matInput placeholder="Event name" formControlName="name" required />
+          <mat-error *ngIf="form.get('name')?.hasError('required')">Name is required</mat-error>
         </mat-form-field>
 
         <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">
           Description
         </mat-label>
-        <!--        <mat-form-field appearance="outline" class="w-100" color="primary">-->
         <editor style="width: 100%" apiKey="{{environment.TINYMCE_API_KEY}}"
                 [init]="{plugins: 'lists link image table code help wordcount'}"
-                [formControl]="$any(form).controls?.description">
+                formControlName="description">
         </editor>
-        <!--        </mat-form-field>-->
+        <mat-error *ngIf="form.get('description')?.hasError('required')">Description is required</mat-error>
 
         <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">
           Start date
         </mat-label>
-        <mat-datetimepicker-toggle
-          [for]="startDatePicker"
-          matSuffix
-        ></mat-datetimepicker-toggle>
-        <mat-datetimepicker
-          #startDatePicker
-          type="datetime"
-          mode="portrait"
-        ></mat-datetimepicker>
+        <mat-datetimepicker-toggle [for]="startDatePicker" matSuffix></mat-datetimepicker-toggle>
+        <mat-datetimepicker #startDatePicker type="datetime" mode="portrait"></mat-datetimepicker>
         <mat-form-field appearance="outline" class="w-100" color="primary">
-          <input
-            matInput
-            [formControl]="$any(form).controls?.startDate"
-            [matDatetimepicker]="startDatePicker"
-            required
-            autocomplete="false"
-          />
+          <input matInput [matDatetimepicker]="startDatePicker" formControlName="startDate" required autocomplete="off" [min]="today" />
+          <mat-error *ngIf="form.get('startDate')?.hasError('required')">Start date is required</mat-error>
         </mat-form-field>
 
         <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">
           End date
         </mat-label>
-        <mat-datetimepicker-toggle
-          [for]="endDatePicker"
-          matSuffix
-        ></mat-datetimepicker-toggle>
-        <mat-datetimepicker
-          #endDatePicker
-          type="datetime"
-          mode="portrait"
-        ></mat-datetimepicker>
+        <mat-datetimepicker-toggle [for]="endDatePicker" matSuffix></mat-datetimepicker-toggle>
+        <mat-datetimepicker #endDatePicker type="datetime" mode="portrait"></mat-datetimepicker>
         <mat-form-field appearance="outline" class="w-100" color="primary">
-          <input
-            matInput
-            [formControl]="$any(form).controls?.endDate"
-            [matDatetimepicker]="endDatePicker"
-            required
-            autocomplete="false"
-          />
+          <input matInput [matDatetimepicker]="endDatePicker" formControlName="endDate" required autocomplete="off" [min]="today" />
+          <mat-error *ngIf="form.get('endDate')?.hasError('required')">End date is required</mat-error>
         </mat-form-field>
 
         <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">
           Preparation time (in hours)
         </mat-label>
         <mat-form-field appearance="outline" class="w-100" color="primary">
-          <input matInput type="number" id="preparationTime" name="preparationTime"
-                 [formControl]="$any(form).controls?.preparationTime" min="1"/>
+          <input matInput type="number" formControlName="preparationTime" min="1" required />
+          <mat-error *ngIf="form.get('preparationTime')?.hasError('required')">Preparation time is required</mat-error>
         </mat-form-field>
-
 
         <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Location</mat-label>
         <mat-form-field appearance="outline" class="w-100" color="primary">
-          <mat-select class="w-100" [formControl]="$any(form).controls?.location" required
-                      (selectionChange)="onLocationChange($event)">
-            <mat-option>--</mat-option>
-            @for (location of locations; track location) {
-              <mat-option [value]="location">{{ location.name }}</mat-option>
-            }
+          <mat-select formControlName="location" required (selectionChange)="onLocationChange($event)">
+            <mat-option value="">--</mat-option>
+            <mat-option *ngFor="let location of locations" [value]="location">{{ location.name }}</mat-option>
           </mat-select>
-          @if (form.controls['location'].hasError('required')) {
-            <mat-error>Please choose a location</mat-error>
-          }
+          <mat-error *ngIf="form.get('location')?.hasError('required')">Please choose a location</mat-error>
         </mat-form-field>
 
         <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Tickets fee supporter</mat-label>
         <mat-form-field appearance="outline" class="w-100" color="primary">
-          <mat-select [formControl]="$any(form).controls?.feeSupporter" required>
-            <mat-option>--</mat-option>
+          <mat-select formControlName="feeSupporter" required>
+            <mat-option value="">--</mat-option>
             <mat-option value="CLIENT">CLIENT</mat-option>
             <mat-option value="ORGANISER">ORGANISER</mat-option>
           </mat-select>
-          @if (form.controls['feeSupporter'].hasError('required')) {
-            <mat-error>Please choose a value for fee supporter</mat-error>
-          }
+          <mat-error *ngIf="form.get('feeSupporter')?.hasError('required')">Please choose a value for fee supporter</mat-error>
         </mat-form-field>
 
+        <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Upload event logo</mat-label>
         <mat-form-field appearance="outline" class="w-100" color="primary">
-          <mat-label>Upload event logo</mat-label>
-          <button mat-icon-button matPrefix (click)="f_input.click()">
+          <button mat-icon-button matPrefix (click)="fileInput.click()">
             <mat-icon>
               <i-tabler name="paperclip"></i-tabler>
             </mat-icon>
           </button>
-          <input type="text" readonly matInput [formControl]="$any(form).controls?.image"/>
-          <input
-            type="file"
-            multiple
-            hidden
-            #f_input
-            (change)="handleFileInputChange($event)"
-          />
-          <mat-error>The image is required</mat-error>
+          <input type="text" readonly matInput formControlName="logo"/>
+          <input type="file" hidden #fileInput (change)="handleFileInputChange($event)" />
+          <mat-error *ngIf="form.get('logo')?.hasError('required')">The image is required</mat-error>
         </mat-form-field>
-
       </div>
 
       <div>
-        <button matStepperNext mat-flat-button color="primary" (click)="onClick()">Next</button>
+        <button matStepperNext mat-flat-button color="primary" (click)="checkDates()">Next</button>
       </div>
     </form>
   </mat-step>
@@ -138,55 +96,48 @@
   <mat-step [stepControl]="form" label="Prices section">
     <form [formGroup]="form">
       <ng-template matStepLabel>Prices section</ng-template>
-
       <br/>
-      <div class="row" *ngIf="form.value.location?.categories.length == 0">
+      <div *ngIf="form.value.location?.categories.length == 0">
         <div class="col-sm-8">
-          <p><strong>Define tickets categories: you can define more categories and specify different prices for
-            them</strong></p>
+          <p><strong>Define tickets categories: you can define more categories and specify different prices for them</strong></p>
         </div>
         <div class="col-sm-4">
           <div class="row">
             <button mat-flat-button color="primary" (click)="addStandingCategory()">Add category</button>
             &nbsp;&nbsp;&nbsp;&nbsp;
-            <button mat-flat-button class="delete-button" (click)="deleteStandingCategory()">Remove last category
-            </button>
+            <button mat-flat-button class="delete-button" (click)="deleteStandingCategory()">Remove last category</button>
           </div>
         </div>
       </div>
-
       <br/>
-
       <div formArrayName="standingCategories">
         <div *ngFor="let category of $any(standingCategories).controls; let i = index" [formGroupName]="i">
           <app-add-standing-category [formGroup]="category"></app-add-standing-category>
         </div>
       </div>
-
       <div *ngIf="this.form.value.location?.categories.length > 0">
         <div class="col-sm-8">
           <h4>Please, specify the price for each seats category</h4>
         </div>
         <br/>
-
         <div formArrayName="categoriesPrices">
           <div class="col-sm-4" *ngFor="let category of categoriesPrices.controls; let i = index">
             <div [formGroupName]="i">
               <mat-form-field appearance="outline" class="w-100" color="primary">
                 <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">{{ this.form.value.location?.categories[i] }}</mat-label>
-                <input matInput formControlName="price" type="number" placeholder="Enter category price">
+                <input matInput formControlName="price" type="number" placeholder="Enter category price" required min="1">
+                <mat-error *ngIf="category.get('price')?.hasError('required')">Price is required</mat-error>
+                <mat-error *ngIf="category.get('price')?.hasError('min')">Price must be greater than 1</mat-error>
               </mat-form-field>
             </div>
           </div>
         </div>
       </div>
-
       <br/>
-
       <div class="row">
         <button mat-flat-button color="accent" matStepperPrevious>Back</button>
         &nbsp;&nbsp;
-        <button matStepperNext mat-flat-button color="primary" (click)="onClick()">Next</button>
+        <button matStepperNext mat-flat-button color="primary" (click)="checkCategoriesCapacity()">Next</button>
       </div>
     </form>
   </mat-step>
@@ -203,30 +154,39 @@
       </mat-label>
       <mat-form-field appearance="outline" class="w-100" color="primary">
         <input matInput placeholder="Charitable cause name" [formControl]="$any(form).controls?.charitableCauseName"/>
+        <mat-error *ngIf="form.hasError('charityIncomplete') && form.get('charitableCauseName')?.touched">
+          All charitable cause fields must be filled together.
+        </mat-error>
       </mat-form-field>
 
       <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">
         Cause description
       </mat-label>
       <mat-form-field appearance="outline" class="w-100" color="primary">
-        <input matInput placeholder="Charitable cause description"
-               [formControl]="$any(form).controls?.charitableCauseDescription"/>
+        <input matInput placeholder="Charitable cause description" [formControl]="$any(form).controls?.charitableCauseDescription"/>
+        <mat-error *ngIf="form.hasError('charityIncomplete') && form.get('charitableCauseDescription')?.touched">
+          All charitable cause fields must be filled together.
+        </mat-error>
       </mat-form-field>
 
       <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">
         Needed amount
       </mat-label>
       <mat-form-field appearance="outline" class="w-100" color="primary">
-        <input matInput type="number" id="neededAmount" name="neededAmount"
-               [formControl]="$any(form).controls?.neededAmount"/>
+        <input matInput type="number" id="neededAmount" name="neededAmount" [formControl]="$any(form).controls?.neededAmount"/>
+        <mat-error *ngIf="form.hasError('charityIncomplete') && form.get('neededAmount')?.touched">
+          All charitable cause fields must be filled together.
+        </mat-error>
       </mat-form-field>
 
       <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">
         Percentage of ticket value that goes to charity
       </mat-label>
       <mat-form-field appearance="outline" class="w-100" color="primary">
-        <input matInput type="number" id="charityPercentage" name="charityPercentage"
-               [formControl]="$any(form).controls?.charityPercentage"/>
+        <input matInput type="number" id="charityPercentage" name="charityPercentage" [formControl]="$any(form).controls?.charityPercentage"/>
+        <mat-error *ngIf="form.hasError('charityIncomplete') && form.get('charityPercentage')?.touched">
+          All charitable cause fields must be filled together.
+        </mat-error>
       </mat-form-field>
 
       <div class="row">
@@ -238,6 +198,8 @@
       </div>
     </form>
   </mat-step>
+
+
 </mat-stepper>
 
 

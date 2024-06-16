@@ -1,0 +1,149 @@
+<mat-tab-group>
+  <mat-tab label="Accepted">
+    <br/>
+    <mat-card-content>
+      <div class="row">
+        <h1 *ngIf="acceptedEvents.length == 0">No events in this category</h1>
+        <div class="col-lg-4 col-md-6 col-sm-12" *ngFor="let event of acceptedEvents">
+          <mat-card class="cardWithShadow event overflow-hidden">
+            <a (click)="router.navigate(['events', event.id])">
+              <img
+                src="{{ event.logo }}"
+                alt="imgSrc"
+                class="w-100 event-logo"
+                mat-card-image
+              />
+            </a>
+
+            <mat-card-content class="p-b-24 p-t-12 position-relative">
+              <mat-card-title class="mat-headline-2 f-s-16 m-b-4">{{ event.name }}</mat-card-title>
+              <div class="d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center">
+                  <i-tabler name="calendar-time"></i-tabler>&nbsp;
+                  <p class="mat-body-1">{{ formatDate(event.startDate, 'dd.MM.yyyy, HH:mm', this.locale) }} - {{ formatDate(event.endDate, 'dd.MM.yyyy, HH:mm', this.locale) }}</p>
+                </div>
+              </div>
+              <div class="d-flex">
+                <i-tabler name="map-pin"></i-tabler>&nbsp;
+                <div class="d-flex">
+                  <p class="mat-body-1">{{ event.location }}</p>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-tab>
+
+  <mat-tab label="Rejected">
+    <br/>
+    <mat-card-content>
+      <div class="row">
+        <h1 *ngIf="rejectedEvents.length == 0">No events in this category</h1>
+        <div class="col-lg-4 col-md-6 col-sm-12" *ngFor="let event of rejectedEvents">
+          <mat-card class="cardWithShadow event overflow-hidden">
+            <a (click)="router.navigate(['events', event.id])">
+              <img
+                src="{{ event.logo }}"
+                alt="imgSrc"
+                class="w-100 event-logo"
+                mat-card-image
+              />
+            </a>
+
+            <mat-card-content class="p-b-24 p-t-12 position-relative">
+              <mat-card-title class="mat-headline-2 f-s-16 m-b-4">{{ event.name }}</mat-card-title>
+              <div class="d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center">
+                  <i-tabler name="calendar-time"></i-tabler>&nbsp;
+                  <p class="mat-body-1">{{ formatDate(event.startDate, 'dd.MM.yyyy, HH:mm', this.locale) }} - {{ formatDate(event.endDate, 'dd.MM.yyyy, HH:mm', this.locale) }}</p>
+                </div>
+              </div>
+              <div class="d-flex">
+                <i-tabler name="map-pin"></i-tabler>&nbsp;
+                <div class="d-flex">
+                  <p class="mat-body-1">{{ event.location }}</p>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-tab>
+
+  <mat-tab label="Pending">
+    <br/>
+    <mat-card-content>
+      <div class="row">
+        <h1 *ngIf="pendingEvents.length == 0">No events in this category</h1>
+        <div class="col-lg-4 col-md-6 col-sm-12" *ngFor="let event of pendingEvents">
+          <mat-card class="cardWithShadow event overflow-hidden">
+            <a (click)="router.navigate(['events', event.id])">
+              <img
+                src="{{ event.logo }}"
+                alt="imgSrc"
+                class="w-100 event-logo"
+                mat-card-image
+              />
+            </a>
+
+            <mat-card-content class="p-b-24 p-t-12 position-relative">
+              <mat-card-title class="mat-headline-2 f-s-16 m-b-4">{{ event.name }}</mat-card-title>
+              <div class="d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center">
+                  <i-tabler name="calendar-time"></i-tabler>&nbsp;
+                  <p class="mat-body-1">{{ formatDate(event.startDate, 'dd.MM.yyyy, HH:mm', this.locale) }} - {{ formatDate(event.endDate, 'dd.MM.yyyy, HH:mm', this.locale) }}</p>
+                </div>
+              </div>
+              <div class="d-flex">
+                <i-tabler name="map-pin"></i-tabler>&nbsp;
+                <div class="d-flex">
+                  <p class="mat-body-1">{{ event.location }}</p>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-tab>
+
+  <mat-tab label="Ended">
+    <br/>
+    <mat-card-content>
+      <div class="row">
+        <h1 *ngIf="endedEvents.length == 0">No events in this category</h1>
+        <div class="col-lg-4 col-md-6 col-sm-12" *ngFor="let event of endedEvents">
+          <mat-card class="cardWithShadow event overflow-hidden">
+            <a (click)="router.navigate(['events', event.id])">
+              <img
+                src="{{ event.logo }}"
+                alt="imgSrc"
+                class="w-100 event-logo"
+                mat-card-image
+              />
+            </a>
+
+            <mat-card-content class="p-b-24 p-t-12 position-relative">
+              <mat-card-title class="mat-headline-2 f-s-16 m-b-4">{{ event.name }}</mat-card-title>
+              <div class="d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center">
+                  <i-tabler name="calendar-time"></i-tabler>&nbsp;
+                  <p class="mat-body-1">{{ formatDate(event.startDate, 'dd.MM.yyyy, HH:mm', this.locale) }} - {{ formatDate(event.endDate, 'dd.MM.yyyy, HH:mm', this.locale) }}</p>
+                </div>
+              </div>
+              <div class="d-flex">
+                <i-tabler name="map-pin"></i-tabler>&nbsp;
+                <div class="d-flex">
+                  <p class="mat-body-1">{{ event.location }}</p>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-tab>
+</mat-tab-group>

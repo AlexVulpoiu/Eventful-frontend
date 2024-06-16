@@ -1,0 +1,15 @@
+<h1 mat-dialog-title>Edit description</h1>
+<div mat-dialog-content>
+  <form [formGroup]="editDescriptionForm">
+    <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Description</mat-label>
+    <editor style="width: 100%" apiKey="{{environment.TINYMCE_API_KEY}}"
+            [init]="{plugins: 'lists link image table code help wordcount'}"
+            formControlName="description">
+    </editor>
+    <mat-error *ngIf="editDescriptionForm.get('description')?.hasError('required')">Description is required</mat-error>
+  </form>
+</div>
+<div mat-dialog-actions class="actions-right">
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-button [disabled]="!editDescriptionForm.valid" (click)="onSave()">Save</button>
+</div>

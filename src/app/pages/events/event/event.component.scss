@@ -259,3 +259,22 @@ $seat-unavailable-color: #a0a0a0;
 .icon-20 {
   vertical-align: middle;
 }
+
+.button-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.button-container button {
+  flex: 1;
+  margin: 0 5px;
+}
+
+.button-container button:first-child {
+  margin-left: 0;
+}
+
+.button-container button:last-child {
+  margin-right: 0;
+}
+

@@ -1,45 +1,58 @@
 <h2 mat-dialog-title>Add raffle</h2>
 <form [formGroup]="raffleForm" (ngSubmit)="onSave()">
   <mat-dialog-content>
-    <mat-form-field appearance="fill">
-      <mat-label>Participants limit</mat-label>
-      <input matInput formControlName="participantsLimit" type="number">
-      <mat-error *ngIf="raffleForm.get('participantsLimit')?.hasError('required')">
-        Value is required
-      </mat-error>
-      <mat-error *ngIf="raffleForm.get('participantsLimit')?.hasError('min')">
-        Minimum value is 0
-      </mat-error>
-    </mat-form-field>
+    <div class="form-field-container">
+      <mat-form-field class="full-width-field" appearance="fill">
+        <mat-label>Participants limit</mat-label>
+        <input matInput formControlName="participantsLimit" type="number">
+        <mat-error *ngIf="raffleForm.get('participantsLimit')?.hasError('required')">
+          Value is required
+        </mat-error>
+        <mat-error *ngIf="raffleForm.get('participantsLimit')?.hasError('min')">
+          Minimum value is 0
+        </mat-error>
+      </mat-form-field>
 
-    <mat-form-field appearance="fill">
-      <mat-label>End Date</mat-label>
-      <input matInput formControlName="endDate" [matDatepicker]="picker">
-      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-datepicker #picker></mat-datepicker>
-      <mat-error *ngIf="raffleForm.get('endDate')?.hasError('required')">
-        End Date is required
-      </mat-error>
-    </mat-form-field>
+      <mat-form-field class="full-width-field" appearance="fill">
+        <mat-label>End Date</mat-label>
+        <input matInput formControlName="endDate" [matDatepicker]="picker" [min]="tomorrow" [max]="limitDate" readonly>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+        <mat-error *ngIf="raffleForm.get('endDate')?.hasError('required')">
+          End Date is required
+        </mat-error>
+        <mat-error *ngIf="raffleForm.errors?.['bothValuesProvided']">
+          Only one value from Participants limit or End Date should be provided
+        </mat-error>
+      </mat-form-field>
 
-    <mat-form-field appearance="fill">
-      <mat-label>Prize</mat-label>
-      <input matInput formControlName="prize" type="number" required>
-      <mat-error *ngIf="raffleForm.get('prize')?.hasError('required')">
-        Prize is required
+      <!-- Custom validation error message -->
+      <mat-error *ngIf="raffleForm.errors?.['bothValuesProvided']">
+        Only one value from Participants limit or End Date should be provided
       </mat-error>
-      <mat-error *ngIf="raffleForm.get('prize')?.hasError('min')">
-        Minimum value is 0
-      </mat-error>
-    </mat-form-field>
 
-    <mat-form-field appearance="fill">
-      <mat-label>Partner name</mat-label>
-      <input matInput formControlName="partnerName" required>
-      <mat-error *ngIf="raffleForm.get('partnerName')?.hasError('required')">
-        Partner name is required
-      </mat-error>
-    </mat-form-field>
+      <mat-form-field class="full-width-field" appearance="fill">
+        <mat-label>Voucher value</mat-label>
+        <input matInput formControlName="prize" type="number" required>
+        <mat-error *ngIf="raffleForm.get('prize')?.hasError('required')">
+          Prize is required
+        </mat-error>
+        <mat-error *ngIf="raffleForm.get('prize')?.hasError('min')">
+          Minimum value is 0
+        </mat-error>
+        <mat-error *ngIf="raffleForm.get('prize')?.hasError('max')">
+          Maximum value is 100
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="full-width-field" appearance="fill">
+        <mat-label>Partner name</mat-label>
+        <input matInput formControlName="partnerName" required>
+        <mat-error *ngIf="raffleForm.get('partnerName')?.hasError('required')">
+          Partner name is required
+        </mat-error>
+      </mat-form-field>
+    </div>
   </mat-dialog-content>
 
   <mat-dialog-actions align="end">

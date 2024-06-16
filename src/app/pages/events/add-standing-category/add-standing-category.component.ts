@@ -1,7 +1,8 @@
 import {Component, Input} from '@angular/core';
 import {FormGroup, FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {MatFormField, MatLabel} from "@angular/material/form-field";
+import {MatError, MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
+import {NgIf} from "@angular/common";
 
 @Component({
   selector: 'app-add-standing-category',
@@ -9,9 +10,11 @@ import {MatInput} from "@angular/material/input";
   imports: [
     FormsModule,
     MatFormField,
+    MatError,
     MatInput,
     MatLabel,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgIf
   ],
   templateUrl: './add-standing-category.component.html',
   styleUrl: './add-standing-category.component.scss'

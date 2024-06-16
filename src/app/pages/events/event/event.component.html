@@ -1,8 +1,36 @@
-<div *ngIf="roles.length == 1 && roles.includes('ORGANISER')">
-  <button mat-flat-button color="accent" (click)="openPromotionDialog()">Add promotional period</button>
-  <button mat-flat-button color="accent" (click)="openRaffleDialog()">Add raffle</button>
-  <button mat-button (click)="openApprovalDialog()">Approve</button>
-  <button mat-button (click)="openRejectionDialog()">Reject</button>
+<div *ngIf="roles.length == 1 && roles.includes('ORGANISER') && eventDto?.status == 'ACCEPTED'">
+  <mat-accordion>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>View options for event</mat-panel-title>
+        <mat-panel-description>
+          Add raffles, promotions, scan tickets or view orders and reviews
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <div class="button-container">
+        <button *ngIf="eventDto?.discount == 0" mat-flat-button color="accent"
+                (click)="openPromotionDialog()">Add promotional period
+        </button>
+        <button *ngIf="eventDto?.raffle == undefined" mat-flat-button color="accent"
+                (click)="openRaffleDialog()">Add raffle
+        </button>
+        <button *ngIf="startDateAsDate <= currentDate && currentDate <= endDateAsDate"
+                mat-flat-button color="accent" (click)="goToTicketsScannerPage()">Scan tickets
+        </button>
+        <button mat-flat-button color="accent" (click)="openOrdersDialog()">View
+          orders
+        </button>
+        <button *ngIf="endDateAsDate <= currentDate" mat-flat-button color="accent"
+                (click)="openReviewsDialog()">View reviews
+        </button>
+      </div>
+      <!--      <button mat-button (click)="openApprovalDialog()">Approve</button>&nbsp;&nbsp;-->
+      <!--      <button mat-button (click)="openRejectionDialog()">Reject</button>&nbsp;&nbsp;-->
+
+    </mat-expansion-panel>
+  </mat-accordion>
+  <br/>
 </div>
 
 <div class="container">
@@ -14,6 +42,12 @@
 
 <div class="row justify-content-center">
   <h1>{{ eventDto?.name }}</h1>
+  <button mat-icon-button *ngIf="roles.length == 1 && roles.includes('ORGANISER') && eventDto?.status != 'ACCEPTED'"
+          (click)="openEditNameDialog()">
+    <mat-icon>
+      <i-tabler name="edit"></i-tabler>
+    </mat-icon>
+  </button>
 </div>
 
 <br/>
@@ -40,13 +74,29 @@
     <br/>
 
     <div class="w-100 description">
-      <h2>Event details</h2>
+      <div class="w-100 row">
+        <h2>Event details</h2>
+        <button mat-icon-button *ngIf="roles.length == 1 && roles.includes('ORGANISER') && eventDto?.status != 'ACCEPTED'"
+                (click)="openEditDescriptionDialog()">
+          <mat-icon>
+            <i-tabler name="edit"></i-tabler>
+          </mat-icon>
+        </button>
+      </div>
       <div [innerHTML]="eventDto?.description"></div>
     </div>
 
     <div class="w-100" *ngIf="eventDto?.charitableCause != undefined">
       <br/>
-      <h2>This event supports a charitable cause</h2>
+      <div class="w-100 row">
+        <h2>This event supports a charitable cause</h2>
+        <button mat-icon-button *ngIf="roles.length == 1 && roles.includes('ORGANISER') && eventDto?.status != 'ACCEPTED'"
+                (click)="openEditCharitableCauseDialog()">
+          <mat-icon>
+            <i-tabler name="edit"></i-tabler>
+          </mat-icon>
+        </button>
+      </div>
       <h2>{{ eventDto?.charityPercentage }}% from tickets value go to {{ eventDto?.charitableCause!.name! }}</h2>
       <p>{{ eventDto?.charitableCause!.description! }}</p>
       <p><strong>{{ eventDto?.charitableCause!.collectedAmount! }}</strong> RON raised from a needed amount of
@@ -57,7 +107,8 @@
     <div class="w-100" *ngIf="discount > 0">
       <br/>
       <h2>Promotional period</h2>
-      <p>All tickets are <strong>{{ discount }}% off until {{ formatDate(discountEndDate, 'dd.MM.yyyy', this.locale) }}</strong>.</p>
+      <p>All tickets are <strong>{{ discount }}% off
+        until {{ formatDate(discountEndDate, 'dd.MM.yyyy', this.locale) }}</strong>.</p>
       <p>The discount is already applied on the prices!</p>
     </div>
 
@@ -65,11 +116,14 @@
       <br/>
       <h2>This event has an active raffle</h2>
       <p *ngIf="eventDto?.raffle!.participantsLimit! == 0">
-        All customers that place an order for this event <strong>until {{ formatDate(eventDto?.raffle!.endDate!, 'dd.MM.yyyy', this.locale) }}</strong>
-        automatically enter into the drawing for winning a <strong>voucher with {{ eventDto?.raffle!.prize! }}% discount at {{ eventDto?.raffle!.partnerName! }}</strong>!
+        All customers that place an order for this event
+        <strong>until {{ formatDate(eventDto?.raffle!.endDate!, 'dd.MM.yyyy', this.locale) }}</strong>
+        automatically enter into the drawing for winning a <strong>voucher with {{ eventDto?.raffle!.prize! }}% discount
+        at {{ eventDto?.raffle!.partnerName! }}</strong>!
       </p>
       <p *ngIf="eventDto?.raffle!.participantsLimit! > 0">
-        First {{ eventDto?.raffle!.participantsLimit! }} customers win a <strong>voucher with {{ eventDto?.raffle!.prize! }}% discount
+        First {{ eventDto?.raffle!.participantsLimit! }} customers win a <strong>voucher
+        with {{ eventDto?.raffle!.prize! }}% discount
         at {{ eventDto?.raffle!.partnerName! }}</strong>!
       </p>
     </div>
@@ -90,6 +144,132 @@
 
 <br/>
 <hr/>
+
+<div *ngIf="roles.length == 1 && !roles.includes('USER')" class="w-100">
+
+  <div class="w-100 row" *ngIf="standingCategories.length > 0">
+    <div class="col-lg-6 col-md-12 col-sm-12">
+      <div class="w-100 row">
+        <h2>Tickets prices</h2>
+        <button mat-icon-button
+                *ngIf="roles.length == 1 && roles.includes('ORGANISER') && eventDto?.status != 'ACCEPTED'"
+                (click)="openPricesEditDialog()">
+          <mat-icon>
+            <i-tabler name="edit"></i-tabler>
+          </mat-icon>
+        </button>
+      </div>
+
+      <div class="table-responsive m-t-16">
+        <table mat-table [dataSource]="standingCategories" class="w-100 table-striped">
+
+          <!-- Position Column -->
+          <ng-container matColumnDef="category">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              class="f-w-600 mat-subtitle-1 f-s-14"
+            >
+              Category
+            </th>
+            <td mat-cell *matCellDef="let element">
+              <div class="d-flex align-items-center">
+                <h6 class="mat-subtitle-1 f-s-14 f-w-600">
+                  {{ element.name }}
+                </h6>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Name Column -->
+          <ng-container matColumnDef="price">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              class="f-w-600 mat-subtitle-1 f-s-14"
+            >
+              Price
+            </th>
+            <td mat-cell *matCellDef="let element" class="mat-body-1">
+              <span *ngIf="discount > 0"
+                    class="f-s-14 m-l-4 text-decoration-line-through">{{ element.initialPrice }}</span>&nbsp;
+              {{ element.price }} RON
+            </td>
+          </ng-container>
+
+          <!-- Symbol Column -->
+          <ng-container matColumnDef="cart">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              class="f-w-600 mat-subtitle-1 f-s-14"
+              style="visibility: hidden"
+            >
+              Add to cart
+            </th>
+            <td mat-cell *matCellDef="let i = index;" class="mat-body-1" style="visibility: hidden">
+              <div class="number-input">
+                <button class="minus-button" (click)="decreaseValue(i)">-</button>
+                <input type="text" [value]="ticketsPerCategory[i]" readonly>
+                <button class="plus-button" (click)="increaseValue(i)">+</button>
+              </div>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="w-100 row" *ngIf="seatsCategories.length > 0">
+    <div class="col-lg-6 col-md-12 col-sm-12">
+      <div class="w-100 row">
+        <h2>Tickets prices</h2>
+        <button mat-icon-button
+                *ngIf="roles.length == 1 && roles.includes('ORGANISER') && eventDto?.status != 'ACCEPTED'"
+                (click)="openPricesEditDialog()">
+          <mat-icon>
+            <i-tabler name="edit"></i-tabler>
+          </mat-icon>
+        </button>
+      </div>
+
+      <div class="row w-100">
+        <div class="w-50">
+          <ul>
+            <ng-container *ngFor="let sc of seatsCategories; let i = index">
+              <li>
+                <strong>{{ sc.name }}:</strong> rows {{ sc.minRow }} - {{ sc.maxRow }}, seats {{ sc.minSeat }}
+                - {{ sc.maxSeat }}
+              </li>
+            </ng-container>
+          </ul>
+        </div>
+
+        <div class="w-25 right-elements">
+          <ul class="no-bullets right-elements">
+            <ng-container *ngFor="let sc of seatsCategories; let i = index">
+              <li>
+                <span *ngIf="discount > 0"
+                      class="f-s-14 m-l-4 text-decoration-line-through">{{ sc.initialPrice }}</span>&nbsp;
+                {{ sc.price }} RON
+              </li>
+            </ng-container>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <br/>
+    <br/>
+    <br/>
+
+  </div>
+
+</div>
 
 <div *ngIf="roles.length == 1 && roles.includes('USER')" class="w-100">
 
@@ -116,7 +296,7 @@
                   {{ element.name }}
                 </h6>
               </div>
-              <p *ngIf="element.ticketsRemaining <= 100">Last {{element.ticketsRemaining}} tickets</p>
+              <p *ngIf="element.ticketsRemaining <= 100">Last {{ element.ticketsRemaining }} tickets</p>
             </td>
           </ng-container>
 
@@ -130,7 +310,8 @@
               Price
             </th>
             <td mat-cell *matCellDef="let element" class="mat-body-1">
-              <span *ngIf="discount > 0" class="f-s-14 m-l-4 text-decoration-line-through">{{ element.initialPrice }}</span>&nbsp;
+              <span *ngIf="discount > 0"
+                    class="f-s-14 m-l-4 text-decoration-line-through">{{ element.initialPrice }}</span>&nbsp;
               {{ element.price }} RON
             </td>
           </ng-container>
@@ -226,7 +407,8 @@
           <ul class="no-bullets right-elements">
             <ng-container *ngFor="let sc of seatsCategories; let i = index">
               <li>
-                <span *ngIf="discount > 0" class="f-s-14 m-l-4 text-decoration-line-through">{{ sc.initialPrice }}</span>&nbsp;
+                <span *ngIf="discount > 0"
+                      class="f-s-14 m-l-4 text-decoration-line-through">{{ sc.initialPrice }}</span>&nbsp;
                 {{ sc.price }} RON
               </li>
             </ng-container>
@@ -302,7 +484,12 @@
 </div>
 
 <div *ngIf="roles.length == 0">
-  <h3 class="icon-text"><mat-icon><i-tabler name="info-circle" class="icon-20"></i-tabler></mat-icon>You need to be authenticated to buy tickets</h3>
+  <h3 class="icon-text">
+    <mat-icon>
+      <i-tabler name="info-circle" class="icon-20"></i-tabler>
+    </mat-icon>
+    You need to be authenticated to buy tickets
+  </h3>
 </div>
 
 <br/>

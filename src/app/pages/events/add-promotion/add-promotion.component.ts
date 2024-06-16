@@ -58,6 +58,7 @@ export class AddPromotionComponent implements OnInit {
   promotionForm: FormGroup;
   eventId: number = 0;
   limitDate: Date = new Date();
+  tomorrow: Date = new Date();
 
   constructor(
     public dialogRef: MatDialogRef<AddPromotionComponent>,
@@ -66,7 +67,7 @@ export class AddPromotionComponent implements OnInit {
     private eventPromotionService: EventPromotionService
   ) {
     this.promotionForm = this.fb.group({
-      value: [null, [Validators.required, Validators.min(0)]],
+      value: [null, [Validators.required, Validators.min(0), Validators.max(100)]],
       endDate: [null, Validators.required]
     });
   }
@@ -75,15 +76,19 @@ export class AddPromotionComponent implements OnInit {
     this.eventPromotionService.getMessage.subscribe(data => {
       this.eventId = data.eventId;
       this.limitDate = data.limitDate;
+      this.tomorrow.setDate(this.tomorrow.getDate() + 1);
     });
   }
 
   onSave(): void {
     if (this.promotionForm.valid) {
       console.log(this.promotionForm.value);
-      this.eventService.addPromotion(this.eventId, new AddPromotionDto(this.promotionForm.value.value, this.promotionForm.value.endDate))
+      this.eventService.addPromotion(this.eventId, new AddPromotionDto(this.promotionForm.value.value, new Date(this.promotionForm.value.endDate.toString() + ' UTC')))
         .subscribe(data => console.log(data));
-      this.dialogRef.close(this.promotionForm.value);
+      setTimeout(() => {
+        this.dialogRef.close(this.promotionForm.value);
+        window.location.reload();
+      }, 1000);
     }
   }
 }

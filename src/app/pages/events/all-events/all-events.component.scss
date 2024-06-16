@@ -1,0 +1,11 @@
+.event-logo {
+  aspect-ratio: 3/2;
+}
+
+.event {
+  transition: transform .15s;
+}
+
+.event:hover {
+  transform: scale(1.05);
+}

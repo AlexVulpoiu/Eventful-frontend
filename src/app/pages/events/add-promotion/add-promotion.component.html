@@ -1,7 +1,7 @@
 <h2 mat-dialog-title>Add promotion</h2>
 <form [formGroup]="promotionForm" (ngSubmit)="onSave()">
   <mat-dialog-content>
-    <mat-form-field appearance="fill">
+    <mat-form-field class="full-width-field" appearance="fill">
       <mat-label>Value</mat-label>
       <input matInput formControlName="value" type="number" required>
       <mat-error *ngIf="promotionForm.get('value')?.hasError('required')">
@@ -10,10 +10,13 @@
       <mat-error *ngIf="promotionForm.get('value')?.hasError('min')">
         Minimum value is 0
       </mat-error>
+      <mat-error *ngIf="promotionForm.get('value')?.hasError('max')">
+        Maximum value is 100
+      </mat-error>
     </mat-form-field>
-    <mat-form-field appearance="fill">
+    <mat-form-field class="full-width-field" appearance="fill">
       <mat-label>End Date</mat-label>
-      <input matInput formControlName="endDate" [matDatepicker]="picker" required>
+      <input matInput formControlName="endDate" [matDatepicker]="picker" required readonly [min]="tomorrow" [max]="limitDate">
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
       <mat-error *ngIf="promotionForm.get('endDate')?.hasError('required')">

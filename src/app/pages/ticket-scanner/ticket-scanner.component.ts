@@ -1,4 +1,4 @@
-import {Component, Inject, LOCALE_ID, ViewChild} from '@angular/core';
+import {Component, Inject, LOCALE_ID, OnInit, ViewChild} from '@angular/core';
 import {BehaviorSubject, distinctUntilChanged, map, Observable, scan, shareReplay, startWith} from "rxjs";
 import {ZXingScannerComponent, ZXingScannerModule} from "@zxing/ngx-scanner";
 import {BarcodeFormat} from "@zxing/library";
@@ -6,6 +6,7 @@ import {AsyncPipe, CommonModule, formatDate, NgIf} from "@angular/common";
 import {MatButton} from "@angular/material/button";
 import {EventService} from "../../services/event.service";
 import {TicketDto} from "../../dto/tickets/ticket-dto";
+import {EventTicketsScannerService} from "../../services/event-tickets-scanner";
 
 @Component({
   selector: 'app-ticket-scanner',
@@ -20,7 +21,7 @@ import {TicketDto} from "../../dto/tickets/ticket-dto";
   templateUrl: './ticket-scanner.component.html',
   styleUrl: './ticket-scanner.component.scss'
 })
-export class TicketScannerComponent {
+export class TicketScannerComponent implements OnInit {
   @ViewChild('scanner') scanner!: ZXingScannerComponent;
   ticketInfo: TicketDto | undefined;
   startDate: Date = new Date();
@@ -28,10 +29,15 @@ export class TicketScannerComponent {
   ticketId: string = '';
   showButton: boolean = false;
   showNextScanButton: boolean = false;
+  eventId: number = 0;
 
-  constructor(private eventService: EventService,
+  constructor(private eventService: EventService, private eventTicketsScannerService: EventTicketsScannerService,
               @Inject(LOCALE_ID) public locale: string) {
 
+  }
+
+  ngOnInit(): void {
+    this.eventTicketsScannerService.getMessage.subscribe(data => this.eventId = data.eventId);
   }
 
   allowedFormats = [BarcodeFormat.QR_CODE];
@@ -65,7 +71,7 @@ export class TicketScannerComponent {
     map((result) => result),
   ).subscribe(id => {
     if (id !== undefined && id !== null && id !== '') {
-      this.eventService.getTicketInfo(10, id)
+      this.eventService.getTicketInfo(this.eventId, id)
         .subscribe(data => {
           this.ticketInfo = data;
           this.startDate = data.startDate;
@@ -78,7 +84,7 @@ export class TicketScannerComponent {
   });
 
   validateTicket() {
-    this.eventService.validateTicket(10, this.ticketId).subscribe(
+    this.eventService.validateTicket(this.eventId, this.ticketId).subscribe(
       () => {
         this.showButton = false;
         this.showNextScanButton = true;

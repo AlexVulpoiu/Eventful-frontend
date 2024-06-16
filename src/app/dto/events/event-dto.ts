@@ -12,6 +12,7 @@ export class EventDto {
   public startDate: Date;
   public endDate: Date;
   public logo: string;
+  public status: string;
   public charityPercentage: number;
   public rejectionReason: string;
   public location: LocationDto;
@@ -24,7 +25,7 @@ export class EventDto {
   public seatsCategories: SeatsCategoryDetails[];
   public unavailableSeats: Seat[];
 
-  constructor(id: number, name: string, description: string, startDate: Date, endDate: Date, logo: string,
+  constructor(id: number, name: string, description: string, startDate: Date, endDate: Date, logo: string, status: string,
               charityPercentage: number, rejectionReason: string, location: LocationDto, organiserName: string,
               discount: number, discountEndDate: Date, raffle: RaffleDto, charitableCause: CharitableCauseDto,
               standingCategories: StandingCategoryDto[], seatsCategories: SeatsCategoryDetails[], unavailableSeats: Seat[]) {
@@ -34,6 +35,7 @@ export class EventDto {
     this.startDate = startDate;
     this.endDate = endDate;
     this.logo = logo;
+    this.status = status;
     this.charityPercentage = charityPercentage;
     this.rejectionReason = rejectionReason;
     this.location = location;

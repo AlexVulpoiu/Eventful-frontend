@@ -16,6 +16,9 @@ import {ProfileComponent} from "./pages/profile/profile.component";
 import {AddEventComponent} from "./pages/events/add-event/add-event.component";
 import {FeedbackComponent} from "./pages/feedback/feedback.component";
 import {AddReviewComponent} from "./pages/events/add-review/add-review.component";
+import {AllEventsComponent} from "./pages/events/all-events/all-events.component";
+import {StatisticsComponent} from "./pages/statistics/statistics.component";
+import {OrganiserProfileComponent} from "./pages/organiser-profile/organiser-profile.component";
 
 const routes: Routes = [
   {
@@ -81,6 +84,10 @@ const routes: Routes = [
         component: AddEventComponent
       },
       {
+        path: 'events/all',
+        component: AllEventsComponent
+      },
+      {
         path: 'events/:eventId',
         component: EventComponent
       },
@@ -99,6 +106,14 @@ const routes: Routes = [
       {
         path: 'reviews/:reviewId',
         component: AddReviewComponent
+      },
+      {
+        path: 'statistics',
+        component: StatisticsComponent
+      },
+      {
+        path: 'organiser-profile',
+        component: OrganiserProfileComponent
       }
     ],
   },

@@ -1,0 +1,49 @@
+<h1>My profile</h1>
+
+<hr/>
+<br>
+
+<div class="w-100">
+  <h1>Personal details</h1>
+  <hr/>
+  <h2>Name: {{ organiserProfileDto?.name }} </h2>
+  <h2>Email: {{ organiserProfileDto?.email}} </h2>
+  <h2>Phone: {{ organiserProfileDto?.phone != undefined ? organiserProfileDto?.phone : 'N/A' }}</h2>
+
+  <br/>
+
+  <h1>Legal details</h1>
+  <hr/>
+  <div class="w-100" *ngIf="organiserProfileDto?.cnp != undefined">
+    <h2>CNP: {{ organiserProfileDto?.cnp }}</h2>
+  </div>
+  <div class="w-100" *ngIf="organiserProfileDto?.cui != undefined">
+    <h2>CUI: {{ organiserProfileDto?.cui }}</h2>
+    <h2>Legal name: {{ organiserProfileDto?.legalName }}</h2>
+  </div>
+  <h2>Commerce registration number: {{ organiserProfileDto?.commerceRegistrationNumber }}</h2>
+
+  <br/>
+
+  <h1>Address</h1>
+  <hr/>
+  <div class="w-100 row col-12">
+    <div class="col-6">
+      <h2>Country: {{ organiserProfileDto?.address?.country }}</h2>
+      <h2>District: {{ organiserProfileDto?.address?.district }}</h2>
+      <h2>City: {{ organiserProfileDto?.address?.city }}</h2>
+    </div>
+    <div class="col-6">
+      <h2>Street: {{ organiserProfileDto?.address?.street }}</h2>
+      <h2>Building: {{ organiserProfileDto?.address?.building }}</h2>
+      <h2>Zip code: {{ organiserProfileDto?.address?.zipCode }}</h2>
+    </div>
+  </div>
+
+  <br/>
+
+  <h1>Bank details</h1>
+  <hr/>
+  <h2>Bank: {{ organiserProfileDto?.bankAccount?.bank }}</h2>
+  <h2>IBAN: {{ organiserProfileDto?.bankAccount?.iban }}</h2>
+</div>

@@ -4,7 +4,8 @@
       Name
     </mat-label>
     <mat-form-field appearance="outline" class="w-100" color="primary">
-      <input matInput id="name" name="name" [formControl]="$any(formGroup).get('name')" />
+      <input matInput id="name" name="name" [formControl]="$any(formGroup).get('name')" required />
+      <mat-error *ngIf="formGroup.get('name')?.hasError('required')">Name is required</mat-error>
     </mat-form-field>
   </div>
 
@@ -13,7 +14,9 @@
       Capacity
     </mat-label>
     <mat-form-field appearance="outline" class="w-100" color="primary">
-      <input matInput type="number" id="capacity" name="capacity" [formControl]="$any(formGroup).get('capacity')" />
+      <input matInput type="number" id="capacity" name="capacity" [formControl]="$any(formGroup).get('capacity')" required min="1" />
+      <mat-error *ngIf="formGroup.get('capacity')?.hasError('required')">Capacity is required</mat-error>
+      <mat-error *ngIf="formGroup.get('capacity')?.hasError('min')">Capacity must be greater than 1</mat-error>
     </mat-form-field>
   </div>
 
@@ -22,7 +25,9 @@
       Price
     </mat-label>
     <mat-form-field appearance="outline" class="w-100" color="primary">
-      <input matInput type="number" id="price" name="price" [formControl]="$any(formGroup).get('price')" />
+      <input matInput type="number" id="price" name="price" [formControl]="$any(formGroup).get('price')" required min="1" />
+      <mat-error *ngIf="formGroup.get('price')?.hasError('required')">Price is required</mat-error>
+      <mat-error *ngIf="formGroup.get('price')?.hasError('min')">Price must be greater than 1</mat-error>
     </mat-form-field>
   </div>
 </div>

@@ -1,0 +1,14 @@
+<h1 mat-dialog-title>Edit name</h1>
+<div mat-dialog-content>
+  <form [formGroup]="editNameForm">
+    <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Name</mat-label>
+    <mat-form-field class="full-width">
+      <input matInput formControlName="name" required>
+      <mat-error *ngIf="editNameForm.get('name')?.hasError('required')">Name is required</mat-error>
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions class="actions-right">
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-button [disabled]="!editNameForm.valid" (click)="onSave()">Save</button>
+</div>

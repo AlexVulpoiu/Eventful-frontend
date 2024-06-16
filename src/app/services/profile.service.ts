@@ -1,6 +1,7 @@
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Injectable} from "@angular/core";
 import {ProfileDto} from "../dto/profile/profile-dto";
+import {OrganiserProfileDto} from "../dto/profile/organiser-profile-dto";
 
 const PROFILE_API = 'http://localhost:8080/api/profile';
 
@@ -17,6 +18,10 @@ export class ProfileService {
 
   getProfileDetails() {
     return this.http.get<ProfileDto>(PROFILE_API, httpOptions);
+  }
+
+  getOrganiserProfile() {
+    return this.http.get<OrganiserProfileDto>(PROFILE_API + '/organiser', httpOptions);
   }
 
   getAvailablePoints() {

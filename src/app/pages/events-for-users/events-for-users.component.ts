@@ -12,6 +12,7 @@ import {EventPreviewDto} from "../../dto/events/event-preview-dto";
 import {FormsModule} from "@angular/forms";
 import {MatIcon} from "@angular/material/icon";
 import {MatInput} from "@angular/material/input";
+import {MatTooltip} from "@angular/material/tooltip";
 
 @Component({
   selector: 'app-events-for-users',
@@ -33,7 +34,8 @@ import {MatInput} from "@angular/material/input";
     FormsModule,
     MatIcon,
     MatInput,
-    MatPaginator
+    MatPaginator,
+    MatTooltip
   ],
   templateUrl: './events-for-users.component.html',
   styleUrls: ['./events-for-users.component.scss']

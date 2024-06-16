@@ -45,6 +45,11 @@ export const navItems: NavItem[] = [
     route: '/events/add'
   },
   {
+    displayName: 'All events',
+    iconName: 'calendar-event',
+    route: '/events/all'
+  },
+  {
     displayName: 'Add feedback',
     iconName: 'writing',
     route: '/feedback'

@@ -6,7 +6,7 @@ import {formatDate, NgClass, NgFor, NgIf, NgStyle} from "@angular/common";
 import {DomSanitizer, SafeResourceUrl} from "@angular/platform-browser";
 import {environment} from "../../../../environments/environment";
 import {TablerIconsModule} from "angular-tabler-icons";
-import {MatButton} from "@angular/material/button";
+import {MatButton, MatIconButton} from "@angular/material/button";
 import {
   MatCell,
   MatCellDef,
@@ -34,6 +34,22 @@ import {EventRejectService} from "../../../services/event-reject.service";
 import {RejectEventComponent} from "../reject-event/reject-event.component";
 import {TokenStorageService} from "../../../services/token-storage.service";
 import {MatIcon} from "@angular/material/icon";
+import {
+  MatAccordion, MatExpansionModule,
+  MatExpansionPanel,
+  MatExpansionPanelDescription,
+  MatExpansionPanelTitle
+} from "@angular/material/expansion";
+import {EventReviewsService} from "../../../services/event-reviews-service";
+import {EventReviewsComponent} from "../event-reviews/event-reviews.component";
+import {EventOrdersService} from "../../../services/event-orders-service";
+import {EventOrdersComponent} from "../event-orders/event-orders.component";
+import {EventTicketsScannerService} from "../../../services/event-tickets-scanner";
+import {EventEditService} from "../../../services/event-edit.service";
+import {EditNameComponent} from "../edit-name/edit-name.component";
+import {EditDescriptionComponent} from "../edit-description/edit-description.component";
+import {EditCharitableCauseComponent} from "../edit-charitable-cause/edit-charitable-cause.component";
+import {EditPricesComponent} from "../edit-prices/edit-prices.component";
 
 @Component({
   selector: 'app-event',
@@ -57,7 +73,13 @@ import {MatIcon} from "@angular/material/icon";
     NgFor,
     NgClass,
     MatTooltip,
-    MatIcon
+    MatIcon,
+    MatExpansionModule,
+    MatExpansionPanel,
+    MatExpansionPanelTitle,
+    MatExpansionPanelDescription,
+    MatAccordion,
+    MatIconButton
   ],
   templateUrl: './event.component.html',
   styleUrl: './event.component.scss'
@@ -66,7 +88,9 @@ export class EventComponent implements OnInit {
 
   eventDto: EventDto | undefined;
   startDate: Date = new Date();
+  startDateAsDate: Date = new Date();
   endDate: Date = new Date();
+  endDateAsDate: Date = new Date();
   standingCategories: StandingCategoryDto[] = [];
   seatsCategories: SeatsCategoryDetails[] = [];
   safeMapsUrl: SafeResourceUrl = this.domSanitizer.bypassSecurityTrustResourceUrl('');
@@ -77,6 +101,7 @@ export class EventComponent implements OnInit {
   roles: string[] = [];
   discount: number = 0;
   discountEndDate: Date = new Date();
+  currentDate: Date = new Date();
 
   private seatConfig: any = [];
   protected seatmap: any[] = [];
@@ -99,7 +124,9 @@ export class EventComponent implements OnInit {
               @Inject(LOCALE_ID) public locale: string, protected router: Router,
               private eventOrderService: EventOrderService, private eventPromotionService: EventPromotionService,
               private eventRaffleService: EventRaffleService, private eventApproveService: EventApproveService,
-              private eventRejectService: EventRejectService,
+              private eventRejectService: EventRejectService, private eventReviewsService: EventReviewsService,
+              private eventOrdersService: EventOrdersService, private eventTicketsScannerService: EventTicketsScannerService,
+              private eventEditService: EventEditService,
               public dialog: MatDialog, private tokenStorageService: TokenStorageService) {
   }
 
@@ -135,6 +162,79 @@ export class EventComponent implements OnInit {
       if (result) {
         console.log('The dialog was closed with data: ', result);
       }
+    });
+  }
+
+  openEditNameDialog() {
+    this.eventEditService.setMessage({name: this.eventDto?.name, id: this.eventDto?.id});
+
+    const dialogRef = this.dialog.open(EditNameComponent, {
+      width: '600px'
+    });
+
+    dialogRef.afterClosed().subscribe(() => window.location.reload());
+  }
+
+  openEditDescriptionDialog() {
+    this.eventEditService.setMessage({description: this.eventDto?.description, id: this.eventDto?.id});
+
+    const dialogRef = this.dialog.open(EditDescriptionComponent, {
+      width: '600px'
+    });
+
+    dialogRef.afterClosed().subscribe(() => window.location.reload());
+  }
+
+  openEditCharitableCauseDialog() {
+    this.eventEditService.setMessage({
+      id: this.eventDto?.charitableCause.id,
+      name: this.eventDto?.charitableCause.name,
+      description: this.eventDto?.charitableCause.description,
+      neededAmount: this.eventDto?.charitableCause.neededAmount
+    });
+
+    const dialogRef = this.dialog.open(EditCharitableCauseComponent, {
+      width: '600px'
+    });
+
+    dialogRef.afterClosed().subscribe(() => window.location.reload());
+  }
+
+  openPricesEditDialog() {
+    this.eventEditService.setMessage({
+      id: this.eventDto?.id,
+      categories: this.standingCategories.length > 0 ? this.standingCategories : this.seatsCategories
+    });
+
+    const dialogRef = this.dialog.open(EditPricesComponent, {
+      width: '600px'
+    });
+
+    dialogRef.afterClosed().subscribe(() => window.location.reload());
+  }
+
+  goToTicketsScannerPage() {
+    this.eventTicketsScannerService.setMessage({eventId: this.eventDto?.id});
+    this.router.navigate(['/tickets-scanner']);
+  }
+
+  openOrdersDialog() {
+    this.eventService.getOrders(this.eventDto?.id!).subscribe(
+      data => this.eventOrdersService.setMessage(data)
+    );
+
+    const dialogRef = this.dialog.open(EventOrdersComponent, {
+      width: '600px'
+    });
+  }
+
+  openReviewsDialog() {
+    this.eventService.getReviews(this.eventDto?.id!).subscribe(
+      data => this.eventReviewsService.setMessage(data)
+    );
+
+    const dialogRef = this.dialog.open(EventReviewsComponent, {
+      width: '600px'
     });
   }
 
@@ -215,13 +315,15 @@ export class EventComponent implements OnInit {
         const url = `https://www.google.com/maps/embed/v1/place?key=${mapsApiKey}&q=${this.eventDto?.location.fullAddress}`;
         this.safeMapsUrl = this.domSanitizer.bypassSecurityTrustResourceUrl(url);
         this.startDate = this.eventDto.startDate;
+        this.startDateAsDate = new Date(this.startDate);
         this.endDate = this.eventDto.endDate;
+        this.endDateAsDate = new Date(this.endDate);
         this.standingCategories = this.eventDto.standingCategories;
         this.seatsCategories = this.eventDto.seatsCategories;
         this.unavailableSeats = this.eventDto.unavailableSeats;
         this.discount = this.eventDto.discount;
         this.discountEndDate = this.eventDto.discountEndDate;
-        console.log(this.unavailableSeats);
+        // console.log(this.unavailableSeats);
         this.location = this.eventDto.location;
         for (let i = 0; i < this.standingCategories.length; i++) {
           this.ticketsPerCategory.push(0);
@@ -336,7 +438,7 @@ export class EventComponent implements OnInit {
             totalItemCounter++;
             mapObj["seats"].push(seatObj);
           });
-          console.log(" \n\n\n Seat Objects ", mapObj);
+          // console.log(" \n\n\n Seat Objects ", mapObj);
           this.seatmap.push(mapObj);
 
         });
