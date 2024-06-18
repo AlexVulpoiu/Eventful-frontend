@@ -1,0 +1,59 @@
+<mat-dialog-content>
+  <div class="w-100">
+    <h1>Personal details</h1>
+    <hr/>
+    <h2>Name: {{ data?.name }} </h2>
+    <h2>Email: {{ data?.email }} </h2>
+    <h2>Phone: {{ data?.phone != undefined ? data?.phone : 'N/A' }}</h2>
+    <h2>Status: {{ data?.status }}</h2>
+
+    <br/>
+
+    <h1>Legal details</h1>
+    <hr/>
+    <div class="w-100" *ngIf="data?.cnp != undefined">
+      <h2>CNP: {{ data?.cnp }}</h2>
+    </div>
+    <div class="w-100" *ngIf="data?.cui != undefined">
+      <h2>CUI: {{ data?.cui }}</h2>
+      <h2>Legal name: {{ data?.legalName }}</h2>
+    </div>
+    <h2>Commerce registration number: {{ data?.commerceRegistrationNumber }}</h2>
+
+    <br/>
+
+    <h1>Address</h1>
+    <hr/>
+    <div class="w-100 row col-12">
+      <div class="col-6">
+        <h2>Country: {{ data?.address?.country }}</h2>
+        <h2>District: {{ data?.address?.district }}</h2>
+        <h2>City: {{ data?.address?.city }}</h2>
+      </div>
+      <div class="col-6">
+        <h2>Street: {{ data?.address?.street }}</h2>
+        <h2>Building: {{ data?.address?.building }}</h2>
+        <h2>Zip code: {{ data?.address?.zipCode }}</h2>
+      </div>
+    </div>
+
+    <br/>
+
+    <h1>Bank details</h1>
+    <hr/>
+    <h2>Bank: {{ data?.bankAccount?.bank }}</h2>
+    <h2>IBAN: {{ data?.bankAccount?.iban }}</h2>
+
+    <br/>
+    <hr/>
+
+    <div *ngIf="data?.status == 'PENDING'" class="button-container">
+      <button mat-flat-button class="success-button" (click)="onApprove(data)">Approve</button>
+      <button mat-flat-button class="delete-button" (click)="onReject(data)">Reject</button>
+    </div>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-flat-button color="accent" (click)="onClose()">Close</button>
+</mat-dialog-actions>

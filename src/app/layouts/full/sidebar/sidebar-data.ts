@@ -55,6 +55,16 @@ export const navItems: NavItem[] = [
     route: '/feedback'
   },
   {
+    displayName: 'View feedback',
+    iconName: 'list-details',
+    route: '/view-feedback'
+  },
+  {
+    displayName: 'View organisers',
+    iconName: 'users-group',
+    route: '/organisers'
+  },
+  {
     navCap: 'Ui Components',
   },
   {

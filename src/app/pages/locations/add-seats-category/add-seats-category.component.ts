@@ -1,7 +1,8 @@
 import {Component, Input} from '@angular/core';
 import {FormGroup, FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {MatFormField, MatLabel} from "@angular/material/form-field";
+import {MatError, MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
+import {NgIf} from "@angular/common";
 
 @Component({
   selector: 'app-add-seats-category',
@@ -11,7 +12,9 @@ import {MatInput} from "@angular/material/input";
     MatFormField,
     MatInput,
     MatLabel,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatError,
+    NgIf
   ],
   templateUrl: './add-seats-category.component.html',
   styleUrl: './add-seats-category.component.scss'

@@ -4,7 +4,8 @@
       Name
     </mat-label>
     <mat-form-field appearance="outline" class="w-100" color="primary">
-      <input matInput id="name" name="name" [formControl]="$any(formGroup).get('name')" />
+      <input matInput [formControl]="$any(formGroup).get('name')"/>
+      <mat-error *ngIf="formGroup.controls['name'].hasError('required')">Name is required</mat-error>
     </mat-form-field>
   </div>
 
@@ -14,6 +15,9 @@
     </mat-label>
     <mat-form-field appearance="outline" class="w-100" color="primary">
       <input matInput type="number" id="minRow" name="minRow" [formControl]="$any(formGroup).get('minRow')" />
+      <mat-error *ngIf="formGroup.controls['minRow'].hasError('required')">Start row is required</mat-error>
+      <mat-error *ngIf="formGroup.controls['minRow'].hasError('min')">Start row must be at least 1</mat-error>
+      <mat-error *ngIf="formGroup.get('minRow')?.hasError('max')">Start row cannot exceed total rows</mat-error>
     </mat-form-field>
 
     <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">
@@ -21,6 +25,9 @@
     </mat-label>
     <mat-form-field appearance="outline" class="w-100" color="primary">
       <input matInput type="number" id="maxRow" name="maxRow" [formControl]="$any(formGroup).get('maxRow')" />
+      <mat-error *ngIf="formGroup.controls['maxRow'].hasError('required')">End row is required</mat-error>
+      <mat-error *ngIf="formGroup.controls['maxRow'].hasError('min')">End row must be at least 1</mat-error>
+      <mat-error *ngIf="formGroup.get('maxRow')?.hasError('max')">End row cannot exceed total rows</mat-error>
     </mat-form-field>
   </div>
 
@@ -30,6 +37,9 @@
     </mat-label>
     <mat-form-field appearance="outline" class="w-100" color="primary">
       <input matInput type="number" id="minSeat" name="minSeat" [formControl]="$any(formGroup).get('minSeat')" />
+      <mat-error *ngIf="formGroup.controls['minSeat'].hasError('required')">Start seat is required</mat-error>
+      <mat-error *ngIf="formGroup.controls['minSeat'].hasError('min')">Start seat must be at least 1</mat-error>
+      <mat-error *ngIf="formGroup.get('minSeat')?.hasError('max')">Start seat cannot exceed total seats per row</mat-error>
     </mat-form-field>
 
     <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">
@@ -37,6 +47,9 @@
     </mat-label>
     <mat-form-field appearance="outline" class="w-100" color="primary">
       <input matInput type="number" id="maxSeat" name="maxSeat" [formControl]="$any(formGroup).get('maxSeat')" />
+      <mat-error *ngIf="formGroup.controls['maxSeat'].hasError('required')">End seat is required</mat-error>
+      <mat-error *ngIf="formGroup.controls['maxSeat'].hasError('min')">End seat must be at least 1</mat-error>
+      <mat-error *ngIf="formGroup.get('maxSeat')?.hasError('max')">End seat cannot exceed total seats per row</mat-error>
     </mat-form-field>
   </div>
 </div>

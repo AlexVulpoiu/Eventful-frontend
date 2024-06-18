@@ -1,0 +1,13 @@
+<h2 mat-dialog-title>{{ data.name }}</h2>
+<br/>
+<mat-dialog-content>
+  <h3><strong>General info</strong></h3>
+  <hr/>
+  <p><strong>Address:</strong> {{ data.address }}</p>
+  <p><strong>City:</strong> {{ data.city }}</p>
+  <p><strong>Country:</strong> {{ data.country }}</p>
+  <p><strong>Capacity:</strong> {{ data.capacity }}</p>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-flat-button color="accent" (click)="onClose()">Close</button>
+</mat-dialog-actions>

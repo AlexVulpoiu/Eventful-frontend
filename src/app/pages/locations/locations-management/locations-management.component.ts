@@ -14,15 +14,20 @@ import {
   MatHeaderRowDef,
   MatRow, MatRowDef, MatTable
 } from "@angular/material/table";
-import {MatIconModule} from '@angular/material/icon';
 import {NgIf, TitleCasePipe} from "@angular/common";
-import {productsData} from "../../dashboard/dashboard.component";
 import {SeatedLocationDto} from "../../../dto/locations/seated-location-dto";
 import {LocationsService} from "../../../services/locations.service";
 import {Router} from "@angular/router";
 import {MatBadge} from "@angular/material/badge";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {StandingLocationDto} from "../../../dto/locations/standing-location-dto";
+import {MatDialog} from "@angular/material/dialog";
+import {
+  StandingLocationDetailsDialogComponent
+} from "../standing-location-details-dialog/standing-location-details-dialog.component";
+import {
+  SeatedLocationDetailsDialogComponent
+} from "../seated-location-details-dialog/seated-location-details-dialog.component";
 
 @Component({
   selector: 'app-locations-management',
@@ -55,40 +60,55 @@ import {StandingLocationDto} from "../../../dto/locations/standing-location-dto"
 })
 export class LocationsManagementComponent implements OnInit {
 
-  length = 50;
-  pageSize = 10;
-  pageIndex = 0;
-  hidePageSize = false;
-  showFirstLastButtons = true;
-  disabled = false;
+  searchStanding: string = '';
+  searchSeated: string = '';
 
-  pageEvent: PageEvent = new PageEvent();
-
-  handlePageEvent(e: PageEvent) {
-    this.pageEvent = e;
-    this.length = e.length;
-    this.pageSize = e.pageSize;
-    this.pageIndex = e.pageIndex;
-    this.seatedLocations = this.seatedLocations.reverse();
-  }
-
-  search: string = '';
   seatedLocations: SeatedLocationDto[] = [];
   standingLocations: StandingLocationDto[] = [];
 
   displayedColumns: string[] = ['index', 'name', 'address', 'capacity', 'actions'];
 
-  constructor(private locationService: LocationsService, protected router: Router) {
+  constructor(private locationService: LocationsService, protected router: Router, protected dialog: MatDialog) {
+  }
+
+  onSearchStandingChange(value: string) {
+    this.searchStanding = value;
+    this.loadStandingLocations();
+  }
+
+  onSearchSeatedChange(value: string) {
+    this.searchSeated = value;
+    this.loadSeatedLocations();
   }
 
   ngOnInit() {
-    this.locationService.getSeatedLocations().subscribe(
-      (response: SeatedLocationDto[]) => this.seatedLocations = response
-    );
+    this.loadStandingLocations();
+    this.loadSeatedLocations();
+  }
 
-    this.locationService.getStandingLocations().subscribe(
+  loadStandingLocations() {
+    this.locationService.getStandingLocations(this.searchStanding).subscribe(
       (response: StandingLocationDto[]) => this.standingLocations = response
     );
+  }
 
+  loadSeatedLocations() {
+    this.locationService.getSeatedLocations(this.searchSeated).subscribe(
+      (response: SeatedLocationDto[]) => this.seatedLocations = response
+    );
+  }
+
+  openStandingLocationDetails(location: StandingLocationDto) {
+    this.dialog.open(StandingLocationDetailsDialogComponent, {
+      width: '400px',
+      data: location
+    });
+  }
+
+  openSeatedLocationDetails(location: SeatedLocationDto) {
+    this.dialog.open(SeatedLocationDetailsDialogComponent, {
+      width: '400px',
+      data: location
+    });
   }
 }

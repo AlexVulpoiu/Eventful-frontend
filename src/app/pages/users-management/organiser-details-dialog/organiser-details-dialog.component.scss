@@ -1,0 +1,32 @@
+
+mat-dialog-actions {
+  margin: 0 20px;
+}
+
+.success-button {
+  background-color: #10e05c;
+  color: white;
+}
+
+.delete-button {
+  background-color: #ee5026;
+  color: white;
+}
+
+.button-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.button-container button {
+  flex: 1;
+  margin: 0 5px;
+}
+
+.button-container button:first-child {
+  margin-left: 0;
+}
+
+.button-container button:last-child {
+  margin-right: 0;
+}

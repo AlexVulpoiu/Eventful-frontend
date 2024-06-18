@@ -25,8 +25,26 @@
                 (click)="openReviewsDialog()">View reviews
         </button>
       </div>
-      <!--      <button mat-button (click)="openApprovalDialog()">Approve</button>&nbsp;&nbsp;-->
-      <!--      <button mat-button (click)="openRejectionDialog()">Reject</button>&nbsp;&nbsp;-->
+
+    </mat-expansion-panel>
+  </mat-accordion>
+  <br/>
+</div>
+
+<div *ngIf="eventDto?.status == 'PENDING' && roles.includes('MODERATOR') || roles.includes('ADMIN')">
+  <mat-accordion>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>View options for event</mat-panel-title>
+        <mat-panel-description>
+          Approve or reject event
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <div class="button-container">
+        <button mat-flat-button class="success-button" (click)="openApprovalDialog()">Approve</button>
+        <button mat-flat-button class="delete-button" (click)="openRejectionDialog()">Reject</button>
+      </div>
 
     </mat-expansion-panel>
   </mat-accordion>
@@ -76,7 +94,8 @@
     <div class="w-100 description">
       <div class="w-100 row">
         <h2>Event details</h2>
-        <button mat-icon-button *ngIf="roles.length == 1 && roles.includes('ORGANISER') && eventDto?.status != 'ACCEPTED'"
+        <button mat-icon-button
+                *ngIf="roles.length == 1 && roles.includes('ORGANISER') && eventDto?.status != 'ACCEPTED'"
                 (click)="openEditDescriptionDialog()">
           <mat-icon>
             <i-tabler name="edit"></i-tabler>
@@ -90,7 +109,8 @@
       <br/>
       <div class="w-100 row">
         <h2>This event supports a charitable cause</h2>
-        <button mat-icon-button *ngIf="roles.length == 1 && roles.includes('ORGANISER') && eventDto?.status != 'ACCEPTED'"
+        <button mat-icon-button
+                *ngIf="roles.length == 1 && roles.includes('ORGANISER') && eventDto?.status != 'ACCEPTED'"
                 (click)="openEditCharitableCauseDialog()">
           <mat-icon>
             <i-tabler name="edit"></i-tabler>

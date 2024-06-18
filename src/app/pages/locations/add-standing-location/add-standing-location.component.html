@@ -1,52 +1,54 @@
 <div class="col-md-6">
-  <h1>Add standing location</h1>
+  <h1>Add Standing Location</h1>
 
   <br/>
 
-  <form class="m-t-30" (ngSubmit)="onSubmit()">
+  <form class="m-t-30" [formGroup]="form" (ngSubmit)="onSubmit()">
     <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">
       Name
     </mat-label>
     <mat-form-field appearance="outline" class="w-100" color="primary">
-      <input matInput placeholder="Location name" [formControl]="$any(form).controls?.name" (blur)="updateErrorMessage()"/>
-      @if ($any(form).controls?.name.invalid) {
-        <mat-error>{{errorMessage}}</mat-error>
-      }
+      <input matInput placeholder="Location name" formControlName="name"/>
+      <mat-error *ngIf="form.controls['name'].hasError('required')">Name is required</mat-error>
     </mat-form-field>
 
     <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">
       City
     </mat-label>
     <mat-form-field appearance="outline" class="w-100" color="primary">
-      <input matInput id="city" name="city" [formControl]="$any(form).controls?.city" (blur)="updateErrorMessage()" />
+      <input matInput placeholder="City" formControlName="city"/>
+      <mat-error *ngIf="form.controls['city'].hasError('required')">City is required</mat-error>
     </mat-form-field>
 
     <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">
       Country
     </mat-label>
     <mat-form-field appearance="outline" class="w-100" color="primary">
-      <input matInput id="country" name="country" [formControl]="$any(form).controls?.country" (blur)="updateErrorMessage()" />
+      <input matInput placeholder="Country" formControlName="country"/>
+      <mat-error *ngIf="form.controls['country'].hasError('required')">Country is required</mat-error>
     </mat-form-field>
 
     <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">
       Address
     </mat-label>
     <mat-form-field appearance="outline" class="w-100" color="primary">
-      <input matInput id="address" name="address" [formControl]="$any(form).controls?.address" (blur)="updateErrorMessage()" />
+      <input matInput placeholder="Address" formControlName="address"/>
+      <mat-error *ngIf="form.controls['address'].hasError('required')">Address is required</mat-error>
     </mat-form-field>
 
     <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">
       Capacity
     </mat-label>
     <mat-form-field appearance="outline" class="w-100" color="primary">
-      <input matInput id="capacity" name="capacity" [formControl]="$any(form).controls?.capacity" (blur)="updateErrorMessage()" />
+      <input matInput type="number" placeholder="Capacity" formControlName="capacity"/>
+      <mat-error *ngIf="form.controls['capacity'].hasError('required')">Capacity is required</mat-error>
+      <mat-error *ngIf="form.controls['capacity'].hasError('min')">Capacity must be at least 1</mat-error>
     </mat-form-field>
 
     <div class="form-group">
-      <button mat-flat-button class="success-button w-100">
-        Save location
+      <button mat-flat-button class="success-button w-100" [disabled]="form.invalid">
+        Save Location
       </button>
     </div>
-    <!-- input -->
   </form>
 </div>

@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {FormsModule, Validators, ReactiveFormsModule, FormControl, FormGroup} from "@angular/forms";
+import {FormsModule, Validators, ReactiveFormsModule, FormControl, FormGroup, FormBuilder} from "@angular/forms";
 import {MatButton} from "@angular/material/button";
 import {MatCard, MatCardContent} from "@angular/material/card";
 import {MatFormField, MatFormFieldModule, MatLabel} from "@angular/material/form-field";
@@ -31,31 +31,19 @@ import {AddStandingLocationDto} from "../../../dto/locations/add-standing-locati
 })
 export class AddStandingLocationComponent implements OnInit {
 
-  form: FormGroup = new FormGroup({
-    name: new FormControl('', [Validators.required, Validators.minLength(1)]),
-    city: new FormControl('', [Validators.required, Validators.minLength(1)]),
-    country: new FormControl('', [Validators.required, Validators.minLength(1)]),
-    address: new FormControl('', [Validators.required, Validators.minLength(1)]),
-    capacity: new FormControl(1, [Validators.required, Validators.min(1)]),
-  });
+  form: FormGroup = new FormGroup({});
 
-  errorMessage = '';
-
-  constructor(private locationService: LocationsService, private router: Router) {
+  constructor(private fb: FormBuilder, private locationService: LocationsService, private router: Router) {
   }
 
-  ngOnInit() {
-
-  }
-
-  updateErrorMessage() {
-    if (this.form.controls['name'].hasError('required')) {
-      this.errorMessage = 'You must enter a value';
-    } else if (this.form.controls['name'].hasError('minLength')) {
-      this.errorMessage = 'Name should have at least 1 character';
-    } else {
-      this.errorMessage = '';
-    }
+  ngOnInit(): void {
+    this.form = this.fb.group({
+      name: ['', Validators.required],
+      city: ['', Validators.required],
+      country: ['', Validators.required],
+      address: ['', Validators.required],
+      capacity: ['', [Validators.required, Validators.min(1)]]
+    });
   }
 
   onSubmit(): void {
@@ -64,7 +52,7 @@ export class AddStandingLocationComponent implements OnInit {
         this.form.value.address, this.form.value.capacity)
     ).subscribe(data => {
       console.log(data);
-      this.router.navigate(['/events']);
+      this.router.navigate(['/locations']);
     });
   }
 }

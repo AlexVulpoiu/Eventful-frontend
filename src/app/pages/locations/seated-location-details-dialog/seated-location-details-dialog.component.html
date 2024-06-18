@@ -1,0 +1,21 @@
+<h2 mat-dialog-title>{{ data.name }}</h2>
+<br/>
+<mat-dialog-content>
+  <h3><strong>General info</strong></h3>
+  <hr/>
+  <p><strong>Address:</strong> {{ data.address }}</p>
+  <p><strong>City:</strong> {{ data.city }}</p>
+  <p><strong>Country:</strong> {{ data.country }}</p>
+  <p><strong>Number of rows:</strong> {{ data.numberOfRows }}</p>
+  <p><strong>Seats per row:</strong> {{ data.seatsPerRow }}</p>
+  <p><strong>Total capacity:</strong> {{ data.numberOfRows * data.seatsPerRow }}</p>
+  <br/>
+  <h3><strong>Seats categories</strong></h3>
+  <hr/>
+  <p *ngFor="let sc of data.seatsCategories">
+    <strong>{{ sc.name }}:</strong> rows {{ sc.minRow }} - {{ sc.maxRow }}, seats {{ sc.minSeat }} - {{ sc.maxSeat }}
+  </p>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-flat-button color="accent" (click)="onClose()">Close</button>
+</mat-dialog-actions>

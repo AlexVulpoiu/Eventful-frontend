@@ -17,12 +17,12 @@ export class LocationsService {
   constructor(private http: HttpClient) {
   }
 
-  getSeatedLocations() {
-    return this.http.get<SeatedLocationDto[]>(LOCATIONS_API + '/seated', httpOptions);
+  getSeatedLocations(search: string) {
+    return this.http.get<SeatedLocationDto[]>(LOCATIONS_API + '/seated?search=' + search, httpOptions);
   }
 
-  getStandingLocations() {
-    return this.http.get<StandingLocationDto[]>(LOCATIONS_API + '/standing', httpOptions);
+  getStandingLocations(search: string) {
+    return this.http.get<StandingLocationDto[]>(LOCATIONS_API + '/standing?search=' + search, httpOptions);
   }
 
   addStandingLocation(addStandingLocationDto: AddStandingLocationDto) {
