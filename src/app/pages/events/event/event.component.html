@@ -1,3 +1,7 @@
+<div *ngIf="endDateAsDate <= currentDate" class="col-12">
+  <h1>Tickets statistics: {{ eventDto?.soldTickets }} tickets sold, {{ eventDto?.participants }} participants</h1>
+</div>
+
 <div *ngIf="roles.length == 1 && roles.includes('ORGANISER') && eventDto?.status == 'ACCEPTED'">
   <mat-accordion>
     <mat-expansion-panel>

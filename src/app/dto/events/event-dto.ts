@@ -19,6 +19,8 @@ export class EventDto {
   public organiserName: string;
   public discount: number;
   public discountEndDate: Date;
+  public soldTickets: number;
+  public participants: number;
   public raffle: RaffleDto;
   public charitableCause: CharitableCauseDto;
   public standingCategories: StandingCategoryDto[];
@@ -27,7 +29,7 @@ export class EventDto {
 
   constructor(id: number, name: string, description: string, startDate: Date, endDate: Date, logo: string, status: string,
               charityPercentage: number, rejectionReason: string, location: LocationDto, organiserName: string,
-              discount: number, discountEndDate: Date, raffle: RaffleDto, charitableCause: CharitableCauseDto,
+              discount: number, discountEndDate: Date, soldTickets: number, participants: number, raffle: RaffleDto, charitableCause: CharitableCauseDto,
               standingCategories: StandingCategoryDto[], seatsCategories: SeatsCategoryDetails[], unavailableSeats: Seat[]) {
     this.id = id;
     this.name = name;
@@ -42,6 +44,8 @@ export class EventDto {
     this.organiserName = organiserName;
     this.discount = discount;
     this.discountEndDate = discountEndDate;
+    this.soldTickets = soldTickets;
+    this.participants = participants;
     this.raffle = raffle;
     this.charitableCause = charitableCause;
     this.standingCategories = standingCategories;
