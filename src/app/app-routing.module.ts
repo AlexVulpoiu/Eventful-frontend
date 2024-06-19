@@ -24,6 +24,7 @@ import {ViewOrganisersComponent} from "./pages/users-management/view-organisers/
 import {RolesComponent} from "./pages/roles/roles.component";
 import {ViewUsersComponent} from "./pages/users-management/view-users/view-users.component";
 import {GeneralStatisticsComponent} from "./pages/general-statistics/general-statistics.component";
+import {AccountConfirmationComponent} from "./pages/account-confirmation/account-confirmation.component";
 
 const routes: Routes = [
   {
@@ -139,6 +140,10 @@ const routes: Routes = [
       {
         path: 'general-statistics',
         component: GeneralStatisticsComponent
+      },
+      {
+        path: 'confirm-account/:code',
+        component: AccountConfirmationComponent
       }
     ],
   },

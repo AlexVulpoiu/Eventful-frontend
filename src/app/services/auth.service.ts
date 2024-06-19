@@ -37,6 +37,10 @@ export class AuthService {
     return this.http.post(AUTH_API + "organisers/legal/signup", legalPersonSignupRequest, httpOptions);
   }
 
+  confirmAccount(code: string) {
+    return this.http.post<any>(AUTH_API + 'verify?code=' + code, httpOptions);
+  }
+
   logout(): void {
     this.tokenStorageService.logout();
     this.router.navigate(['/events']);
