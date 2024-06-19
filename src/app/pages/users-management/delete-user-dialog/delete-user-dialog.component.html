@@ -1,0 +1,9 @@
+<h1 mat-dialog-title>Delete moderator</h1>
+<div mat-dialog-content>
+  <p style="text-align: justify">You are about to permanently delete this account from the database.</p>
+  <p>Are you sure you want to continue?</p>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-flat-button class="delete-button" (click)="onSubmit()">Submit</button>
+</div>

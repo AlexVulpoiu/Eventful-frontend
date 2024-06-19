@@ -1,0 +1,10 @@
+.delete-button {
+  background-color: #ee5026;
+  color: white;
+}
+
+.buttons-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}

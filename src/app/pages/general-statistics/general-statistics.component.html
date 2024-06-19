@@ -1,0 +1,77 @@
+<div class="row w-100">
+  <div class="col-2"></div>
+  <div class="col-8">
+    <div class="col-12">
+      <mat-card class="cardWithShadow">
+        <mat-card-content class="p-24">
+          <div class="d-flex w-100">
+            <mat-card-title>Income Overview</mat-card-title>
+          </div>
+          <apx-chart
+            [series]="salesOverviewChart.series"
+            [dataLabels]="salesOverviewChart.dataLabels"
+            [chart]="salesOverviewChart.chart"
+            [legend]="salesOverviewChart.legend"
+            [xaxis]="salesOverviewChart.xaxis"
+            [yaxis]="salesOverviewChart.yaxis"
+            [grid]="salesOverviewChart.grid"
+            [stroke]="salesOverviewChart.stroke"
+            [tooltip]="salesOverviewChart.tooltip"
+            [plotOptions]="salesOverviewChart.plotOptions"
+          ></apx-chart>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+
+    <div class="col-12">
+      <mat-card class="cardWithShadow">
+        <mat-card-content class="p-24">
+          <div class="d-flex w-100">
+            <mat-card-title>Events Overview</mat-card-title>
+          </div>
+          <apx-chart
+            [series]="eventsOverviewChart.series"
+            [dataLabels]="eventsOverviewChart.dataLabels"
+            [chart]="eventsOverviewChart.chart"
+            [legend]="eventsOverviewChart.legend"
+            [xaxis]="eventsOverviewChart.xaxis"
+            [yaxis]="eventsOverviewChart.yaxis"
+            [grid]="eventsOverviewChart.grid"
+            [stroke]="eventsOverviewChart.stroke"
+            [tooltip]="eventsOverviewChart.tooltip"
+            [plotOptions]="eventsOverviewChart.plotOptions"
+          ></apx-chart>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <div class="col-12">
+      <mat-card class="cardWithShadow">
+        <mat-card-content class="p-24">
+          <div class="w-100">
+            <mat-card-title>General statistics</mat-card-title>
+            <br/>
+            <div class="statistics-grid">
+              <div class="stat-item">
+                <h6 class="mat-headline-5">Total income: {{ generalStatisticsDto?.totalIncome }} RON</h6>
+              </div>
+              <div class="stat-item">
+                <h6 class="mat-headline-5">Events organized: {{ generalStatisticsDto?.totalEvents }}</h6>
+              </div>
+              <div class="stat-item">
+                <h6 class="mat-headline-5">Tickets sold: {{ generalStatisticsDto?.totalTicketsSold }}</h6>
+              </div>
+              <div class="stat-item">
+                <h6 class="mat-headline-5">Users retained: {{ generalStatisticsDto?.totalUsers }}</h6>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+  </div>
+  <div class="col-2"></div>
+</div>
+

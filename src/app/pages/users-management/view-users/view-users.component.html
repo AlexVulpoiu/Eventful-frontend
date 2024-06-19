@@ -1,0 +1,162 @@
+<div class="row w-100">
+  <div class="col-6">
+    <h1>Users</h1>
+  </div>
+  <div class="col-6">
+    <button class="w-100" mat-flat-button color="primary" (click)="openAddModeratorDialog()">Add moderator</button>
+  </div>
+</div>
+<hr/>
+<br/>
+
+<mat-tab-group>
+  <mat-tab label="Users">
+    <div class="table-responsive m-t-16">
+      <table mat-table [dataSource]="users" class="w-100 table-striped">
+        <ng-container matColumnDef="index">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="f-w-600 mat-subtitle-1 f-s-14"
+          >
+            #
+          </th>
+          <td mat-cell *matCellDef="let element; let i = index;">
+            <div class="d-flex align-items-center">
+              <h6 class="mat-subtitle-1 f-s-14 f-w-600">
+                {{ i + 1 }}.
+              </h6>
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="f-w-600 mat-subtitle-1 f-s-14"
+          >
+            Name
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <div class="d-flex align-items-center">
+              <h6 class="mat-subtitle-1 f-s-14 f-w-600">
+                {{ element.fullName }}
+              </h6>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="email">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="f-w-600 mat-subtitle-1 f-s-14"
+          >
+            Email
+          </th>
+          <td mat-cell *matCellDef="let element" class="mat-body-1">
+            {{ element.email }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="f-w-600 mat-subtitle-1 f-s-14"
+          >
+            Actions
+          </th>
+          <td mat-cell *matCellDef="let element" class="mat-body-1">
+            <button mat-flat-button color="accent" class="w-100" (click)="openChangeRoleDialog('MODERATOR', moderatorText, element.id)">
+              Change role to MODERATOR
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    </div>
+  </mat-tab>
+
+  <mat-tab label="Moderators">
+    <div class="table-responsive m-t-16">
+      <table mat-table [dataSource]="moderators" class="w-100 table-striped">
+        <ng-container matColumnDef="index">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="f-w-600 mat-subtitle-1 f-s-14"
+          >
+            #
+          </th>
+          <td mat-cell *matCellDef="let element; let i = index;">
+            <div class="d-flex align-items-center">
+              <h6 class="mat-subtitle-1 f-s-14 f-w-600">
+                {{ i + 1 }}.
+              </h6>
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="f-w-600 mat-subtitle-1 f-s-14"
+          >
+            Name
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <div class="d-flex align-items-center">
+              <h6 class="mat-subtitle-1 f-s-14 f-w-600">
+                {{ element.fullName }}
+              </h6>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="email">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="f-w-600 mat-subtitle-1 f-s-14"
+          >
+            Email
+          </th>
+          <td mat-cell *matCellDef="let element" class="mat-body-1">
+            {{ element.email }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="f-w-600 mat-subtitle-1 f-s-14"
+          >
+            Actions
+          </th>
+          <td mat-cell *matCellDef="let element" class="mat-body-1">
+            <div class="buttons-grid">
+              <button mat-flat-button color="accent" (click)="openChangeRoleDialog('USER', userText, element.id)">
+                Change role to USER
+              </button>
+
+              <button mat-flat-button class="delete-button" (click)="openDeleteUserDialog(element.id)">
+                Delete
+              </button>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    </div>
+  </mat-tab>
+</mat-tab-group>

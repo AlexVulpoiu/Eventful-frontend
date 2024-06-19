@@ -21,6 +21,9 @@ import {StatisticsComponent} from "./pages/statistics/statistics.component";
 import {OrganiserProfileComponent} from "./pages/organiser-profile/organiser-profile.component";
 import {ViewFeedbackComponent} from "./pages/view-feedback/view-feedback.component";
 import {ViewOrganisersComponent} from "./pages/users-management/view-organisers/view-organisers.component";
+import {RolesComponent} from "./pages/roles/roles.component";
+import {ViewUsersComponent} from "./pages/users-management/view-users/view-users.component";
+import {GeneralStatisticsComponent} from "./pages/general-statistics/general-statistics.component";
 
 const routes: Routes = [
   {
@@ -124,6 +127,18 @@ const routes: Routes = [
       {
         path: 'organisers',
         component: ViewOrganisersComponent
+      },
+      {
+        path: 'roles',
+        component: RolesComponent
+      },
+      {
+        path: 'users',
+        component: ViewUsersComponent
+      },
+      {
+        path: 'general-statistics',
+        component: GeneralStatisticsComponent
       }
     ],
   },

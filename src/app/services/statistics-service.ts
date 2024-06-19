@@ -1,6 +1,7 @@
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Injectable} from "@angular/core";
 import {OrganiserStatisticsDto} from "../dto/statistics/organiser-statistics-dto";
+import {GeneralStatisticsDto} from "../dto/statistics/general-statistics-dto";
 
 const STATISTICS_API = 'http://localhost:8080/api/statistics';
 
@@ -17,5 +18,9 @@ export class StatisticsService {
 
   getStatistics() {
     return this.http.get<OrganiserStatisticsDto>(STATISTICS_API, httpOptions);
+  }
+
+  getGeneralStatistics() {
+    return this.http.get<GeneralStatisticsDto>(STATISTICS_API + '/general', httpOptions);
   }
 }

@@ -1,0 +1,9 @@
+<h1 mat-dialog-title>Change role to {{ data.role }}</h1>
+<div mat-dialog-content>
+  <p style="text-align: justify">{{ data.text }}</p>
+  <p>Are you sure you want to continue?</p>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-flat-button class="success-button" (click)="onSubmit()">Submit</button>
+</div>

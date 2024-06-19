@@ -65,6 +65,21 @@ export const navItems: NavItem[] = [
     route: '/organisers'
   },
   {
+    displayName: 'Roles',
+    iconName: 'settings',
+    route: '/roles'
+  },
+  {
+    displayName: 'View users',
+    iconName: 'users',
+    route: '/users'
+  },
+  {
+    displayName: 'Statistics',
+    iconName: 'chart-bar',
+    route: '/general-statistics'
+  },
+  {
     navCap: 'Ui Components',
   },
   {
