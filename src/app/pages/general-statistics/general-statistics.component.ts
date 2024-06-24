@@ -12,6 +12,9 @@ import {
 import {TablerIconsModule} from "angular-tabler-icons";
 import {GeneralStatisticsDto} from "../../dto/statistics/general-statistics-dto";
 import {StatisticsService} from "../../services/statistics-service";
+import {TokenStorageService} from 'src/app/services/token-storage.service';
+import {NotificationService} from "../../services/notification.service";
+import {Router} from "@angular/router";
 
 export interface salesOverviewChart {
   series: ApexAxisChartSeries;
@@ -31,14 +34,14 @@ export interface salesOverviewChart {
 @Component({
   selector: 'app-general-statistics',
   standalone: true,
-    imports: [
-        MatCard,
-        MatCardContent,
-        MatCardTitle,
-        MatMiniFabButton,
-        NgApexchartsModule,
-        TablerIconsModule
-    ],
+  imports: [
+    MatCard,
+    MatCardContent,
+    MatCardTitle,
+    MatMiniFabButton,
+    NgApexchartsModule,
+    TablerIconsModule
+  ],
   templateUrl: './general-statistics.component.html',
   styleUrl: './general-statistics.component.scss'
 })
@@ -51,159 +54,188 @@ export class GeneralStatisticsComponent {
   months: string[] = [];
   eventsPerMonth: number[] = [];
   incomePerMonth: number[] = [];
+  roles: string[] = [];
 
-  constructor(private statisticsService: StatisticsService) {
-    this.statisticsService.getGeneralStatistics().subscribe(data => {
-      this.generalStatisticsDto = data;
-      this.months = this.generalStatisticsDto.months;
-      this.eventsPerMonth = this.generalStatisticsDto.eventsPerMonth;
-      this.incomePerMonth = this.generalStatisticsDto.incomePerMonth;
+  constructor(private statisticsService: StatisticsService, private tokenStorageService: TokenStorageService,
+              private notificationService: NotificationService, private router: Router) {
+    let user = this.tokenStorageService.getUser();
+    if (user.roles != undefined) {
+      this.roles = user.roles;
+    }
 
-      this.salesOverviewChart = {
-        series: [
-          {
-            name: 'Earnings this month',
-            data: this.incomePerMonth,
-            color: '#10e05c',
-          },
-        ],
+    if (!this.roles.includes('ADMIN')) {
+      if (this.roles.length === 0 || this.roles.includes('USER')) {
+        this.router.navigate(['/events']);
+      } else {
+        this.router.navigate(['/events/all']);
+      }
+    }
 
-        grid: {
-          borderColor: 'rgba(0,0,0,0.1)',
-          strokeDashArray: 3,
-          xaxis: {
-            lines: {
-              show: false,
+    this.statisticsService.getGeneralStatistics().subscribe({
+      next: data => {
+        this.generalStatisticsDto = data;
+        this.months = this.generalStatisticsDto.months;
+        this.eventsPerMonth = this.generalStatisticsDto.eventsPerMonth;
+        this.incomePerMonth = this.generalStatisticsDto.incomePerMonth;
+
+        this.salesOverviewChart = {
+          series: [
+            {
+              name: 'Earnings this month',
+              data: this.incomePerMonth,
+              color: '#10e05c',
             },
-          },
-        },
-        plotOptions: {
-          bar: {horizontal: false, columnWidth: '35%', borderRadius: [4]},
-        },
-        chart: {
-          type: 'bar',
-          height: 390,
-          offsetX: -15,
-          toolbar: {show: true},
-          foreColor: '#adb0bb',
-          fontFamily: 'inherit',
-          sparkline: {enabled: false},
-        },
-        dataLabels: {enabled: false},
-        markers: {size: 0},
-        legend: {show: false},
-        xaxis: {
-          type: 'category',
-          categories: this.months,
-          labels: {
-            style: {cssClass: 'grey--text lighten-2--text fill-color'},
-          },
-        },
-        yaxis: {
-          show: true,
-          min: 0,
-          max: 200,
-          tickAmount: 4,
-          labels: {
-            style: {
-              cssClass: 'grey--text lighten-2--text fill-color',
-            },
-          },
-        },
-        stroke: {
-          show: true,
-          width: 3,
-          lineCap: 'butt',
-          colors: ['transparent'],
-        },
-        tooltip: {theme: 'light'},
+          ],
 
-        responsive: [
-          {
-            breakpoint: 600,
-            options: {
-              plotOptions: {
-                bar: {
-                  borderRadius: 3,
-                },
+          grid: {
+            borderColor: 'rgba(0,0,0,0.1)',
+            strokeDashArray: 3,
+            xaxis: {
+              lines: {
+                show: false,
               },
             },
           },
-        ],
-      };
-
-      this.eventsOverviewChart = {
-        series: [
-          {
-            name: 'Organised events',
-            data: this.eventsPerMonth,
-            color: '#5D87FF',
+          plotOptions: {
+            bar: {horizontal: false, columnWidth: '35%', borderRadius: [4]},
           },
-        ],
-
-        grid: {
-          borderColor: 'rgba(0,0,0,0.1)',
-          strokeDashArray: 3,
+          chart: {
+            type: 'bar',
+            height: 390,
+            offsetX: -15,
+            toolbar: {show: true},
+            foreColor: '#adb0bb',
+            fontFamily: 'inherit',
+            sparkline: {enabled: false},
+          },
+          dataLabels: {enabled: false},
+          markers: {size: 0},
+          legend: {show: false},
           xaxis: {
-            lines: {
-              show: false,
+            type: 'category',
+            categories: this.months,
+            labels: {
+              style: {cssClass: 'grey--text lighten-2--text fill-color'},
             },
           },
-        },
-        plotOptions: {
-          bar: {horizontal: false, columnWidth: '35%', borderRadius: [4]},
-        },
-        chart: {
-          type: 'bar',
-          height: 390,
-          offsetX: -15,
-          toolbar: {show: true},
-          foreColor: '#adb0bb',
-          fontFamily: 'inherit',
-          sparkline: {enabled: false},
-        },
-        dataLabels: {enabled: false},
-        markers: {size: 0},
-        legend: {show: false},
-        xaxis: {
-          type: 'category',
-          categories: this.months,
-          labels: {
-            style: {cssClass: 'grey--text lighten-2--text fill-color'},
-          },
-        },
-        yaxis: {
-          show: true,
-          min: 0,
-          max: 5,
-          tickAmount: 5,
-          labels: {
-            style: {
-              cssClass: 'grey--text lighten-2--text fill-color',
-            },
-          },
-        },
-        stroke: {
-          show: true,
-          width: 3,
-          lineCap: 'butt',
-          colors: ['transparent'],
-        },
-        tooltip: {theme: 'light'},
-
-        responsive: [
-          {
-            breakpoint: 600,
-            options: {
-              plotOptions: {
-                bar: {
-                  borderRadius: 3,
-                },
+          yaxis: {
+            show: true,
+            min: 0,
+            max: 200,
+            tickAmount: 4,
+            labels: {
+              style: {
+                cssClass: 'grey--text lighten-2--text fill-color',
               },
             },
           },
-        ],
-      };
+          stroke: {
+            show: true,
+            width: 3,
+            lineCap: 'butt',
+            colors: ['transparent'],
+          },
+          tooltip: {theme: 'light'},
+
+          responsive: [
+            {
+              breakpoint: 600,
+              options: {
+                plotOptions: {
+                  bar: {
+                    borderRadius: 3,
+                  },
+                },
+              },
+            },
+          ],
+        };
+
+        this.eventsOverviewChart = {
+          series: [
+            {
+              name: 'Organised events',
+              data: this.eventsPerMonth,
+              color: '#5D87FF',
+            },
+          ],
+
+          grid: {
+            borderColor: 'rgba(0,0,0,0.1)',
+            strokeDashArray: 3,
+            xaxis: {
+              lines: {
+                show: false,
+              },
+            },
+          },
+          plotOptions: {
+            bar: {horizontal: false, columnWidth: '35%', borderRadius: [4]},
+          },
+          chart: {
+            type: 'bar',
+            height: 390,
+            offsetX: -15,
+            toolbar: {show: true},
+            foreColor: '#adb0bb',
+            fontFamily: 'inherit',
+            sparkline: {enabled: false},
+          },
+          dataLabels: {enabled: false},
+          markers: {size: 0},
+          legend: {show: false},
+          xaxis: {
+            type: 'category',
+            categories: this.months,
+            labels: {
+              style: {cssClass: 'grey--text lighten-2--text fill-color'},
+            },
+          },
+          yaxis: {
+            show: true,
+            min: 0,
+            max: 5,
+            tickAmount: 5,
+            labels: {
+              style: {
+                cssClass: 'grey--text lighten-2--text fill-color',
+              },
+            },
+          },
+          stroke: {
+            show: true,
+            width: 3,
+            lineCap: 'butt',
+            colors: ['transparent'],
+          },
+          tooltip: {theme: 'light'},
+
+          responsive: [
+            {
+              breakpoint: 600,
+              options: {
+                plotOptions: {
+                  bar: {
+                    borderRadius: 3,
+                  },
+                },
+              },
+            },
+          ],
+        };
+      },
+      error: err => {
+        let message = typeof err.error === "string" ? err.error : 'Internal server error';
+        let status = typeof err.status === "number" ? err.status : 500;
+
+        if (status === 401 || status === 403) {
+          this.router.navigate(['/events/all']);
+        } else if (400 <= status && status < 500) {
+          this.notificationService.showWarning(message);
+        } else {
+          this.notificationService.showError(message);
+        }
+      }
     });
   }
 }

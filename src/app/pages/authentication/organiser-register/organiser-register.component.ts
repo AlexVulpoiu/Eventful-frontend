@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {MatStep, MatStepLabel, MatStepper, MatStepperNext, MatStepperPrevious} from "@angular/material/stepper";
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {MatError, MatFormField, MatLabel} from "@angular/material/form-field";
@@ -11,6 +11,7 @@ import {LegalPersonSignupRequest} from "../../../dto/auth/legal-person-signup-re
 import {MatCard, MatCardContent} from "@angular/material/card";
 import {Router, RouterLink} from "@angular/router";
 import {PersonSignupRequest} from "../../../dto/auth/person-signup-request";
+import {NotificationService} from "../../../services/notification.service";
 
 @Component({
   selector: 'app-organiser-register',
@@ -45,7 +46,8 @@ export class OrganiserRegisterComponent {
   organisationDetailsFormGroup: FormGroup = new FormGroup({});
   legalPerson = false;
 
-  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) { }
+  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router, private notificationService: NotificationService) {
+  }
 
   ngOnInit(): void {
     this.generalInfoFormGroup = this.fb.group({
@@ -113,14 +115,42 @@ export class OrganiserRegisterComponent {
             formValues.country, formValues.district, formValues.city, formValues.street, formValues.building, formValues.zipcode,
             formValues.bank, formValues.iban,
             formValues.commerceRegistrationNumber, formValues.cui, formValues.legalName)
-        ).subscribe(() => this.router.navigate(['/authentication/login']))
+        ).subscribe({
+          next: () => {
+            localStorage.setItem('login-page-message', "Your account has been created and a confirmation email was sent. Please login after email confirmation.");
+            this.router.navigate(['/authentication/login']);
+          },
+
+          error: err => {
+            let message = typeof err.error === "string" ? err.error : 'Internal server error';
+            if (typeof err.status === "number" && 400 <= err.status && err.status < 500) {
+              this.notificationService.showWarning(message);
+            } else {
+              this.notificationService.showError(message);
+            }
+          }
+        });
       } else {
         this.authService.registerPerson(
           new PersonSignupRequest(formValues.email, formValues.firstName, formValues.lastName, formValues.password,
             formValues.country, formValues.district, formValues.city, formValues.street, formValues.building, formValues.zipcode,
             formValues.bank, formValues.iban,
             formValues.commerceRegistrationNumber, formValues.pin)
-        ).subscribe(() => this.router.navigate(['/authentication/login']))
+        ).subscribe({
+          next: () => {
+            localStorage.setItem('login-page-message', "Your account has been created and a confirmation email was sent. Please login after email confirmation.");
+            this.router.navigate(['/authentication/login']);
+          },
+
+          error: err => {
+            let message = typeof err.error === "string" ? err.error : 'Internal server error';
+            if (typeof err.status === "number" && 400 <= err.status && err.status < 500) {
+              this.notificationService.showWarning(message);
+            } else {
+              this.notificationService.showError(message);
+            }
+          }
+        });
       }
     }
   }

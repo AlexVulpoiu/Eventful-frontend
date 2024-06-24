@@ -4,6 +4,7 @@ import {TokenStorageService} from "../../../services/token-storage.service";
 import {Router} from "@angular/router";
 import {LoginRequest} from "../../../dto/auth/login-request";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {NotificationService} from "../../../services/notification.service";
 
 @Component({
   selector: 'app-login',
@@ -13,11 +14,16 @@ export class LoginComponent implements OnInit {
   signInForm: FormGroup = new FormGroup({});
   isLoggedIn = false;
   isLoginFailed = false;
-  errorMessage = '';
   roles: string[] = [];
 
   constructor(private authService: AuthService, private tokenStorage: TokenStorageService, private router: Router,
-              private fb: FormBuilder) { }
+              private fb: FormBuilder, private notificationService: NotificationService) {
+    let message = localStorage.getItem('login-page-message');
+    if (message != null && message.length > 0) {
+      this.notificationService.showInfo(message);
+      localStorage.removeItem('login-page-message');
+    }
+  }
 
   ngOnInit(): void {
     this.signInForm = this.fb.group({
@@ -45,7 +51,12 @@ export class LoginComponent implements OnInit {
           this.router.navigate(['/events']);
         },
         error: err => {
-          this.errorMessage = err.error.message;
+          let message = typeof err.error === "string" ? err.error : 'Internal server error';
+          if (typeof err.status === "number" && 400 <= err.status && err.status < 500) {
+            this.notificationService.showWarning(message);
+          } else {
+            this.notificationService.showError(message);
+          }
           this.isLoginFailed = true;
         }
       });

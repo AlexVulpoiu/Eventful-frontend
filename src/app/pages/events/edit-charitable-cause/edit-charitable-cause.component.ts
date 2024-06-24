@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle} from "@angular/material/dialog";
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {MatError, MatFormField, MatLabel} from "@angular/material/form-field";
@@ -8,6 +8,7 @@ import {EventEditService} from "../../../services/event-edit.service";
 import {MatButton} from "@angular/material/button";
 import {CharitableCauseService} from "../../../services/charitable-cause.service";
 import {AddCharitableCauseDto} from "../../../dto/charitable-causes/add-charitable-cause-dto";
+import {NotificationService} from "../../../services/notification.service";
 
 @Component({
   selector: 'app-edit-charitable-cause',
@@ -38,7 +39,7 @@ export class EditCharitableCauseComponent {
     private fb: FormBuilder,
     private dialogRef: MatDialogRef<EditCharitableCauseComponent>,
     private eventEditService: EventEditService,
-    private charitableCauseService: CharitableCauseService
+    private charitableCauseService: CharitableCauseService, private notificationService: NotificationService
   ) {
     this.eventEditService.getMessage.subscribe(
       data => {
@@ -64,11 +65,23 @@ export class EditCharitableCauseComponent {
 
   onSave(): void {
     if (this.form.valid) {
-      console.log(this.id);
       this.charitableCauseService.editCharitableCause(this.id,
         new AddCharitableCauseDto(this.form.get('name')?.value, this.form.get('description')?.value, this.form.get('neededAmount')?.value))
-        .subscribe(data => console.log(data));
-      this.dialogRef.close();
+        .subscribe({
+          next: () => {
+            this.dialogRef.close();
+            this.notificationService.showSuccess('Charitable cause edited successfully!');
+          },
+
+          error: err => {
+            let message = typeof err.error === "string" ? err.error : 'Internal server error';
+            if (typeof err.status === "number" && 400 <= err.status && err.status < 500) {
+              this.notificationService.showWarning(message);
+            } else {
+              this.notificationService.showError(message);
+            }
+          }
+        });
     }
   }
 }

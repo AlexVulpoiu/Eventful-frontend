@@ -44,7 +44,7 @@
       >My Profile
     </button>
 
-    <button mat-menu-item (click)="goToStatisticsPage()">
+    <button *ngIf="isOrganiser" mat-menu-item (click)="goToStatisticsPage()">
       <mat-icon class="d-flex align-items-center"
       ><i-tabler name="device-desktop-analytics" class="icon-18 d-flex"></i-tabler></mat-icon
       >Statistics

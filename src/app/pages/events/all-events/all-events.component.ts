@@ -8,6 +8,7 @@ import {MatMiniFabButton} from "@angular/material/button";
 import {MatTooltip} from "@angular/material/tooltip";
 import {TablerIconsModule} from "angular-tabler-icons";
 import {Router} from "@angular/router";
+import {NotificationService} from "../../../services/notification.service";
 
 @Component({
   selector: 'app-all-events',
@@ -35,7 +36,7 @@ export class AllEventsComponent implements OnInit {
   pendingEvents: EventPreviewDto[] = [];
   endedEvents: EventPreviewDto[] = [];
 
-  constructor(private eventService: EventService, protected router: Router,
+  constructor(private eventService: EventService, protected router: Router, private notificationService: NotificationService,
               @Inject(LOCALE_ID) public locale: string) {
   }
 
@@ -45,13 +46,81 @@ export class AllEventsComponent implements OnInit {
 
   loadEvents() {
     this.eventService.getEventsByStatusAndEndDate('ACCEPTED', false)
-      .subscribe(events => this.acceptedEvents = events);
+      .subscribe({
+        next: events => {
+          this.acceptedEvents = events;
+        },
+
+        error: err => {
+          let message = typeof err.error === "string" ? err.error : 'Internal server error';
+          let status = typeof err.status === "number" ? err.status : 500;
+
+          if (status === 401 || status === 403) {
+            this.router.navigate(['/events']);
+          } else if (400 <= status && status < 500) {
+            this.notificationService.showWarning(message);
+          } else {
+            this.notificationService.showError(message);
+          }
+        }
+      });
     this.eventService.getEventsByStatusAndEndDate('REJECTED', false)
-      .subscribe(events => this.rejectedEvents = events);
+      .subscribe({
+        next: events => {
+          this.rejectedEvents = events;
+        },
+
+        error: err => {
+          let message = typeof err.error === "string" ? err.error : 'Internal server error';
+          let status = typeof err.status === "number" ? err.status : 500;
+
+          if (status === 401 || status === 403) {
+            this.router.navigate(['/events']);
+          } else if (400 <= status && status < 500) {
+            this.notificationService.showWarning(message);
+          } else {
+            this.notificationService.showError(message);
+          }
+        }
+      });
     this.eventService.getEventsByStatusAndEndDate('PENDING', false)
-      .subscribe(events => this.pendingEvents = events);
+      .subscribe({
+        next: events => {
+          this.pendingEvents = events;
+        },
+
+        error: err => {
+          let message = typeof err.error === "string" ? err.error : 'Internal server error';
+          let status = typeof err.status === "number" ? err.status : 500;
+
+          if (status === 401 || status === 403) {
+            this.router.navigate(['/events']);
+          } else if (400 <= status && status < 500) {
+            this.notificationService.showWarning(message);
+          } else {
+            this.notificationService.showError(message);
+          }
+        }
+      });
     this.eventService.getEventsByStatusAndEndDate('ACCEPTED', true)
-      .subscribe(events => this.endedEvents = events);
+      .subscribe({
+        next: events => {
+          this.endedEvents = events;
+        },
+
+        error: err => {
+          let message = typeof err.error === "string" ? err.error : 'Internal server error';
+          let status = typeof err.status === "number" ? err.status : 500;
+
+          if (status === 401 || status === 403) {
+            this.router.navigate(['/events']);
+          } else if (400 <= status && status < 500) {
+            this.notificationService.showWarning(message);
+          } else {
+            this.notificationService.showError(message);
+          }
+        }
+      });
   }
 
   protected readonly formatDate = formatDate;

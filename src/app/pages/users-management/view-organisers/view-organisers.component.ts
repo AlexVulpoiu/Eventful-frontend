@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatButton} from "@angular/material/button";
 import {
@@ -18,6 +18,9 @@ import {OrganiserProfileDto} from "../../../dto/profile/organiser-profile-dto";
 import {OrganiserService} from "../../../services/organiser.service";
 import {MatDialog} from "@angular/material/dialog";
 import {OrganiserDetailsDialogComponent} from "../organiser-details-dialog/organiser-details-dialog.component";
+import {TokenStorageService} from "../../../services/token-storage.service";
+import {NotificationService} from "../../../services/notification.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-view-organisers',
@@ -51,11 +54,88 @@ export class ViewOrganisersComponent {
   pendingOrganisers: OrganiserProfileDto[] = [];
   rejectedOrganisers: OrganiserProfileDto[] = [];
   displayedColumns = ['index', 'name', 'email', 'actions'];
+  roles: string[] = [];
 
-  constructor(private organiserService: OrganiserService, protected dialog: MatDialog) {
-    this.organiserService.getOrganisers('ACCEPTED').subscribe(data => this.acceptedOrganisers = data);
-    this.organiserService.getOrganisers('PENDING').subscribe(data => this.pendingOrganisers = data);
-    this.organiserService.getOrganisers('REJECTED').subscribe(data => this.rejectedOrganisers = data);
+  constructor(private organiserService: OrganiserService, protected dialog: MatDialog, private router: Router,
+              private tokenStorageService: TokenStorageService, private notificationService: NotificationService) {
+    let user = this.tokenStorageService.getUser();
+    if (user.roles != undefined) {
+      this.roles = user.roles;
+    }
+
+    if (!this.roles.includes('MODERATOR') && !this.roles.includes('ADMIN')) {
+      if (this.roles.includes('ORGANISER')) {
+        this.router.navigate(['/events/all']);
+      } else {
+        this.router.navigate(['/events']);
+      }
+    }
+
+    this.organiserService.getOrganisers('ACCEPTED').subscribe({
+      next: data => {
+        this.acceptedOrganisers = data;
+      },
+      error: err => {
+        let message = typeof err.error === "string" ? err.error : 'Internal server error';
+        let status = typeof err.status === "number" ? err.status : 500;
+
+        if (status === 401 || status === 403) {
+          if (this.roles.includes('ORGANISER')) {
+            this.router.navigate(['/events/all']);
+          } else {
+            this.router.navigate(['/events']);
+          }
+        } else if (400 <= status && status < 500) {
+          this.notificationService.showWarning(message);
+        } else {
+          this.notificationService.showError(message);
+        }
+      }
+    });
+
+    this.organiserService.getOrganisers('PENDING').subscribe({
+      next: data => {
+        this.pendingOrganisers = data;
+      },
+      error: err => {
+        let message = typeof err.error === "string" ? err.error : 'Internal server error';
+        let status = typeof err.status === "number" ? err.status : 500;
+
+        if (status === 401 || status === 403) {
+          if (this.roles.includes('ORGANISER')) {
+            this.router.navigate(['/events/all']);
+          } else {
+            this.router.navigate(['/events']);
+          }
+        } else if (400 <= status && status < 500) {
+          this.notificationService.showWarning(message);
+        } else {
+          this.notificationService.showError(message);
+        }
+      }
+    });
+
+    this.organiserService.getOrganisers('REJECTED').subscribe({
+      next: data => {
+        this.rejectedOrganisers = data;
+      },
+      error: err => {
+        let message = typeof err.error === "string" ? err.error : 'Internal server error';
+        let status = typeof err.status === "number" ? err.status : 500;
+
+        if (status === 401 || status === 403) {
+          if (this.roles.includes('ORGANISER')) {
+            this.router.navigate(['/events/all']);
+          } else {
+            this.router.navigate(['/events']);
+          }
+        } else if (400 <= status && status < 500) {
+          this.notificationService.showWarning(message);
+        } else {
+          this.notificationService.showError(message);
+        }
+      }
+    });
   }
 
   openOrganiserDetailsDialog(organiser: OrganiserProfileDto) {

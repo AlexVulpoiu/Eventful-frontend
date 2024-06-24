@@ -13,6 +13,8 @@ import {FormsModule} from "@angular/forms";
 import {MatIcon} from "@angular/material/icon";
 import {MatInput} from "@angular/material/input";
 import {MatTooltip} from "@angular/material/tooltip";
+import {NotificationService} from "../../services/notification.service";
+import {TokenStorageService} from "../../services/token-storage.service";
 
 @Component({
   selector: 'app-events-for-users',
@@ -48,10 +50,19 @@ export class EventsForUsersComponent implements OnInit {
   totalEvents: number = 0;
   pageSize: number = 9;
   currentPage: number = 0;
+  roles: string[] = [];
 
-  constructor(private eventService: EventService,
-              protected router: Router,
+  constructor(private eventService: EventService, private notificationService: NotificationService,
+              protected router: Router, private tokenStorageService: TokenStorageService,
               @Inject(LOCALE_ID) public locale: string) {
+    let user = this.tokenStorageService.getUser();
+    if (user.roles != undefined) {
+      this.roles = user.roles;
+    }
+
+    if (this.roles.length > 0 && !this.roles.includes('USER')) {
+      this.router.navigate(['/events/all']);
+    }
   }
 
   ngOnInit() {
@@ -59,9 +70,24 @@ export class EventsForUsersComponent implements OnInit {
   }
 
   loadEvents() {
-    this.eventService.getEventsList(this.search, this.currentPage, this.pageSize).subscribe(res => {
-      this.events = res.content;
-      this.totalEvents = res.totalElements;
+    this.eventService.getEventsList(this.search, this.currentPage, this.pageSize).subscribe({
+      next: res => {
+        this.events = res.content;
+        this.totalEvents = res.totalElements;
+      },
+
+      error: err => {
+        let message = typeof err.error === "string" ? err.error : 'Internal server error';
+        let status = typeof err.status === "number" ? err.status : 500;
+
+        if (status === 401 || status === 403) {
+          this.router.navigate(['/events/all']);
+        } else if (400 <= status && status < 500) {
+          this.notificationService.showWarning(message);
+        } else {
+          this.notificationService.showError(message);
+        }
+      }
     });
   }
 

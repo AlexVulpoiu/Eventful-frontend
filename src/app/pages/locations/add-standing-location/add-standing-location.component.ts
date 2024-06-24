@@ -8,6 +8,8 @@ import {Router, RouterLink} from "@angular/router";
 import {NgIf} from "@angular/common";
 import {LocationsService} from "../../../services/locations.service";
 import {AddStandingLocationDto} from "../../../dto/locations/add-standing-location-dto";
+import {TokenStorageService} from "../../../services/token-storage.service";
+import {NotificationService} from "../../../services/notification.service";
 
 @Component({
   selector: 'app-add-standing-location',
@@ -32,8 +34,22 @@ import {AddStandingLocationDto} from "../../../dto/locations/add-standing-locati
 export class AddStandingLocationComponent implements OnInit {
 
   form: FormGroup = new FormGroup({});
+  roles: string[] = [];
 
-  constructor(private fb: FormBuilder, private locationService: LocationsService, private router: Router) {
+  constructor(private fb: FormBuilder, private locationService: LocationsService, private router: Router,
+              private tokenStorageService: TokenStorageService, private notificationService: NotificationService) {
+    let user = this.tokenStorageService.getUser();
+    if (user.roles != undefined) {
+      this.roles = user.roles;
+    }
+
+    if (!this.roles.includes('MODERATOR') && !this.roles.includes('ADMIN')) {
+      if (this.roles.includes('ORGANISER')) {
+        this.router.navigate(['/events/all']);
+      } else {
+        this.router.navigate(['/events']);
+      }
+    }
   }
 
   ngOnInit(): void {
@@ -50,9 +66,29 @@ export class AddStandingLocationComponent implements OnInit {
     this.locationService.addStandingLocation(
       new AddStandingLocationDto(this.form.value.name, this.form.value.city, this.form.value.country,
         this.form.value.address, this.form.value.capacity)
-    ).subscribe(data => {
-      console.log(data);
-      this.router.navigate(['/locations']);
-    });
+    ).subscribe(
+      {
+        next: () => {
+          localStorage.setItem('locations-page-message', 'Standing location added successfully!');
+          this.router.navigate(['/locations']);
+        },
+        error: err => {
+          let message = typeof err.error === "string" ? err.error : 'Internal server error';
+          let status = typeof err.status === "number" ? err.status : 500;
+
+          if (status === 401 || status === 403) {
+            if (this.roles.includes('ORGANISER')) {
+              this.router.navigate(['/events/all']);
+            } else {
+              this.router.navigate(['/events']);
+            }
+          } else if (400 <= status && status < 500) {
+            this.notificationService.showWarning(message);
+          } else {
+            this.notificationService.showError(message);
+          }
+        }
+      }
+    );
   }
 }

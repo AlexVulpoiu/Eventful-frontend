@@ -7,6 +7,8 @@ import {NgIf} from "@angular/common";
 import {MatButton} from "@angular/material/button";
 import {UserService} from "../../../services/user.service";
 import {AddModeratorDto} from "../../../dto/users/add-moderator-dto";
+import {NotificationService} from "../../../services/notification.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-add-moderator-dialog',
@@ -32,7 +34,7 @@ export class AddModeratorDialogComponent {
   constructor(
     private fb: FormBuilder,
     private dialogRef: MatDialogRef<AddModeratorDialogComponent>,
-    private userService: UserService
+    private userService: UserService, private notificationService: NotificationService, private router: Router
   ) {
     this.moderatorForm = this.fb.group({
       firstName: ['', Validators.required],
@@ -49,8 +51,28 @@ export class AddModeratorDialogComponent {
     if (this.moderatorForm.valid) {
       this.userService.addModerator(
         new AddModeratorDto(this.moderatorForm.value.firstName, this.moderatorForm.value.lastName, this.moderatorForm.value.email)
-      ).subscribe(() =>
-        this.dialogRef.close(this.moderatorForm.value));
+      ).subscribe({
+        next: () => {
+          this.dialogRef.close(this.moderatorForm.value);
+          this.notificationService.showInfo('The moderator was added successfully!');
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
+        },
+        error: err => {
+          let message = typeof err.error === "string" ? err.error : 'Internal server error';
+          let status = typeof err.status === "number" ? err.status : 500;
+
+          if (status === 401 || status === 403) {
+            this.dialogRef.close();
+            this.router.navigate(['/events/all']);
+          } else if (400 <= status && status < 500) {
+            this.notificationService.showWarning(message);
+          } else {
+            this.notificationService.showError(message);
+          }
+        }
+      });
     }
   }
 }

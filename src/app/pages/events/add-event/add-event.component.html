@@ -48,7 +48,12 @@
         </mat-form-field>
 
         <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">
-          Preparation time (in hours)
+          <div matTooltip="The location will be occupied for the period that includes the preparation time before and after the event" class="icon-text">
+            Preparation time (in hours) &nbsp;
+            <mat-icon>
+              <i-tabler name="help" class="icon-20"></i-tabler>
+            </mat-icon>
+          </div>
         </mat-label>
         <mat-form-field appearance="outline" class="w-100" color="primary">
           <input matInput type="number" formControlName="preparationTime" min="1" required />

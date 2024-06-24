@@ -12,6 +12,8 @@ import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/
 import {NgIf} from "@angular/common";
 import {EventEditService} from "../../../services/event-edit.service";
 import {EventService} from "../../../services/event.service";
+import {NotificationService} from "../../../services/notification.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-edit-name',
@@ -40,7 +42,7 @@ export class EditNameComponent {
     private fb: FormBuilder,
     public dialogRef: MatDialogRef<EditNameComponent>,
     private eventEditService: EventEditService,
-    private eventService: EventService
+    private eventService: EventService, private notificationService: NotificationService, private router: Router
   ) {
     this.eventEditService.getMessage.subscribe(data => {
       this.name = data.name;
@@ -57,8 +59,29 @@ export class EditNameComponent {
 
   onSave(): void {
     if (this.editNameForm.valid) {
-      this.eventService.editEventName(this.id, this.editNameForm.get('name')?.value).subscribe(data => console.log(data));
-      this.dialogRef.close();
+      this.eventService.editEventName(this.id, this.editNameForm.get('name')?.value)
+        .subscribe({
+          next: () => {
+            this.dialogRef.close(this.editNameForm.value);
+            this.notificationService.showSuccess('The event name was updated successfully!');
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
+          },
+          error: err => {
+            let message = typeof err.error === "string" ? err.error : 'Internal server error';
+            let status = typeof err.status === "number" ? err.status : 500;
+
+            if (status === 401 || status === 403) {
+              this.dialogRef.close();
+              this.router.navigate(['/events/all']);
+            } else if (400 <= status && status < 500) {
+              this.notificationService.showWarning(message);
+            } else {
+              this.notificationService.showError(message);
+            }
+          }
+        });
     }
   }
 }

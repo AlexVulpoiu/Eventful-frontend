@@ -50,6 +50,7 @@ import {EditNameComponent} from "../edit-name/edit-name.component";
 import {EditDescriptionComponent} from "../edit-description/edit-description.component";
 import {EditCharitableCauseComponent} from "../edit-charitable-cause/edit-charitable-cause.component";
 import {EditPricesComponent} from "../edit-prices/edit-prices.component";
+import {NotificationService} from "../../../services/notification.service";
 
 @Component({
   selector: 'app-event',
@@ -126,8 +127,13 @@ export class EventComponent implements OnInit {
               private eventRaffleService: EventRaffleService, private eventApproveService: EventApproveService,
               private eventRejectService: EventRejectService, private eventReviewsService: EventReviewsService,
               private eventOrdersService: EventOrdersService, private eventTicketsScannerService: EventTicketsScannerService,
-              private eventEditService: EventEditService,
+              private eventEditService: EventEditService, private notificationService: NotificationService,
               public dialog: MatDialog, private tokenStorageService: TokenStorageService) {
+    let message = localStorage.getItem('event-page-message');
+    if (message != null && message.length > 0) {
+      this.notificationService.showInfo(message);
+      localStorage.removeItem('event-page-message');
+    }
   }
 
   openPromotionDialog(): void {
@@ -220,7 +226,23 @@ export class EventComponent implements OnInit {
 
   openOrdersDialog() {
     this.eventService.getOrders(this.eventDto?.id!).subscribe(
-      data => this.eventOrdersService.setMessage(data)
+      {
+        next: data => {
+          this.eventOrdersService.setMessage(data);
+        },
+        error: err => {
+          let message = typeof err.error === "string" ? err.error : 'Internal server error';
+          let status = typeof err.status === "number" ? err.status : 500;
+
+          if (status === 401 || status === 403) {
+            this.router.navigate(['/events/all']);
+          } else if (400 <= status && status < 500) {
+            this.notificationService.showWarning(message);
+          } else {
+            this.notificationService.showError(message);
+          }
+        }
+      }
     );
 
     const dialogRef = this.dialog.open(EventOrdersComponent, {
@@ -230,7 +252,23 @@ export class EventComponent implements OnInit {
 
   openReviewsDialog() {
     this.eventService.getReviews(this.eventDto?.id!).subscribe(
-      data => this.eventReviewsService.setMessage(data)
+      {
+        next: data => {
+          this.eventReviewsService.setMessage(data);
+        },
+        error: err => {
+          let message = typeof err.error === "string" ? err.error : 'Internal server error';
+          let status = typeof err.status === "number" ? err.status : 500;
+
+          if (status === 401 || status === 403) {
+            this.router.navigate(['/events/all']);
+          } else if (400 <= status && status < 500) {
+            this.notificationService.showWarning(message);
+          } else {
+            this.notificationService.showError(message);
+          }
+        }
+      }
     );
 
     const dialogRef = this.dialog.open(EventReviewsComponent, {
@@ -310,40 +348,59 @@ export class EventComponent implements OnInit {
   ngOnInit() {
     const mapsApiKey = environment.MAPS_API_KEY;
     this.route.params.subscribe(params => {
-      this.eventService.getEvent(params['eventId']).subscribe(res => {
-        this.eventDto = res;
-        const url = `https://www.google.com/maps/embed/v1/place?key=${mapsApiKey}&q=${this.eventDto?.location.fullAddress}`;
-        this.safeMapsUrl = this.domSanitizer.bypassSecurityTrustResourceUrl(url);
-        this.startDate = this.eventDto.startDate;
-        this.startDateAsDate = new Date(this.startDate);
-        this.endDate = this.eventDto.endDate;
-        this.endDateAsDate = new Date(this.endDate);
-        this.standingCategories = this.eventDto.standingCategories;
-        this.seatsCategories = this.eventDto.seatsCategories;
-        this.unavailableSeats = this.eventDto.unavailableSeats;
-        this.discount = this.eventDto.discount;
-        this.discountEndDate = this.eventDto.discountEndDate;
-        // console.log(this.unavailableSeats);
-        this.location = this.eventDto.location;
-        for (let i = 0; i < this.standingCategories.length; i++) {
-          this.ticketsPerCategory.push(0);
-        }
+      this.eventService.getEvent(params['eventId']).subscribe(
+        {
+          next: res => {
+            this.eventDto = res;
+            const url = `https://www.google.com/maps/embed/v1/place?key=${mapsApiKey}&q=${this.eventDto?.location.fullAddress}`;
+            this.safeMapsUrl = this.domSanitizer.bypassSecurityTrustResourceUrl(url);
+            this.startDate = this.eventDto.startDate;
+            this.startDateAsDate = new Date(this.startDate);
+            this.endDate = this.eventDto.endDate;
+            this.endDateAsDate = new Date(this.endDate);
+            this.standingCategories = this.eventDto.standingCategories;
+            this.seatsCategories = this.eventDto.seatsCategories;
+            this.unavailableSeats = this.eventDto.unavailableSeats;
+            this.discount = this.eventDto.discount;
+            this.discountEndDate = this.eventDto.discountEndDate;
+            // console.log(this.unavailableSeats);
+            this.location = this.eventDto.location;
+            for (let i = 0; i < this.standingCategories.length; i++) {
+              this.ticketsPerCategory.push(0);
+            }
 
-        if (this.seatsCategories.length > 0) {
-          this.seatConfig = [];
-          let seatMap = [];
-          for (let i = 0; i < this.location.rows; i++) {
-            seatMap.push({
-              "seat_label": "Row " + (i + 1),
-              "layout": "_" + "x".repeat(this.location.seatsPerRow)
-            });
+            if (this.seatsCategories.length > 0) {
+              this.seatConfig = [];
+              let seatMap = [];
+              for (let i = 0; i < this.location.rows; i++) {
+                seatMap.push({
+                  "seat_label": "Row " + (i + 1),
+                  "layout": "_" + "x".repeat(this.location.seatsPerRow)
+                });
+              }
+              this.seatConfig.push({
+                "seat_map": seatMap
+              });
+            }
+            this.processSeatChart(this.seatConfig);
+          },
+          error: err => {
+            let message = typeof err.error === "string" ? err.error : 'Internal server error';
+            let status = typeof err.status === "number" ? err.status : 500;
+
+            if (status === 401 || status === 403) {
+              if (this.roles.length == 0 || this.roles.includes('USER')) {
+                this.router.navigate(['/events']);
+              } else {
+                this.router.navigate(['/events/all']);
+              }
+            } else if (400 <= status && status < 500) {
+              this.notificationService.showWarning(message);
+            } else {
+              this.notificationService.showError(message);
+            }
           }
-          this.seatConfig.push({
-            "seat_map": seatMap
-          });
-        }
-        this.processSeatChart(this.seatConfig);
-      });
+        });
     });
     let user = this.tokenStorageService.getUser();
     if (user.roles != undefined) {
@@ -472,17 +529,17 @@ export class EventComponent implements OnInit {
       for (let index = 0; index < seatsToBlockArr.length; index++) {
         var seat = seatsToBlockArr[index] + "";
         var seatSplitArr = seat.split("_");
-        console.log("Split seat: ", seatSplitArr);
+        // console.log("Split seat: ", seatSplitArr);
         for (let index2 = 0; index2 < this.seatmap.length; index2++) {
           const element = this.seatmap[index2];
           if (element.seatRowLabel == seatSplitArr[0]) {
             var seatObj = element.seats[parseInt(seatSplitArr[1]) - 1];
             if (seatObj) {
-              console.log("\n\n\nFount Seat to block: ", seatObj);
+              // console.log("\n\n\nFount Seat to block: ", seatObj);
               seatObj["status"] = "unavailable";
               this.seatmap[index2]["seats"][parseInt(seatSplitArr[1]) - 1] = seatObj;
-              console.log("\n\n\nSeat Obj", seatObj);
-              console.log(this.seatmap[index2]["seats"][parseInt(seatSplitArr[1]) - 1]);
+              // console.log("\n\n\nSeat Obj", seatObj);
+              // console.log(this.seatmap[index2]["seats"][parseInt(seatSplitArr[1]) - 1]);
               break;
             }
 

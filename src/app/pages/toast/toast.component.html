@@ -1,0 +1,6 @@
+<div class="toast-container" [ngClass]="{ 'info': type === 'info', 'success': type === 'success', 'warning': type === 'warning', 'error': type === 'error' }">
+  <span>{{ message }}</span>
+  <button mat-icon-button class="close-button" (click)="close()">
+    <mat-icon><i-tabler name="circle-x"></i-tabler></mat-icon>
+  </button>
+</div>

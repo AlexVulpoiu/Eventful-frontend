@@ -35,6 +35,9 @@ import {TablerIconsModule} from "angular-tabler-icons";
 import {AddCharitableCauseDto} from "../../../dto/charitable-causes/add-charitable-cause-dto";
 import {AddCategoryPriceDto} from "../../../dto/events/add-category-price-dto";
 import * as moment from "moment";
+import {NotificationService} from "../../../services/notification.service";
+import {TokenStorageService} from "../../../services/token-storage.service";
+import {MatTooltip} from "@angular/material/tooltip";
 
 export const MY_FORMATS = {
   parse: {
@@ -59,7 +62,7 @@ export function charitableCauseValidator(): ValidatorFn {
     const isCauseComplete = causeName && causeDescription && neededAmount > 0 && charityPercentage > 0;
 
     if (isCauseFilled && !isCauseComplete) {
-      return { charityIncomplete: true };
+      return {charityIncomplete: true};
     }
     return null;
   };
@@ -98,25 +101,39 @@ export function charitableCauseValidator(): ValidatorFn {
     MatIcon,
     MatIconButton,
     TablerIconsModule,
+    MatTooltip,
   ],
   templateUrl: './add-event.component.html',
   styleUrl: './add-event.component.scss',
   providers: [
-    { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
-    { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }
+    {provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE]},
+    {provide: MAT_DATE_FORMATS, useValue: MY_FORMATS}
   ]
 })
 export class AddEventComponent implements OnInit {
 
   locations: LocationDetailsDto[] = [];
   description = "";
-  formData= new FormData();
+  formData = new FormData();
   today: Date = new Date();
+  roles: string[] = [];
 
   form: FormGroup = this.formBuilder.group({});
 
   constructor(private eventsService: EventService, private locationService: LocationsService, private router: Router,
-              private formBuilder: FormBuilder) {
+              private formBuilder: FormBuilder, private notificationService: NotificationService, private tokenStorageService: TokenStorageService) {
+    let user = this.tokenStorageService.getUser();
+    if (user.roles != undefined) {
+      this.roles = user.roles;
+    }
+    if (!this.roles.includes('ORGANISER')) {
+      if (this.roles.includes('MODERATOR') || this.roles.includes('ADMIN')) {
+        this.router.navigate(['/events/all']);
+      } else {
+        this.router.navigate(['/events']);
+      }
+    }
+
     this.form = this.formBuilder.group({
       name: ['', [Validators.required, Validators.minLength(1)]],
       description: ['', [Validators.required, Validators.minLength(1)]],
@@ -132,12 +149,32 @@ export class AddEventComponent implements OnInit {
       neededAmount: [0],
       categoriesPrices: this.formBuilder.array([]),
       standingCategories: this.formBuilder.array([]),
-    }, { validators: charitableCauseValidator() });
+    }, {validators: charitableCauseValidator()});
   }
 
   ngOnInit() {
     this.locationService.getAllLocations('').subscribe(
-      data => this.locations = data
+      {
+        next: data => {
+          this.locations = data;
+        }, error: err => {
+          let message = typeof err.error === "string" ? err.error : 'Internal server error';
+          let status = typeof err.status === "number" ? err.status : 500;
+
+          if (status === 401 || status === 403) {
+            if (this.roles.includes('ORGANISER')) {
+              this.router.navigate(['/events/all']);
+            } else {
+              this.router.navigate(['/events']);
+            }
+          } else if (400 <= status && status < 500) {
+            this.notificationService.showWarning(message);
+          } else {
+            this.notificationService.showError(message);
+          }
+
+        }
+      }
     );
   }
 
@@ -158,11 +195,6 @@ export class AddEventComponent implements OnInit {
     if (this.standingCategories.length > 0) {
       this.standingCategories.removeAt(this.standingCategories.length - 1);
     }
-  }
-
-  modelChangeFn(e: string) {
-    this.description = e;
-    this.form.value.description = e;
   }
 
   onLocationChange(event: any) {
@@ -232,9 +264,38 @@ export class AddEventComponent implements OnInit {
     event.categoriesPrices = categoriesPricesForEvent;
 
     this.eventsService.addEvent(event).subscribe(
-      id => {
-        this.eventsService.updateLogo(id, this.formData)
-          .subscribe(() => this.router.navigate(['events', id]));
+      {
+        next: id => {
+          this.eventsService.updateLogo(id, this.formData)
+            .subscribe({
+              next: () => {
+                this.router.navigate(['events', id]);
+              }, error: err => {
+                let message = typeof err.error === "string" ? err.error : 'Internal server error';
+                let status = typeof err.status === "number" ? err.status : 500;
+
+                if (status === 401 || status === 403) {
+                  this.router.navigate(['/events/all']);
+                } else if (400 <= status && status < 500) {
+                  this.notificationService.showWarning(message);
+                } else {
+                  this.notificationService.showError(message);
+                }
+              }
+            });
+        },
+        error: err => {
+          let message = typeof err.error === "string" ? err.error : 'Internal server error';
+          let status = typeof err.status === "number" ? err.status : 500;
+
+          if (status === 401 || status === 403) {
+            this.router.navigate(['/events/all']);
+          } else if (400 <= status && status < 500) {
+            this.notificationService.showWarning(message);
+          } else {
+            this.notificationService.showError(message);
+          }
+        }
       }
     );
   }

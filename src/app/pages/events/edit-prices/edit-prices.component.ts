@@ -7,6 +7,8 @@ import {MatInput} from "@angular/material/input";
 import {MatButton} from "@angular/material/button";
 import {EventService} from "../../../services/event.service";
 import {EventEditService} from "../../../services/event-edit.service";
+import {NotificationService} from "../../../services/notification.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-edit-prices',
@@ -37,6 +39,7 @@ export class EditPricesComponent {
     private dialogRef: MatDialogRef<EditPricesComponent>,
     private eventService: EventService,
     private eventEditService: EventEditService,
+    private notificationService: NotificationService, private router: Router
   ) {
     this.form = this.fb.group({
       items: this.fb.array([])
@@ -82,9 +85,51 @@ export class EditPricesComponent {
       }
 
       if (seated) {
-        this.eventService.updateSeatedPrices(this.eventId, JSON.stringify(seatedPrices)).subscribe(() => console.log(''));
+        this.eventService.updateSeatedPrices(this.eventId, JSON.stringify(seatedPrices)).subscribe({
+          next: () => {
+            this.dialogRef.close(this.form.value);
+            this.notificationService.showSuccess('The prices were updated successfully!');
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
+          },
+          error: err => {
+            let message = typeof err.error === "string" ? err.error : 'Internal server error';
+            let status = typeof err.status === "number" ? err.status : 500;
+
+            if (status === 401 || status === 403) {
+              this.dialogRef.close();
+              this.router.navigate(['/events/all']);
+            } else if (400 <= status && status < 500) {
+              this.notificationService.showWarning(message);
+            } else {
+              this.notificationService.showError(message);
+            }
+          }
+        });
       } else {
-        this.eventService.updateStandingPrices(this.eventId, JSON.stringify(standingPrices)).subscribe(() => console.log(''));
+        this.eventService.updateStandingPrices(this.eventId, JSON.stringify(standingPrices)).subscribe({
+          next: () => {
+            this.dialogRef.close(this.form.value);
+            this.notificationService.showSuccess('The prices were updated successfully!');
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
+          },
+          error: err => {
+            let message = typeof err.error === "string" ? err.error : 'Internal server error';
+            let status = typeof err.status === "number" ? err.status : 500;
+
+            if (status === 401 || status === 403) {
+              this.dialogRef.close();
+              this.router.navigate(['/events/all']);
+            } else if (400 <= status && status < 500) {
+              this.notificationService.showWarning(message);
+            } else {
+              this.notificationService.showError(message);
+            }
+          }
+        });
       }
 
       this.dialogRef.close(result);

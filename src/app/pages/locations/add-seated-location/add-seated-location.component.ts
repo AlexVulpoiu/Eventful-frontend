@@ -25,14 +25,15 @@ import {Router} from "@angular/router";
 import {AddSeatsCategoryComponent} from "../add-seats-category/add-seats-category.component";
 import {NgForOf, NgIf} from "@angular/common";
 import {AddSeatedLocationDto} from "../../../dto/locations/add-seated-location-dto";
-
+import {TokenStorageService} from "../../../services/token-storage.service";
+import {NotificationService} from "../../../services/notification.service";
 
 
 export function maxValidator(maxControl: AbstractControl): ValidatorFn {
   return (control: AbstractControl): { [key: string]: any } | null => {
     const maxValue = maxControl.value;
     if (control.value !== null && control.value > maxValue) {
-      return { max: { maxValue: maxValue, actualValue: control.value } };
+      return {max: {maxValue: maxValue, actualValue: control.value}};
     }
     return null;
   };
@@ -69,8 +70,23 @@ export function maxValidator(maxControl: AbstractControl): ValidatorFn {
 export class AddSeatedLocationComponent implements OnInit {
 
   form: FormGroup = new FormGroup({});
+  roles: string[] = [];
 
-  constructor(private locationService: LocationsService, private router: Router, private fb: FormBuilder) {
+  constructor(private locationService: LocationsService, private router: Router, private fb: FormBuilder,
+              private tokenStorageService: TokenStorageService, private notificationService: NotificationService) {
+    let user = this.tokenStorageService.getUser();
+    if (user.roles != undefined) {
+      this.roles = user.roles;
+    }
+
+    if (!this.roles.includes('MODERATOR') && !this.roles.includes('ADMIN')) {
+      if (this.roles.includes('ORGANISER')) {
+        this.router.navigate(['/events/all']);
+      } else {
+        this.router.navigate(['/events']);
+      }
+    }
+
     this.form = this.fb.group({
       name: ['', Validators.required],
       city: ['', Validators.required],
@@ -117,9 +133,29 @@ export class AddSeatedLocationComponent implements OnInit {
         this.locationService.addSeatedLocation(
           new AddSeatedLocationDto(this.form.value.name, this.form.value.city, this.form.value.country,
             this.form.value.address, this.form.value.numberOfRows, this.form.value.seatsPerRow, this.form.value.seatsPerCategory)
-        ).subscribe(data => {
-          this.router.navigate(['/locations']);
-        });
+        ).subscribe(
+          {
+            next: () => {
+              localStorage.setItem('locations-page-message', 'Seated location added successfully!');
+              this.router.navigate(['/locations']);
+            },
+            error: err => {
+              let message = typeof err.error === "string" ? err.error : 'Internal server error';
+              let status = typeof err.status === "number" ? err.status : 500;
+
+              if (status === 401 || status === 403) {
+                if (this.roles.includes('ORGANISER')) {
+                  this.router.navigate(['/events/all']);
+                } else {
+                  this.router.navigate(['/events']);
+                }
+              } else if (400 <= status && status < 500) {
+                this.notificationService.showWarning(message);
+              } else {
+                this.notificationService.showError(message);
+              }
+            }
+          });
       } else {
         alert("The categories don't cover all seats or there is overlapping!");
       }
@@ -127,7 +163,7 @@ export class AddSeatedLocationComponent implements OnInit {
   }
 
   private validateCategories(numberOfRows: number, seatsPerRow: number, categories: any[]): boolean {
-    const seatMatrix = Array.from({ length: numberOfRows }, () => Array(seatsPerRow).fill(false));
+    const seatMatrix = Array.from({length: numberOfRows}, () => Array(seatsPerRow).fill(false));
 
     for (const category of categories) {
       for (let row = category.minRow - 1; row < category.maxRow; row++) {

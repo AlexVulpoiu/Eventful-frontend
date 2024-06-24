@@ -9,6 +9,8 @@ import {environment} from "../../../../environments/environment";
 import {EditorComponent} from "@tinymce/tinymce-angular";
 import {EventEditService} from "../../../services/event-edit.service";
 import {EventService} from "../../../services/event.service";
+import {NotificationService} from "../../../services/notification.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-edit-description',
@@ -39,7 +41,7 @@ export class EditDescriptionComponent {
     private fb: FormBuilder,
     public dialogRef: MatDialogRef<EditDescriptionComponent>,
     private eventEditService: EventEditService,
-    private eventService: EventService
+    private eventService: EventService, private notificationService: NotificationService, private router: Router
   ) {
     this.eventEditService.getMessage.subscribe(data => {
       this.description = data.description;
@@ -56,8 +58,28 @@ export class EditDescriptionComponent {
 
   onSave(): void {
     if (this.editDescriptionForm.valid) {
-      this.eventService.editEventDescription(this.id, this.editDescriptionForm.get('description')?.value).subscribe(data => console.log(data));
-      this.dialogRef.close();
+      this.eventService.editEventDescription(this.id, this.editDescriptionForm.get('description')?.value).subscribe({
+        next: () => {
+          this.dialogRef.close(this.editDescriptionForm.value);
+          this.notificationService.showSuccess('The event description was updated successfully!');
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
+        },
+        error: err => {
+          let message = typeof err.error === "string" ? err.error : 'Internal server error';
+          let status = typeof err.status === "number" ? err.status : 500;
+
+          if (status === 401 || status === 403) {
+            this.dialogRef.close();
+            this.router.navigate(['/events/all']);
+          } else if (400 <= status && status < 500) {
+            this.notificationService.showWarning(message);
+          } else {
+            this.notificationService.showError(message);
+          }
+        }
+      });
     }
   }
   protected readonly environment = environment;

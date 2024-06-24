@@ -1,1 +1,38 @@
 /* You can add global styles to this file, and also import other style files */
+.toast-panel {
+  background: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+.mat-mdc-snack-bar-container {
+  &.info-snackbar {
+    --mdc-snackbar-container-color: #3da2f5;
+    --mat-mdc-snack-bar-button-color: #fff;
+    --mdc-snackbar-supporting-text-color: #fff;
+  }
+}
+
+.mat-mdc-snack-bar-container {
+  &.success-snackbar {
+    --mdc-snackbar-container-color: #40f281;
+    --mat-mdc-snack-bar-button-color: #fff;
+    --mdc-snackbar-supporting-text-color: #fff;
+  }
+}
+
+.mat-mdc-snack-bar-container {
+  &.warning-snackbar {
+    --mdc-snackbar-container-color: #ff9933;
+    --mat-mdc-snack-bar-button-color: #fff;
+    --mdc-snackbar-supporting-text-color: #fff;
+  }
+}
+
+.mat-mdc-snack-bar-container {
+  &.error-snackbar {
+    --mdc-snackbar-container-color: #f06842;
+    --mat-mdc-snack-bar-button-color: #fff;
+    --mdc-snackbar-supporting-text-color: #fff;
+  }
+}

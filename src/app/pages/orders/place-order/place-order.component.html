@@ -124,7 +124,7 @@
     <br/>
     <br/>
 
-    <button mat-flat-button class="success-button w-100" (click)="placeOrder()">
+    <button [disabled]="buttonDisabled" mat-flat-button class="success-button w-100" (click)="placeOrder()">
       Go to payment
     </button>
   </div>

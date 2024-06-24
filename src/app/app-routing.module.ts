@@ -25,6 +25,7 @@ import {RolesComponent} from "./pages/roles/roles.component";
 import {ViewUsersComponent} from "./pages/users-management/view-users/view-users.component";
 import {GeneralStatisticsComponent} from "./pages/general-statistics/general-statistics.component";
 import {AccountConfirmationComponent} from "./pages/account-confirmation/account-confirmation.component";
+import {NotFoundComponent} from "./pages/not-found/not-found.component";
 
 const routes: Routes = [
   {
@@ -33,25 +34,8 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: '/dashboard',
+        redirectTo: '/events',
         pathMatch: 'full',
-      },
-      {
-        path: 'dashboard',
-        loadChildren: () =>
-          import('./pages/pages.module').then((m) => m.PagesModule),
-      },
-      {
-        path: 'ui-components',
-        loadChildren: () =>
-          import('./pages/ui-components/ui-components.module').then(
-            (m) => m.UicomponentsModule
-          ),
-      },
-      {
-        path: 'extra',
-        loadChildren: () =>
-          import('./pages/extra/extra.module').then((m) => m.ExtraModule),
       },
       {
         path: 'events',
@@ -144,6 +128,10 @@ const routes: Routes = [
       {
         path: 'confirm-account/:code',
         component: AccountConfirmationComponent
+      },
+      {
+        path: '404',
+        component: NotFoundComponent
       }
     ],
   },
@@ -160,6 +148,11 @@ const routes: Routes = [
       },
     ],
   },
+  {
+    path: '**',
+    redirectTo: '/404',
+    pathMatch: 'full'
+  }
 ];
 
 @NgModule({

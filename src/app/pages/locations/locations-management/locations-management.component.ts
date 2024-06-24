@@ -19,7 +19,7 @@ import {SeatedLocationDto} from "../../../dto/locations/seated-location-dto";
 import {LocationsService} from "../../../services/locations.service";
 import {Router} from "@angular/router";
 import {MatBadge} from "@angular/material/badge";
-import {MatPaginator, PageEvent} from "@angular/material/paginator";
+import {MatPaginator} from "@angular/material/paginator";
 import {StandingLocationDto} from "../../../dto/locations/standing-location-dto";
 import {MatDialog} from "@angular/material/dialog";
 import {
@@ -28,6 +28,8 @@ import {
 import {
   SeatedLocationDetailsDialogComponent
 } from "../seated-location-details-dialog/seated-location-details-dialog.component";
+import {NotificationService} from "../../../services/notification.service";
+import {TokenStorageService} from "../../../services/token-storage.service";
 
 @Component({
   selector: 'app-locations-management',
@@ -68,7 +70,28 @@ export class LocationsManagementComponent implements OnInit {
 
   displayedColumns: string[] = ['index', 'name', 'address', 'capacity', 'actions'];
 
-  constructor(private locationService: LocationsService, protected router: Router, protected dialog: MatDialog) {
+  roles: string[] = [];
+
+  constructor(private locationService: LocationsService, protected router: Router, protected dialog: MatDialog,
+              private notificationService: NotificationService, private tokenStorageService: TokenStorageService) {
+    let user = this.tokenStorageService.getUser();
+    if (user.roles != undefined) {
+      this.roles = user.roles;
+    }
+
+    if (!this.roles.includes('MODERATOR') && !this.roles.includes('ADMIN')) {
+      if (this.roles.includes('ORGANISER')) {
+        this.router.navigate(['/events/all']);
+      } else {
+        this.router.navigate(['/events']);
+      }
+    }
+
+    let message = localStorage.getItem('locations-page-message');
+    if (message != null && message.length > 0) {
+      this.notificationService.showInfo(message);
+      localStorage.removeItem('locations-page-message');
+    }
   }
 
   onSearchStandingChange(value: string) {
@@ -87,14 +110,52 @@ export class LocationsManagementComponent implements OnInit {
   }
 
   loadStandingLocations() {
-    this.locationService.getStandingLocations(this.searchStanding).subscribe(
-      (response: StandingLocationDto[]) => this.standingLocations = response
+    this.locationService.getStandingLocations(this.searchStanding).subscribe({
+        next: (response: StandingLocationDto[]) => {
+          this.standingLocations = response;
+        },
+        error: err => {
+          let message = typeof err.error === "string" ? err.error : 'Internal server error';
+          let status = typeof err.status === "number" ? err.status : 500;
+
+          if (status === 401 || status === 403) {
+            if (this.roles.includes('ORGANISER')) {
+              this.router.navigate(['/events/all']);
+            } else {
+              this.router.navigate(['/events']);
+            }
+          } else if (400 <= status && status < 500) {
+            this.notificationService.showWarning(message);
+          } else {
+            this.notificationService.showError(message);
+          }
+        }
+      }
     );
   }
 
   loadSeatedLocations() {
-    this.locationService.getSeatedLocations(this.searchSeated).subscribe(
-      (response: SeatedLocationDto[]) => this.seatedLocations = response
+    this.locationService.getSeatedLocations(this.searchSeated).subscribe({
+        next: (response: SeatedLocationDto[]) => {
+          this.seatedLocations = response
+        },
+        error: err => {
+          let message = typeof err.error === "string" ? err.error : 'Internal server error';
+          let status = typeof err.status === "number" ? err.status : 500;
+
+          if (status === 401 || status === 403) {
+            if (this.roles.includes('ORGANISER')) {
+              this.router.navigate(['/events/all']);
+            } else {
+              this.router.navigate(['/events']);
+            }
+          } else if (400 <= status && status < 500) {
+            this.notificationService.showWarning(message);
+          } else {
+            this.notificationService.showError(message);
+          }
+        }
+      }
     );
   }
 

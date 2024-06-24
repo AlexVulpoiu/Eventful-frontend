@@ -13,6 +13,8 @@ import {PaymentService} from "../../../services/payment.service";
 import {Router} from "@angular/router";
 import {SeatDetails} from "../../../dto/orders/seat-details";
 import {ProfileService} from "../../../services/profile.service";
+import {NotificationService} from "../../../services/notification.service";
+import {TokenStorageService} from "../../../services/token-storage.service";
 
 @Component({
   selector: 'app-place-order',
@@ -43,11 +45,24 @@ export class PlaceOrderComponent implements OnInit {
   useDiscount: boolean = false;
   eventId: number = 0;
   points: number = 0;
+  roles: string[] = [];
+  buttonDisabled: boolean = false;
 
   constructor(private eventOrderService: EventOrderService, @Inject(LOCALE_ID) public locale: string,
               private orderService: OrdersService, private paymentService: PaymentService, private router: Router,
-              private profileService: ProfileService) {
+              private profileService: ProfileService, private notificationService: NotificationService, private tokenStorageService: TokenStorageService) {
+    let user = this.tokenStorageService.getUser();
+    if (user.roles != undefined) {
+      this.roles = user.roles;
+    }
 
+    if (!this.roles.includes('USER')) {
+      if (this.roles.length === 0) {
+        this.router.navigate(['/events']);
+      } else {
+        this.router.navigate(['/events/all']);
+      }
+    }
   }
 
   updateTotal(event: MatCheckboxChange) {
@@ -76,10 +91,27 @@ export class PlaceOrderComponent implements OnInit {
       this.eventId = data.event.id;
     });
 
-    this.profileService.getAvailablePoints().subscribe(data => {
-      this.points = data;
-      if (this.points >= this.total * 10 - 20) {
-        this.points = this.total * 10 - 20;
+    this.profileService.getAvailablePoints().subscribe({
+      next: data => {
+        this.points = data;
+        if (this.points >= this.total * 10 - 20) {
+          this.points = this.total * 10 - 20;
+        }
+      }, error: err => {
+        let message = typeof err.error === "string" ? err.error : 'Internal server error';
+        let status = typeof err.status === "number" ? err.status : 500;
+
+        if (status === 401 || status === 403) {
+          if (this.roles.length === 0 || this.roles.includes('USER')) {
+            this.router.navigate(['/events']);
+          } else {
+            this.router.navigate(['/events/all']);
+          }
+        } else if (400 <= status && status < 500) {
+          this.notificationService.showWarning(message);
+        } else {
+          this.notificationService.showError(message);
+        }
       }
     });
   }
@@ -93,12 +125,49 @@ export class PlaceOrderComponent implements OnInit {
         }
       }
 
+      this.buttonDisabled = true;
       let newOrderDto = new NewOrderDto(this.eventId, this.useDiscount ? this.points : 0, standingTicketsInfo, []);
-      this.orderService.placeOrder(newOrderDto).subscribe(
-        res => {
-          this.paymentService.initiatePayment(res.id).subscribe(
-            data => window.location.href = data.sessionUrl
-          )
+      this.orderService.placeOrder(newOrderDto).subscribe({
+          next: res => {
+            this.paymentService.initiatePayment(res.id).subscribe({
+                next: data => {
+                  window.location.href = data.sessionUrl;
+                },
+                error: err => {
+                  let message = typeof err.error === "string" ? err.error : 'Internal server error';
+                  let status = typeof err.status === "number" ? err.status : 500;
+
+                  if (status === 401 || status === 403) {
+                    if (this.roles.includes('ORGANISER')) {
+                      this.router.navigate(['/events/all']);
+                    } else {
+                      this.router.navigate(['/events']);
+                    }
+                  } else if (400 <= status && status < 500) {
+                    this.notificationService.showWarning(message);
+                  } else {
+                    this.notificationService.showError(message);
+                  }
+                }
+              }
+            );
+          },
+          error: err => {
+            let message = typeof err.error === "string" ? err.error : 'Internal server error';
+            let status = typeof err.status === "number" ? err.status : 500;
+
+            if (status === 401 || status === 403) {
+              if (this.roles.includes('ORGANISER')) {
+                this.router.navigate(['/events/all']);
+              } else {
+                this.router.navigate(['/events']);
+              }
+            } else if (400 <= status && status < 500) {
+              this.notificationService.showWarning(message);
+            } else {
+              this.notificationService.showError(message);
+            }
+          }
         }
       );
     } else {
@@ -109,11 +178,47 @@ export class PlaceOrderComponent implements OnInit {
       }
 
       let newOrderDto = new NewOrderDto(this.eventId, 0, {}, seatsDetails);
-      this.orderService.placeOrder(newOrderDto).subscribe(
-        res => {
-          this.paymentService.initiatePayment(res.id).subscribe(
-            data => window.location.href = data.sessionUrl
-          )
+      this.orderService.placeOrder(newOrderDto).subscribe({
+          next: res => {
+            this.paymentService.initiatePayment(res.id).subscribe({
+                next: data => {
+                  window.location.href = data.sessionUrl;
+                },
+                error: err => {
+                  let message = typeof err.error === "string" ? err.error : 'Internal server error';
+                  let status = typeof err.status === "number" ? err.status : 500;
+
+                  if (status === 401 || status === 403) {
+                    if (this.roles.includes('ORGANISER')) {
+                      this.router.navigate(['/events/all']);
+                    } else {
+                      this.router.navigate(['/events']);
+                    }
+                  } else if (400 <= status && status < 500) {
+                    this.notificationService.showWarning(message);
+                  } else {
+                    this.notificationService.showError(message);
+                  }
+                }
+              }
+            );
+          },
+          error: err => {
+            let message = typeof err.error === "string" ? err.error : 'Internal server error';
+            let status = typeof err.status === "number" ? err.status : 500;
+
+            if (status === 401 || status === 403) {
+              if (this.roles.includes('ORGANISER')) {
+                this.router.navigate(['/events/all']);
+              } else {
+                this.router.navigate(['/events']);
+              }
+            } else if (400 <= status && status < 500) {
+              this.notificationService.showWarning(message);
+            } else {
+              this.notificationService.showError(message);
+            }
+          }
         }
       );
     }

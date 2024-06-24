@@ -7,6 +7,8 @@ import {MatButton} from "@angular/material/button";
 import {EventService} from "../../services/event.service";
 import {TicketDto} from "../../dto/tickets/ticket-dto";
 import {EventTicketsScannerService} from "../../services/event-tickets-scanner";
+import {NotificationService} from "../../services/notification.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-ticket-scanner',
@@ -32,6 +34,7 @@ export class TicketScannerComponent implements OnInit {
   eventId: number = 0;
 
   constructor(private eventService: EventService, private eventTicketsScannerService: EventTicketsScannerService,
+              private notificationService: NotificationService, private router: Router,
               @Inject(LOCALE_ID) public locale: string) {
 
   }
@@ -72,12 +75,25 @@ export class TicketScannerComponent implements OnInit {
   ).subscribe(id => {
     if (id !== undefined && id !== null && id !== '') {
       this.eventService.getTicketInfo(this.eventId, id)
-        .subscribe(data => {
-          this.ticketInfo = data;
-          this.startDate = data.startDate;
-          this.eventName = data.eventName;
-          this.ticketId = data.externalId;
-          this.showButton = true;
+        .subscribe({
+          next: data => {
+            this.ticketInfo = data;
+            this.startDate = data.startDate;
+            this.eventName = data.eventName;
+            this.ticketId = data.externalId;
+            this.showButton = true;
+          }, error: err => {
+            let message = typeof err.error === "string" ? err.error : 'Internal server error';
+            let status = typeof err.status === "number" ? err.status : 500;
+
+            if (status === 401 || status === 403) {
+              this.router.navigate(['/events/all']);
+            } else if (400 <= status && status < 500) {
+              this.notificationService.showWarning(message);
+            } else {
+              this.notificationService.showError(message);
+            }
+          }
         });
       this.toggleCamera$.next(false);
     }
@@ -85,15 +101,26 @@ export class TicketScannerComponent implements OnInit {
 
   validateTicket() {
     this.eventService.validateTicket(this.eventId, this.ticketId).subscribe(
-      () => {
-        this.showButton = false;
-        this.showNextScanButton = true;
-      },
-      error => {
-        console.log(error);
-        window.alert("This ticket was already validated!");
+      {
+        next: () => {
+          this.notificationService.showSuccess('The ticket was validated successfully!');
+          this.showButton = false;
+          this.showNextScanButton = true;
+        },
+        error: err => {
+          let message = typeof err.error === "string" ? err.error : 'Internal server error';
+          let status = typeof err.status === "number" ? err.status : 500;
+
+          if (status === 401 || status === 403) {
+            this.router.navigate(['/events/all']);
+          } else if (400 <= status && status < 500) {
+            this.notificationService.showWarning(message);
+          } else {
+            this.notificationService.showError(message);
+          }
+        }
       }
-    )
+    );
   }
 
   newScan() {

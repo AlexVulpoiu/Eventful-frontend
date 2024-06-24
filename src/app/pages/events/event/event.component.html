@@ -1,8 +1,8 @@
-<div *ngIf="endDateAsDate <= currentDate" class="col-12">
-  <h1>Tickets statistics: {{ eventDto?.soldTickets }} tickets sold, {{ eventDto?.participants }} participants</h1>
-</div>
+<div *ngIf="roles.includes('ORGANISER') && eventDto?.status == 'ACCEPTED'">
+  <div *ngIf="endDateAsDate <= currentDate" class="col-12">
+    <h1>Tickets statistics: {{ eventDto?.soldTickets }} tickets sold, {{ eventDto?.participants }} participants</h1>
+  </div>
 
-<div *ngIf="roles.length == 1 && roles.includes('ORGANISER') && eventDto?.status == 'ACCEPTED'">
   <mat-accordion>
     <mat-expansion-panel>
       <mat-expansion-panel-header>
@@ -13,10 +13,10 @@
       </mat-expansion-panel-header>
 
       <div class="button-container">
-        <button *ngIf="eventDto?.discount == 0" mat-flat-button color="accent"
+        <button *ngIf="eventDto?.discount == 0 && currentDate <= endDateAsDate" mat-flat-button color="accent"
                 (click)="openPromotionDialog()">Add promotional period
         </button>
-        <button *ngIf="eventDto?.raffle == undefined" mat-flat-button color="accent"
+        <button *ngIf="eventDto?.raffle == undefined && currentDate <= endDateAsDate" mat-flat-button color="accent"
                 (click)="openRaffleDialog()">Add raffle
         </button>
         <button *ngIf="startDateAsDate <= currentDate && currentDate <= endDateAsDate"
@@ -35,7 +35,7 @@
   <br/>
 </div>
 
-<div *ngIf="eventDto?.status == 'PENDING' && roles.includes('MODERATOR') || roles.includes('ADMIN')">
+<div *ngIf="eventDto?.status == 'PENDING' && (roles.includes('MODERATOR') || roles.includes('ADMIN'))">
   <mat-accordion>
     <mat-expansion-panel>
       <mat-expansion-panel-header>
@@ -172,7 +172,7 @@
 <div *ngIf="roles.length == 1 && !roles.includes('USER')" class="w-100">
 
   <div class="w-100 row" *ngIf="standingCategories.length > 0">
-    <div class="col-lg-6 col-md-12 col-sm-12">
+    <div class="col-lg-12 col-md-12 col-sm-12">
       <div class="w-100 row">
         <h2>Tickets prices</h2>
         <button mat-icon-button
@@ -249,7 +249,7 @@
   </div>
 
   <div class="w-100 row" *ngIf="seatsCategories.length > 0">
-    <div class="col-lg-6 col-md-12 col-sm-12">
+    <div class="col-lg-12 col-md-12 col-sm-12">
       <div class="w-100 row">
         <h2>Tickets prices</h2>
         <button mat-icon-button
