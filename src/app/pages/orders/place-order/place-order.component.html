@@ -46,7 +46,7 @@
         <ul class="no-bullets right-elements" *ngIf="standingCategories.length > 0">
           <ng-container *ngFor="let c of standingCategories; let i = index">
             <li *ngIf="ticketsPerCategory[i] > 0">
-              {{ ticketsPerCategory[i] * c.price }} RON
+              {{ (ticketsPerCategory[i] * c.price).toFixed(2) }} RON
             </li>
           </ng-container>
         </ul>
@@ -54,7 +54,7 @@
         <ul class="no-bullets right-elements" *ngIf="seatsCategories.length > 0">
           <ng-container *ngFor="let c of seatsCategories; let i = index">
             <li *ngIf="ticketsPerCategory[i] > 0">
-              {{ ticketsPerCategory[i] * seatsPrices[i] }} RON
+              {{ (ticketsPerCategory[i] * seatsPrices[i]).toFixed(2) }} RON
             </li>
           </ng-container>
         </ul>
@@ -72,7 +72,7 @@
 
       <div class="w-50 right-elements">
         <ul class="no-bullets right-elements">
-          <li>{{ orderDetails?.total }} RON</li>
+          <li>{{ orderDetails?.total!.toFixed(2) }} RON</li>
         </ul>
       </div>
     </div>
@@ -116,7 +116,7 @@
 
       <div class="w-50 right-elements">
         <ul class="no-bullets right-elements">
-          <li>{{ total }} RON</li>
+          <li>{{ total.toFixed(2) }} RON</li>
         </ul>
       </div>
     </div>

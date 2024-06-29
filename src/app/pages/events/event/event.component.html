@@ -16,7 +16,7 @@
         <button *ngIf="eventDto?.discount == 0 && currentDate <= endDateAsDate" mat-flat-button color="accent"
                 (click)="openPromotionDialog()">Add promotional period
         </button>
-        <button *ngIf="eventDto?.raffle == undefined && currentDate <= endDateAsDate" mat-flat-button color="accent"
+        <button *ngIf="eventDto?.canAddRaffle && currentDate <= endDateAsDate" mat-flat-button color="accent"
                 (click)="openRaffleDialog()">Add raffle
         </button>
         <button *ngIf="startDateAsDate <= currentDate && currentDate <= endDateAsDate"
@@ -184,6 +184,13 @@
         </button>
       </div>
 
+      <p>
+        <mat-icon>
+          <i-tabler name="help"></i-tabler>
+        </mat-icon>
+        The fee is supported by {{ eventDto?.feeSupporter }}
+      </p>
+
       <div class="table-responsive m-t-16">
         <table mat-table [dataSource]="standingCategories" class="w-100 table-striped">
 
@@ -261,6 +268,13 @@
         </button>
       </div>
 
+      <p>
+        <mat-icon>
+          <i-tabler name="help"></i-tabler>
+        </mat-icon>
+        The fee is supported by {{ eventDto?.feeSupporter }}
+      </p>
+
       <div class="row w-100">
         <div class="w-50">
           <ul>
@@ -300,6 +314,12 @@
   <div class="w-100 row" *ngIf="standingCategories.length > 0">
     <div class="col-lg-6 col-md-12 col-sm-12">
       <h2>Buy tickets</h2>
+      <p>
+        <mat-icon>
+          <i-tabler name="help"></i-tabler>
+        </mat-icon>
+        The fee is supported by {{ eventDto?.feeSupporter }}
+      </p>
       <p>You can add to cart maximum 10 tickets.</p>
 
       <div class="table-responsive m-t-16">
@@ -382,7 +402,7 @@
           <ul class="no-bullets right-elements">
             <ng-container *ngFor="let c of standingCategories; let i = index">
               <li *ngIf="ticketsPerCategory[i] > 0">
-                {{ ticketsPerCategory[i] * c.price }} RON
+                {{ (ticketsPerCategory[i] * c.price).toFixed(2) }} RON
               </li>
             </ng-container>
           </ul>
@@ -400,7 +420,7 @@
 
         <div class="w-50 right-elements">
           <ul class="no-bullets right-elements">
-            <li>{{ getTotalAmountForStandingEvent() }} RON</li>
+            <li>{{ getTotalAmountForStandingEvent().toFixed(2) }} RON</li>
           </ul>
         </div>
       </div>
@@ -414,6 +434,12 @@
   <div class="w-100 row" *ngIf="seatsCategories.length > 0">
     <div class="col-lg-6 col-md-12 col-sm-12">
       <h2>Buy tickets</h2>
+      <p>
+        <mat-icon>
+          <i-tabler name="help"></i-tabler>
+        </mat-icon>
+        The fee is supported by {{ eventDto?.feeSupporter }}
+      </p>
 
       <div class="row w-100">
         <div class="w-50">
@@ -486,8 +512,8 @@
       <div class="col-lg-12 summary-bar">
         <div class="col-lg-4">
           <div>
-            <h5>Total Selected : {{ cart?.selectedSeats?.length }}</h5>
-            <h5>Total Amount :&nbsp;&nbsp; {{ cart.totalamount }} RON</h5>
+            <h5>Total Selected: {{ cart?.selectedSeats?.length }}</h5>
+            <h5>Total Amount:&nbsp;&nbsp; {{ cart.totalamount.toFixed(2) }} RON</h5>
           </div>
         </div>
         <div class="col-lg-8 selected-seats">

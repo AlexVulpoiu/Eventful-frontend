@@ -10,5 +10,5 @@
 </div>
 <div mat-dialog-actions class="actions-right">
   <button mat-button (click)="onCancel()">Cancel</button>
-  <button mat-button [disabled]="!editNameForm.valid" (click)="onSave()">Save</button>
+  <button mat-flat-button class="success-button" [disabled]="!editNameForm.valid" (click)="onSave()">Save</button>
 </div>
