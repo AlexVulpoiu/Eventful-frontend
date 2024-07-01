@@ -19,7 +19,7 @@
         <button *ngIf="eventDto?.canAddRaffle && currentDate <= endDateAsDate" mat-flat-button color="accent"
                 (click)="openRaffleDialog()">Add raffle
         </button>
-        <button *ngIf="startDateAsDate <= currentDate && currentDate <= endDateAsDate"
+        <button *ngIf="currentDate <= endDateAsDate"
                 mat-flat-button color="accent" (click)="goToTicketsScannerPage()">Scan tickets
         </button>
         <button mat-flat-button color="accent" (click)="openOrdersDialog()">View
